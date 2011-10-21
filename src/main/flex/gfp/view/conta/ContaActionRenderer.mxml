@@ -1,0 +1,68 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx = "http://ns.adobe.com/mxml/2009"
+						  xmlns:s = "library://ns.adobe.com/flex/spark"
+						  xmlns:mx = "library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			import assets.images.ImageUtil;
+			
+			import common.custom.CustomEvent;
+			import common.utils.DateUtils;
+			import common.utils.MessageUtils;
+			
+			import gfp.event.AppEvent;
+			import gfp.event.ContaEvent;
+			import gfp.service.ContaService;
+			
+			import mx.rpc.events.ResultEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			[Inject]
+			public var service:ContaService;
+			
+			private function alterar():void
+			{
+				dispatcher.dispatchEvent(new ContaEvent(ContaEvent.EDITAR, data));
+			}
+			
+			private function excluir():void
+			{
+				MessageUtils.confirmDelete(excluirHandler, "Obs: Todas as transações vinculadas serão excluídas!");
+			}
+			
+			private function excluirHandler():void
+			{
+				dispatcher.dispatchEvent(new ContaEvent(ContaEvent.EXCLUIR, data
+														, function(re:ResultEvent):void
+														{
+															dispatcher.dispatchEvent(new AppEvent(AppEvent
+																								  .ATUALIZAR_DASHBOARD));
+															dispatcher.dispatchEvent(new AppEvent(AppEvent
+																								  .TO_CADASTROS));
+														}));
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup horizontalAlign = "right"
+			  width = "100%"
+			  paddingRight = "3"
+			  gap = "0">
+		<s:Image source = "{ImageUtil.INFO}"
+				 click = "alterar()"
+				 alpha = ".7"
+				 toolTip = "Editar conta"
+				 buttonMode = "true"
+				 useHandCursor = "true"/>
+
+		<s:Image source = "{ImageUtil.CANCEL}"
+				 click = "excluir()"
+				 alpha = ".7"
+				 toolTip = "Excluir esta conta"
+				 buttonMode = "true"
+				 useHandCursor = "true"/>
+	</s:HGroup>
+</s:MXDataGridItemRenderer>

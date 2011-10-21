@@ -1,0 +1,176 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Skin xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		xmlns:s = "library://ns.adobe.com/flex/spark"
+		xmlns:mx = "library://ns.adobe.com/flex/mx"
+		filters = "{[borderShadow]}">
+	<fx:Metadata>
+		[HostComponent("spark.components.Panel")]
+	</fx:Metadata>
+
+	<fx:Declarations>
+		<s:SolidColorStroke id = "borderStroke"
+							color = "#C8C8C8"
+							weight = "1"/>
+
+		<s:SolidColorStroke id = "messageStroke"
+							color = "#FFFFFF"
+							weight = "1"/>
+
+		<s:DropShadowFilter id = "borderShadow"
+							color = "#000000"
+							alpha = ".8"
+							distance = "5"
+							quality = "1"/>
+
+		<s:Sequence id = "messageEffect"
+					targets = "{[groupRodape, rectRodape, labelRodape]}">
+			<s:Fade alphaFrom = "0"
+					alphaTo = "1"/>
+
+			<s:Fade alphaFrom = "1"
+					alphaTo = "0"
+					startDelay = "4000"/>
+		</s:Sequence>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import common.utils.EffectUtils;
+			import common.utils.MessageEvent;
+			
+			import mx.events.EffectEvent;
+			
+			private var shake:Boolean;
+			
+			[EventHandler(event="MessageEvent_Show")]
+			public function showMessage(event:MessageEvent):void
+			{
+				labelRodape.text = event.message;
+				shake = event.shake;
+				shake ? EffectUtils.shake(this, playMessageEffect) : playMessageEffect();
+			}
+			
+			private function playMessageEffect(event:EffectEvent = null):void
+			{
+				messageEffect.play();
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name = "disabledWithControlBar"/>
+
+		<s:State name = "normalWithControlBar"/>
+
+		<s:State name = "disabled"/>
+
+		<s:State name = "normal"/>
+	</s:states>
+
+	<s:Rect width = "100%"
+			height = "100%"
+			top = "{rectTopo.height - 10}"
+			radiusX = "5"
+			stroke = "{borderStroke}">
+		<s:fill>
+			<s:LinearGradient rotation = "90">
+				<s:entries>
+					<s:GradientEntry color = "#FFFFFF"/>
+
+					<s:GradientEntry color = "#E8F2FE"/>
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect id = "rectRodape"
+			width = "100%"
+			height = "20"
+			top = "{this.height - rectRodape.height - 4}"
+			left = "2"
+			right = "2"
+			radiusX = "5"
+			stroke = "{messageStroke}"
+			alpha = "0">
+		<s:fill>
+			<s:LinearGradient rotation = "90">
+				<s:entries>
+					<s:GradientEntry color = "#B33333"
+									 alpha = ".9"/>
+
+					<s:GradientEntry color = "#720000"
+									 alpha = ".9"/>
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect id = "rectTopo"
+			width = "100%"
+			height = "30"
+			radiusX = "5">
+		<s:fill>
+			<s:LinearGradient rotation = "90">
+				<s:entries>
+					<s:GradientEntry color = "#005A7D"
+									 alpha = ".8"/>
+
+					<s:GradientEntry color = "#005A7D"/>
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+
+		<s:filters>
+			<s:DropShadowFilter color = "#000000"
+								alpha = ".8"
+								distance = "3"
+								quality = "1"
+								angle = "90"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:HGroup width = "100%"
+			  height = "{rectTopo.height}"
+			  left = "15"
+			  paddingTop = "2">
+		<s:Label id = "titleDisplay"
+				 fontFamily = "Title"
+				 fontSize = "20"
+				 color = "#FFFFFF"
+				 height = "100%"
+				 verticalAlign = "middle">
+			<s:filters>
+				<s:DropShadowFilter distance = "1"
+									quality = "1"/>
+			</s:filters>
+		</s:Label>
+	</s:HGroup>
+
+	<s:HGroup id = "groupRodape"
+			  alpha = "0"
+			  width = "100%"
+			  height = "{rectRodape.height}"
+			  top = "{this.height - rectRodape.height - 3}"
+			  horizontalAlign = "center">
+		<s:Label id = "labelRodape"
+				 fontSize = "13"
+				 alpha = "0"
+				 color = "#FFFFFF"
+				 height = "100%"
+				 verticalAlign = "middle">
+			<s:filters>
+				<s:DropShadowFilter distance = "1"
+									quality = "1"/>
+			</s:filters>
+		</s:Label>
+	</s:HGroup>
+
+	<s:Group id = "contentGroup"
+			 width = "100%"
+			 height = "100%"
+			 top = "50"
+			 bottom = "30"
+			 left = "15"
+			 right = "15">
+	</s:Group>
+</s:Skin>

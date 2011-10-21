@@ -1,0 +1,180 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Panel xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		 xmlns:s = "library://ns.adobe.com/flex/spark"
+		 xmlns:mx = "library://ns.adobe.com/flex/mx"
+		 creationCompleteEffect = "{fadeIn}"
+		 xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		 skinClass = "assets.skins.CustomPanelSkin"
+		 title = "Conta"
+		 xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.custom.RequiredValidator;
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			
+			import gfp.event.AppEvent;
+			import gfp.event.ContaEvent;
+			import gfp.service.BancoService;
+			import gfp.service.ContaService;
+			import gfp.type.ContaType;
+			
+			import mx.events.EffectEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.effects.Fade;
+			
+			[Bindable]
+			[Inject]
+			public var bancoService:BancoService;
+			
+			[Inject]
+			[Bindable]
+			public var contaService:ContaService;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			[Inject]
+			public var service:ContaService;
+			
+			private var changed:Boolean = false;
+			
+			private function cancelar():void
+			{
+				fadeOut.play([this]);
+			}
+			
+			private function fadeOut_effectEndHandler(event:EffectEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				
+				if (changed)
+				{
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_DASHBOARD));
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_CADASTROS));
+				}
+			}
+			
+			private function radioCarteira_clickHandler(event:MouseEvent):void
+			{
+				comboBancos.selectedItem = null;
+				comboBancos.textInput.text = null;
+			}
+			
+			private function salvar():void
+			{
+				if (validateForm())
+				{
+					dispatcher.dispatchEvent(new ContaEvent(ContaEvent.SALVAR, service
+															.selecionada, function(re:ResultEvent):void
+															{
+																changed = true;
+																cancelar();
+															}));
+				}
+			}
+			
+			private function validateForm():Boolean
+			{
+				var result:Boolean = RequiredValidator.validate(RequiredValidator
+																.SELECTION, [comboBancos]
+																, dispatcher);
+				
+				if (result)
+				{
+					result = RequiredValidator.validate(RequiredValidator.STRING
+														, [textIdentificacao], dispatcher);
+				}
+				
+				service.selecionada.tipo = groupTipoConta.selectedValue as int;
+				
+				return result;
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:Parallel id = "fadeIn"
+					target = "{this}"
+					duration = "500"
+					effectEnd = "comboBancos.setFocus()">
+			<mx:Zoom zoomWidthFrom = "1.5"
+					 zoomHeightFrom = "1.5"/>
+
+			<s:Fade alphaFrom = "0"
+					alphaTo = "1"/>
+		</s:Parallel>
+
+		<s:Parallel id = "fadeOut"
+					target = "{this}"
+					duration = "300"
+					effectEnd = "fadeOut_effectEndHandler(event)">
+			<mx:Zoom zoomWidthTo = "1.5"
+					 zoomHeightTo = "1.5"/>
+
+			<s:Fade alphaFrom = "1"
+					alphaTo = "0"/>
+		</s:Parallel>
+
+		<s:RadioButtonGroup id = "groupTipoConta"/>
+	</fx:Declarations>
+
+	<s:VGroup id = "form"
+			  width = "100%">
+		<s:HGroup>
+			<s:RadioButton id = "radioContaCorrente"
+						   label = "Conta Corrente"
+						   selected = "{service.selecionada.tipo == ContaType.CONTA_CORRENTE}"
+						   group = "{groupTipoConta}"
+						   value = "{ContaType.CONTA_CORRENTE}"/>
+
+			<s:RadioButton label = "Poupança"
+						   selected = "{service.selecionada.tipo == ContaType.POUPANCA}"
+						   group = "{groupTipoConta}"
+						   value = "{ContaType.POUPANCA}"/>
+
+			<s:RadioButton id = "radioCarteira"
+						   label = "Carteira"
+						   click = "radioCarteira_clickHandler(event)"
+						   selected = "{service.selecionada.tipo == ContaType.CARTEIRA}"
+						   group = "{groupTipoConta}"
+						   value = "{ContaType.CARTEIRA}"/>
+		</s:HGroup>
+
+		<s:Label text = "Banco:"/>
+
+		<s:ComboBox id = "comboBancos"
+					dataProvider = "{bancoService.lista}"
+					selectedItem = "@{service.selecionada.banco}"
+					width = "100%"
+					enabled = "{!radioCarteira.selected}"/>
+
+		<s:Label text = "Identificação:"/>
+
+		<s:TextInput id = "textIdentificacao"
+					 text = "@{service.selecionada.identificacao}"
+					 width = "100%"/>
+
+		<s:CheckBox id = "checkAtiva"
+					selected = "@{service.selecionada.ativa}"
+					label = "{checkAtiva.selected ? 'Ativa' : 'Inativa'}"/>
+
+		<s:HGroup width = "100%"
+				  horizontalAlign = "center">
+			<custom:CustomButton label = "Cancelar"
+								 click = "cancelar()"
+								 styleName = "styleButtonRed"/>
+
+			<custom:CustomButton label = "Salvar"
+								 click = "salvar()"
+								 styleName = "styleButtonGreen"/>
+		</s:HGroup>
+	</s:VGroup>
+
+	<serviceFeedback:ServiceFeedback watchForCall = "salvarConta"
+									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 width = "100%"
+									 height = "100%"/>
+</s:Panel>

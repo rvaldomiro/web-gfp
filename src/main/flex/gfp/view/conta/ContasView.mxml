@@ -1,0 +1,60 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.custom.CustomEvent;
+			
+			import gfp.event.ContaEvent;
+			import gfp.service.ContaService;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			[Inject]
+			public var service:ContaService;
+			
+			[EventHandler(event="AppEvent.TO_CADASTROS")]
+			public function refresh():void
+			{
+				dispatcher.dispatchEvent(new ContaEvent(ContaEvent.LISTAR));
+			}
+			
+			private function buttonNovaConta_clickHandler():void
+			{
+				dispatcher.dispatchEvent(new ContaEvent(ContaEvent.EDITAR));
+			}
+		]]>
+	</fx:Script>
+
+	<custom:CustomButton id = "buttonNovaConta"
+						 label = "Nova Conta"
+						 click = "buttonNovaConta_clickHandler()"
+						 styleName = "styleButtonAdd"/>
+
+	<s:Group width = "100%"
+			 height = "100%">
+		<mx:DataGrid dataProvider = "{service.listaCompleta}"
+					 showHeaders = "false"
+					 width = "100%"
+					 height = "100%">
+			<mx:columns>
+				<mx:DataGridColumn itemRenderer = "gfp.view.conta.ContaRenderer"
+								   width = "200"/>
+
+				<mx:DataGridColumn itemRenderer = "gfp.view.conta.ContaActionRenderer"
+								   width = "44"/>
+			</mx:columns>
+		</mx:DataGrid>
+
+		<serviceFeedback:ServiceFeedback watchForCall = "listarContas"
+										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 width = "100%"
+										 height = "100%"/>
+	</s:Group>
+</s:VGroup>

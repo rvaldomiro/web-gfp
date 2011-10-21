@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Skin xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		xmlns:s = "library://ns.adobe.com/flex/spark"
+		xmlns:mx = "library://ns.adobe.com/flex/mx">
+
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("common.components.serviceFeedback.ServiceFeedback")]
+	</fx:Metadata>
+
+	<!-- states -->
+	<s:states>
+		<s:State name = "success"/>
+
+		<s:State name = "fail"/>
+
+		<s:State name = "processing"/>
+	</s:states>
+
+	<mx:Image id = "loadingIcon"
+			  source = "@Embed('/common/assets/images/loading.swf')"
+			  visible.processing = "true"
+			  visible.fail = "false"
+			  visible.success = "false"/>
+
+	<mx:Image id = "failIcon"
+			  source = "@Embed('/common/assets/images/fail-icon.png')"
+			  visible.processing = "false"
+			  visible.fail = "true"
+			  visible.success = "false"/>
+</s:Skin>

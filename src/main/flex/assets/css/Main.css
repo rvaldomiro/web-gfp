@@ -1,0 +1,162 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace ah "common.components.com.hulstkamp.flex.spark.components.*";
+@namespace chartClasses "mx.charts.chartClasses.*";
+
+@font-face {
+	src: url("../fonts/VAGRounded Lt Normal.ttf");
+	fontFamily: VAGRounded;
+	fontWeight: normal;
+	embedAsCff: true;
+}
+
+@font-face {
+	src: url("../fonts/Comfortaa Bold.ttf");
+	fontFamily: Title;
+	fontWeight: normal;
+	embedAsCff: true;
+}
+
+s|Application {
+	fontFamily: "VAGRounded";
+	fontSize: 12;
+}
+
+mx|CursorManager
+{
+	busy-cursor: Embed("/assets/skins/UndefinedPersonalSkinLoad.swf");
+}
+
+s|Label, s|ButtonBar, s|RadioButton {	
+	color: #2074A3;
+	fontWeight: normal;
+}
+
+chartClasses|DataTip {
+	fontFamily: VAGRounded;
+	color: #2876A4;
+	fontSize: 11;
+	background-color: #FFF4D3;	
+}
+
+s|CheckBox {
+	skinClass: ClassReference("assets.skins.CheckboxSkin");
+	symbolColorChecked: #70d000;
+	symbolColorUnchecked: #e83800;
+	fontSize: 11;
+	fontWeight: normal;
+	color: #2074A3;
+}
+
+mx|DataGrid {
+	color: #2074A3;
+	verticalGridLines: false;
+	borderStyle: solid;
+	borderColor: #F6F9F6;
+	alternatingItemColors: #FFFFFF, #F6F9F6;
+}
+
+s|TextInput, s|NumericStepper {
+	borderColor: #BDC0CB; 
+	color: #2074A3;
+}
+
+s|DropDownList, s|ComboBox {
+	color: #2074A3;
+}
+
+ah|NiceToolTip {
+	color: #FFFFFF;
+	chromeColor: #555555;	
+	fontSize: 12;
+	fontFamily: "VAGRounded";
+	maxWidth: 100;
+}
+
+ah|NiceToolTip.errorTip {
+	color: #f8f8f8;
+	chromeColor: #e02010;
+	fontSize: 11;
+	fontStyle: italic;
+	fontWeight: normal;
+	maxWidth: 100;
+}
+
+mx|HRule {
+	stroke-color: #c4e3ff;
+}
+
+mx|ChartBase, mx|Alert, mx|TileList {
+	borderColor: #BDC0CB;
+	color: #2074A3;
+}
+
+global {
+	modal-transparency-color: #000000;
+	modal-transparency: .4;
+}
+
+mx|global
+{
+	textFieldClass: ClassReference("mx.core.UIFTETextField");
+	textInputClass: ClassReference("mx.controls.MXFTETextInput"); 
+}
+
+.styleButtonCriarConta {
+	iconClass: ClassReference("assets.images.Add");
+	chromeColor: #800000;
+}
+
+.styleButtonCriarConta:over {
+	chromeColor: #a02000;
+}
+
+.styleButtonAdd {
+	iconClass: ClassReference("assets.images.Add");
+	chromeColor: #305000;
+}
+
+.styleButtonAdd:over {
+	chromeColor: #406000;
+}
+
+.styleButtonGreen {
+	iconClass: ClassReference("assets.images.Check");
+	chromeColor: #305000;
+}
+
+.styleButtonGreen:over {
+	chromeColor: #406000;
+}
+
+.styleButtonRed {
+	iconClass: ClassReference("assets.images.Cross");
+	chromeColor: #800000;
+}
+
+.styleButtonRed:over {
+	chromeColor: #a02000;
+}
+
+.styleButtonBlack {
+	iconClass: ClassReference("assets.images.Magnifier");
+	chromeColor: #505050;
+}
+
+.styleButtonBlack:over {
+	chromeColor: #F9BD00;
+}
+
+s|Button  {
+	skinClass: ClassReference('assets.skins.GenericIconButtonSkin');
+	fontSize: 16;
+	fontFamily: Title;
+	iconColor: #e0e0e0;
+	iconScale: 0.75;
+}
+
+s|Button:over {
+	color: #ffffff;
+	iconColor: #ffffff;
+}

@@ -1,0 +1,55 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:serviceFeedback = "common.components.serviceFeedback.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+		]]>
+	</fx:Script>
+
+	<s:VGroup width = "100%"
+			  height = "100%">
+		<s:HGroup verticalAlign = "bottom">
+			<s:Image id = "image"/>
+
+			<s:VGroup>
+				<s:Label id = "labelDescricao"
+						 fontFamily = "Title"
+						 fontSize = "14"
+						 color = "#014C6B"/>
+
+				<s:Label text = "Próximos 15 dias"
+						 fontSize = "12"/>
+			</s:VGroup>
+		</s:HGroup>
+
+		<s:Group width = "100%"
+				 height = "100%">
+			<mx:DataGrid id = "gridLancamentos"
+						 width = "100%"
+						 height = "100%"
+						 showHeaders = "false"
+						 selectable = "false">
+				<mx:columns>
+					<mx:DataGridColumn itemRenderer = "gfp.view.receitaDespesaVencer.TransacaoVencerRenderer"
+									   width = "500"/>
+
+					<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoActionRenderer"
+									   width = "66"/>
+				</mx:columns>
+			</mx:DataGrid>
+
+			<serviceFeedback:ServiceFeedback watchForCall = "listarReceitasVencer"
+											 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+											 width = "100%"
+											 height = "100%"/>
+
+			<serviceFeedback:ServiceFeedback watchForCall = "listarDespesasVencer"
+											 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+											 width = "100%"
+											 height = "100%"/>
+		</s:Group>
+	</s:VGroup>
+</s:VGroup>

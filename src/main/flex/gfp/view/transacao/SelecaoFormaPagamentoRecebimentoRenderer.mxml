@@ -1,0 +1,84 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<mx:TileList xmlns:mx = "http://www.adobe.com/2006/mxml"
+			 change = "changeHandler(event)"
+			 itemRenderer = "gfp.view.transacao.FormaPagamentoRenderer"
+			 rowCount = "1"
+			 direction = "horizontal"
+			 columnWidth = "120">
+	<mx:Script>
+		<![CDATA[
+			import gfp.model.Conta;
+			import gfp.model.Lancamento;
+			import gfp.service.ContaService;
+			import gfp.type.ContaType;
+			import gfp.type.FormaPagamentoType;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			
+			[Inject]
+			public var contaService:ContaService;
+			
+			[Bindable]
+			private var _dataProvider:ArrayCollection;
+			
+			private var _lancamento:Lancamento;
+			
+			public function init(lancamento:Lancamento):void
+			{
+				_lancamento = lancamento;
+				_dataProvider = new ArrayCollection();
+				
+				for each (var conta:Conta in contaService.lista)
+				{
+					if (conta.tipo == ContaType.CARTEIRA)
+					{
+						var dinheiro:Object = new Object();
+						dinheiro.formaPagamento = 1;
+						dinheiro.descricao = "Dinheiro";
+						dinheiro.conta = conta;
+						_dataProvider.addItem(dinheiro);
+					}
+					else
+					{
+						var cheque:Object = new Object();
+						cheque.formaPagamento = 2;
+						cheque.descricao = "Cheque"
+						cheque.conta = conta;
+						_dataProvider.addItem(cheque);
+						
+						var cartao:Object = new Object();
+						cartao.formaPagamento = 3;
+						cartao.descricao = "Cartão";
+						cartao.conta = conta;
+						_dataProvider.addItem(cartao);
+					}
+				}
+				
+				dataProvider = _dataProvider;
+				setSelectedIndex();
+			}
+			
+			private function changeHandler(event:ListEvent = null):void
+			{
+				_lancamento.formaPagamento = selectedItem.formaPagamento;
+				_lancamento.conta = selectedItem.conta;
+			}
+			
+			private function setSelectedIndex():void
+			{
+				selectedIndex = -1;
+				
+				for (var i:int = 0; i < _dataProvider.length; i++)
+				{
+					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento)
+					{
+						selectedIndex = i;
+						changeHandler();
+						return;
+					}
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:TileList>

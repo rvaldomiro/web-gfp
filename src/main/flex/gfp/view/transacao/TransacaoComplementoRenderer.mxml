@@ -1,0 +1,43 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx = "http://ns.adobe.com/mxml/2009"
+						  xmlns:s = "library://ns.adobe.com/flex/spark"
+						  xmlns:mx = "library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			import assets.images.ImageUtil;
+			
+			import common.utils.DateUtils;
+			import common.utils.NumberUtils;
+			import gfp.model.Lancamento;
+			
+			import gfp.type.FormaPagamentoType;
+			
+			import mx.events.FlexEvent;
+			
+			override public function set data(value:Object):void
+			{
+				o = value as Lancamento;
+				super.data = value;
+			}
+			
+			[Bindable]
+			private var o:Lancamento;
+		]]>
+	</fx:Script>
+
+	<s:HGroup width = "100%"
+			  paddingLeft = "2"
+			  paddingRight = "2"
+			  paddingTop = "2"
+			  paddingBottom = "2">
+		<s:Label text = "{DateUtils.formatSimple(o.dataPagamento)}"
+				 width = "70"
+				 textAlign = "center"/>
+
+		<s:Label text = "{NumberUtils.formatNumber(o.valorPago, 2)}"
+				 textAlign = "right"
+				 width = "70"/>
+
+		<s:Label text = "{o.observacao}"/>
+	</s:HGroup>
+</s:MXDataGridItemRenderer>

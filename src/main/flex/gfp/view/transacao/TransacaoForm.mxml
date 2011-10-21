@@ -1,0 +1,522 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Panel xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		 xmlns:s = "library://ns.adobe.com/flex/spark"
+		 xmlns:mx = "library://ns.adobe.com/flex/mx"
+		 xmlns:custom = "common.components.custom.*"
+		 xmlns:transacao = "gfp.view.transacao.*"
+		 xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		 skinClass = "assets.skins.CustomPanelSkin"
+		 title = "Transação"
+		 creationComplete = "creationCompleteHandler(event)"
+		 creationCompleteEffect = "{fadeIn}"
+		 currentState = "Principal"
+		 stateChangeComplete = "stateChangeCompleteHandler(event)"
+		 resizeEffect = "{mx.effects.Resize}">
+	<fx:Script>
+		<![CDATA[
+			import common.components.custom.RequiredValidator;
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.utils.DateUtils;
+			import common.utils.MessageEvent;
+			import common.utils.MessageUtils;
+			
+			import gfp.dto.AgendamentoDto;
+			import gfp.dto.LancamentoDto;
+			import gfp.event.AppEvent;
+			import gfp.event.CategoriaEvent;
+			import gfp.event.TransacaoEvent;
+			import gfp.model.Categoria;
+			import gfp.model.Conta;
+			import gfp.service.CategoriaService;
+			import gfp.service.ContaService;
+			import gfp.service.LancamentoService;
+			import gfp.service.UsuarioService;
+			import gfp.type.CategoriaType;
+			import gfp.type.FormaPagamentoType;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.DateField;
+			import mx.effects.Move;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+			[Inject]
+			public var categoriaServcie:CategoriaService;
+			
+			[Inject]
+			[Bindable]
+			public var contaService:ContaService;
+			
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			public var dto:AgendamentoDto;
+			
+			[Bindable]
+			[Inject]
+			public var service:LancamentoService;
+			
+			[Inject]
+			public var usuarioService:UsuarioService;
+			
+			private var changed:Boolean = false;
+			
+			[Bindable]
+			private var periodicidadesAgendamento:ArrayCollection = new ArrayCollection([{data: 1
+																							 , label: "Diária"}
+																						 , {data: 2
+																							 , label: "Semanal"}
+																						 , {data: 3
+																							 , label: "Quinzenal"}
+																						 , {data: 4
+																							 , label: "Mensal"}
+																						 , {data: 5
+																							 , label: "Dia Útil do Mês"}]);
+			
+			private function buttonRepetir_clickHandler(event:MouseEvent):void
+			{
+				if (validateForm(false))
+				{
+					currentState = "Agendamento";
+					dto = new AgendamentoDto();
+					dto.lancamento = service.selecionado;
+					dto.dataInicio = service.selecionado.dataVencimento;
+					dto.dataFinal = DateUtils.add(dto.dataInicio, 31);
+					dto.dia = dto.dataInicio.date;
+					dto.valor = dto.lancamento.valorOriginal;
+					stepperDia.setFocus();
+				}
+			}
+			
+			private function cancelar():void
+			{
+				currentState == "Principal" ? fadeOut.play([this]) : currentState = "Principal";
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void
+			{
+				selecaoFormaPagamentoRecebimento.init(service.selecionado);
+				comboCategorias.selectedItem = service.selecionado.categoria;
+				dispatchEvent(new Event("permiteRepetir"));
+				dispatchEvent(new Event("permiteTransferir"));
+			}
+			
+			private function datePagamento_focusOutHandler(event:FocusEvent):void
+			{
+				if (service.selecionado.valorPago == 0 && (event.target as DateField)
+					.selectedDate)
+				{
+					service.selecionado.valorPago = service.selecionado.valorOriginal;
+				}
+			}
+			
+			private function dateVencimento_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				service.selecionado.dataPrevisaoPagamento = event.target.selectedDate;
+			}
+			
+			private function efetivarTransacao():void
+			{
+				service.selecionado.dataPagamento = service.selecionado.dataPrevisaoPagamento;
+				service.selecionado.valorPago = service.selecionado.valorOriginal;
+				salvar();
+			}
+			
+			private function fadeOut_effectEndHandler(event:EffectEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				
+				if (changed)
+				{
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_DASHBOARD));
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES));
+				}
+			}
+			
+			[Bindable(event = "permiteRepetir")]
+			private function permiteRepetir():Boolean
+			{
+				return comboCategorias.selectedItem is Categoria && service.selecionado
+					.valorOriginal > 0 && currentState == "Principal";
+			}
+			
+			[Bindable(event = "permiteTransferir")]
+			private function permiteTransferir():Boolean
+			{
+				if (service == null || service.selecionado == null || !(comboCategorias
+					.selectedItem is Categoria))
+				{
+					return false;
+				}
+				
+				var result:Boolean = comboCategorias.selectedItem.transferencia;
+				
+				if (!result)
+				{
+					comboContaTransferencia.selectedItem = null;
+					service.selecionado.contaTransferencia = null;
+				}
+				else if (comboContaTransferencia.selectedItem == null || comboContaTransferencia
+					.selectedItem.id == service.selecionado.conta.id)
+				{
+					for each (var conta:Object in comboContaTransferencia.dataProvider)
+					{
+						if (conta.id != service.selecionado.conta.id)
+						{
+							comboContaTransferencia.selectedItem = conta;
+							service.selecionado.contaTransferencia = conta as Conta;
+							break;
+						}
+					}
+				}
+				
+				return result;
+			}
+			
+			private function prepararPagamento():void
+			{
+				service.selecionado.dataPagamento = DateUtils.today;
+				service.selecionado.valorPago = service.selecionado.valorOriginal;
+				salvar();
+			}
+			
+			private function salvar():void
+			{
+				if (validateForm())
+				{
+					if (currentState == "Principal")
+					{
+						dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent
+																	.SALVAR, service
+																	.selecionado
+																	, function(re:ResultEvent):void
+																	{
+																		changed = true;
+																		cancelar();
+																	}));
+					}
+					else
+					{
+						dto.lancamento.valorOriginal = dto.valor;
+						dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent
+																	.AGENDAR, dto
+																	, function(re:ResultEvent):void
+																	{
+																		changed = true;
+																		currentState = "Principal";
+																		
+																		var _dto:LancamentoDto =
+																			new LancamentoDto();
+																		_dto.tipoPeriodo = 1;
+																		_dto.dataInicio = dto
+																			.dataInicio;
+																		_dto.dataFinal = dto
+																			.dataFinal;
+																		_dto.categoria = dto
+																			.lancamento
+																			.categoria
+																			.id;
+																		dispatcher
+																			.dispatchEvent(new AppEvent(AppEvent
+																										.TO_TRANSACOES_DIA
+																										, _dto));
+																		
+																		cancelar();
+																	}));
+					}
+				}
+			}
+			
+			private function stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				dispatchEvent(new Event("permiteRepetir"));
+				dispatchEvent(new Event("permiteTransferir"));
+			}
+			
+			private function validateForm(save:Boolean = true):Boolean
+			{
+				if (!(comboCategorias.selectedItem is Categoria))
+				{
+					if (comboCategorias.textInput.text.length > 0)
+					{
+						comboCategorias.validate(save ? salvar : validateForm);
+					}
+					else
+					{
+						RequiredValidator.validate(RequiredValidator.SELECTION, [comboCategorias]
+												   , dispatcher);
+					}
+					
+					return false;
+				}
+				
+				service.selecionado.categoria = comboCategorias.selectedItem as Categoria;
+				
+				var result:Boolean = RequiredValidator.validate(RequiredValidator
+																.SELECTION, [comboCategorias]
+																, dispatcher);
+				
+				if (result)
+				{
+					result = RequiredValidator.validate(RequiredValidator.NUMBER
+														, [textValorOriginal, textValorAgendamento]
+														, dispatcher, .01);
+				}
+				
+				if (result && service.selecionado.categoria.transferencia)
+				{
+					result = RequiredValidator.validate(RequiredValidator.SELECTION
+														, [comboContaTransferencia]
+														, dispatcher);
+				}
+				
+				service.selecionado.contaTransferencia = comboContaTransferencia
+					.selectedItem as Conta;
+				
+				if (service.selecionado.contaTransferencia != null && service.selecionado
+					.formaPagamento == FormaPagamentoType.CHEQUE)
+				{
+					dispatcher.dispatchEvent(new MessageEvent("Transferências só podem ser efetuadas em Dinheiro ou Cartão"));
+					result = false;
+				}
+				else if (service.selecionado.contaTransferencia != null && service
+					.selecionado.contaTransferencia.id == service.selecionado.conta
+					.id)
+				{
+					dispatcher.dispatchEvent(new MessageEvent("Transferências só podem ser efetuadas para contas diferentes"));
+					result = false;
+				}
+				
+				return result;
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name = "Principal"/>
+
+		<s:State name = "Agendamento"/>
+	</s:states>
+
+	<fx:Declarations>
+		<s:Parallel id = "fadeIn"
+					target = "{this}"
+					duration = "500"
+					effectEnd = "comboCategorias.setFocus()">
+			<mx:Zoom zoomWidthFrom = "1.5"
+					 zoomHeightFrom = "1.5"/>
+
+			<s:Fade alphaFrom = "0"
+					alphaTo = "1"/>
+		</s:Parallel>
+
+		<s:Parallel id = "fadeOut"
+					target = "{this}"
+					duration = "300"
+					effectEnd = "fadeOut_effectEndHandler(event)">
+			<mx:Zoom zoomWidthTo = "1.5"
+					 zoomHeightTo = "1.5"/>
+
+			<s:Fade alphaFrom = "1"
+					alphaTo = "0"/>
+		</s:Parallel>
+	</fx:Declarations>
+
+	<s:VGroup id = "form"
+			  width = "100%">
+		<s:Label text = "Categoria:"/>
+
+		<transacao:CategoriaListInput id = "comboCategorias"
+									  dataProvider = "{categoriaServcie.lista}"
+									  change = "dispatchEvent(new Event('permiteRepetir')); dispatchEvent(new Event('permiteTransferir'));"
+									  width = "100%"
+									  enabled.Agendamento = "false"/>
+
+		<s:HGroup width = "100%"
+				  gap = "10">
+			<s:VGroup>
+				<s:Label text = "Vencimento:"/>
+
+				<custom:CustomDateField id = "dateVencimento"
+										selectedDate = "@{service.selecionado.dataVencimento}"
+										change = "dateVencimento_changeHandler(event)"
+										editable = "false"
+										enabled.Agendamento = "false"
+										tabFocusEnabled = "false"/>
+			</s:VGroup>
+
+			<s:VGroup>
+				<s:Label text = "Valor Original:"/>
+
+				<custom:TextInputNumeric id = "textValorOriginal"
+										 value = "@{service.selecionado.valorOriginal}"
+										 change = "dispatchEvent(new Event('permiteRepetir'))"
+										 enabled.Agendamento = "false"/>
+			</s:VGroup>
+		</s:HGroup>
+
+		<s:Label text = "Forma de Pagamento / Recebimento:"/>
+
+		<transacao:SelecaoFormaPagamentoRecebimentoRenderer id = "selecaoFormaPagamentoRecebimento"
+															width = "{contaService.lista.length > 1 ? 498 : 490}"
+															height = "80"
+															enabled.Agendamento = "false"
+															change = "dispatchEvent(new Event('permiteTransferir'))"/>
+
+		<s:Label text = "Transferir para:"/>
+
+		<s:DropDownList id = "comboContaTransferencia"
+						dataProvider = "{contaService.lista}"
+						width = "100%"
+						enabled = "{permiteTransferir()}"/>
+
+		<s:Label text = "Observação:"/>
+
+		<s:TextInput text = "@{service.selecionado.observacao}"
+					 width = "100%"
+					 enabled.Agendamento = "false"/>
+
+		<mx:HRule width = "100%"/>
+
+		<s:VGroup width = "100%"
+				  visible.Agendamento = "false"
+				  includeInLayout.Agendamento = "false"
+				  showEffect = "{mx.effects.Fade}">
+			<s:Label text = "Parcela:"/>
+
+			<s:HGroup verticalAlign = "middle">
+				<s:NumericStepper value = "@{service.selecionado.parcelaNumero}"
+								  minimum = "1"
+								  maximum = "100"
+								  stepSize = "1"/>
+
+				<s:Label text = "de"/>
+
+				<s:NumericStepper value = "@{service.selecionado.parcelaQuantidade}"
+								  minimum = "1"
+								  maximum = "100"
+								  stepSize = "1"/>
+			</s:HGroup>
+
+			<s:HGroup width = "100%"
+					  gap = "10">
+				<s:VGroup>
+					<s:Label text = "Previsão Pagto:"/>
+
+					<custom:CustomDateField id = "datePrevisaoPagamento"
+											selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
+											editable = "false"
+											tabFocusEnabled = "false"/>
+				</s:VGroup>
+
+				<s:VGroup>
+					<s:Label text = "Pagamento:"/>
+
+					<custom:CustomDateField selectedDate = "@{service.selecionado.dataPagamento}"
+											editable = "false"
+											disabledRanges = "{[{rangeStart: DateUtils.add(new Date(), 1)}]}"
+											tabFocusEnabled = "false"/>
+				</s:VGroup>
+
+				<s:VGroup>
+					<s:Label text = "Valor Pago:"/>
+
+					<custom:TextInputNumeric id = "textValorPago"
+											 value = "@{service.selecionado.valorPago}"/>
+				</s:VGroup>
+			</s:HGroup>
+		</s:VGroup>
+
+		<s:VGroup width = "100%"
+				  visible.Principal = "false"
+				  includeInLayout.Principal = "false"
+				  showEffect = "{mx.effects.Fade}">
+			<s:Label text = "Frequência:"/>
+
+			<s:DropDownList dataProvider = "{AgendamentoDto.frequencias}"
+							selectedIndex = "@{dto.frequencia}"/>
+
+			<s:HGroup width = "100%"
+					  gap = "10">
+				<s:VGroup>
+					<s:Label text = "Dia:"/>
+
+					<s:NumericStepper id = "stepperDia"
+									  value = "@{dto.dia}"
+									  minimum = "1"
+									  maximum = "{dto.frequencia == 0 ? 31 : 22}"/>
+				</s:VGroup>
+
+				<s:VGroup>
+					<s:Label text = "Até:"/>
+
+					<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
+											selectableRange = "{{rangeStart:dto.dataInicio}}"
+											tabFocusEnabled = "false"/>
+				</s:VGroup>
+
+				<s:VGroup height = "100%"
+						  verticalAlign = "bottom"
+						  paddingBottom = "5">
+					<s:CheckBox selected = "@{dto.anteciparFinaisSemana}"
+								label = "Antecipar em finais de semana"
+								visible = "{dto.frequencia == 0}"
+								tabFocusEnabled = "false"/>
+				</s:VGroup>
+			</s:HGroup>
+
+			<s:Label text = "Valor:"/>
+
+			<custom:TextInputNumeric id = "textValorAgendamento"
+									 value = "@{dto.valor}"/>
+		</s:VGroup>
+
+		<mx:HRule width = "100%"/>
+
+		<s:HGroup width = "100%"
+				  horizontalAlign = "center">
+			<custom:CustomButton id = "buttonEfetivar"
+								 label = "Efetivar"
+								 click = "efetivarTransacao()"
+								 styleName = "styleButtonGreen"
+								 visible.Agendamento = "false"
+								 includeInLayout.Agendamento = "false"
+								 showEffect = "{mx.effects.Fade}"/>
+
+			<custom:CustomButton id = "buttonRepetir"
+								 label = "Repetir"
+								 click = "buttonRepetir_clickHandler(event)"
+								 styleName = "styleButtonAdd"
+								 visible.Principal = "{permiteRepetir()}"
+								 visible.Agendamento = "false"
+								 includeInLayout.Agendamento = "false"
+								 showEffect = "{mx.effects.Fade}"/>
+
+			<custom:CustomButton label = "Cancelar"
+								 click = "cancelar()"
+								 styleName = "styleButtonRed"
+								 moveEffect = "{mx.effects.Move}"/>
+
+			<custom:CustomButton label.Principal = "Salvar"
+								 label.Agendamento = "Gerar"
+								 click = "salvar()"
+								 styleName = "styleButtonGreen"
+								 moveEffect = "{mx.effects.Move}"/>
+		</s:HGroup>
+	</s:VGroup>
+
+	<serviceFeedback:ServiceFeedback watchForCall = "salvarLancamento"
+									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 width = "100%"
+									 height = "100%"/>
+
+	<serviceFeedback:ServiceFeedback watchForCall = "agendarLancamentos"
+									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 width = "100%"
+									 height = "100%"/>
+</s:Panel>

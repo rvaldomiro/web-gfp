@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project [
+<!ENTITY common SYSTEM "build.xml">
+]>
+<project name="gfp" basedir="." default="deploy" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property name="main-app" value="Main" />
+	<property name="context-root" value="gfp" />
+
+	<import file="${basedir}/../resources/lib/git/build.xml" />
+
+	<property name="prop-file" value="src/main/java/gfp/config/gfp.properties" />
+	<property file="${prop-file}" />
+
+	<property name="repository-dir" value="../resources/lib" />
+	<property name="lib-dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
+	<property name="class-dir" value="${basedir}/src/main/webapp/WEB-INF/classes" />
+	<property name="deploy-dir" value="${user.home}/Sites/apache-tomcat-7.0.11/webapps/${context-root}" />
+
+	<property name="FLEX_HOME" value="/Applications/Adobe Flash Builder 4.5/sdks/4.5.1" />
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+	<path id="test.class.path">
+		<pathelement location="${class-dir}" />
+	</path>
+
+	<path id="build.class.path">
+		<fileset dir="${lib-dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="install">
+		<delete dir="${lib-dir}" failonerror="false" />
+
+		<copy todir="${lib-dir}" preservelastmodified="true">
+			<fileset dir="${repository-dir}/blazeds/template/4.0.0/lib" />
+			<fileset dir="${repository-dir}/hibernate/3.5.5" />
+			<fileset dir="${repository-dir}/jdbc/postgresql" />
+			<fileset dir="${repository-dir}/junit/4.0.0" />
+		</copy>
+	</target>
+
+	<target name="test">
+		<junit haltonfailure="true" haltonerror="true">
+			<classpath refid="test.class.path" />
+			<classpath refid="build.class.path" />
+			<formatter type="brief" usefile="false" />
+			<test name="AllTests" />
+		</junit>
+	</target>
+
+	<!--
+		Adicionar o parâmetro:
+		
+		-Xms768m -Xmx1024m -XX:MaxPermSize=512m
+		
+		Em External Tools Configurations->JRE->VM arguments 
+	-->
+	<target name="deploy" depends="install, test, compile">
+		<copy file="${basedir}/bd-gfp-cfg.properties.production" tofile="${deploy-dir}/../../bin/bd-gfp-cfg.properties" overwrite="true" />
+
+		<copy todir="${deploy-dir}">
+			<fileset dir="${basedir}/src/main/webapp" />
+		</copy>
+
+		<antcall target="git-release">
+			<param name="release-version" value="${current-version}" />
+			<param name="target-dir" value="${basedir}" />
+		</antcall>
+
+		<exec executable="bash">
+			<arg value="${user.home}/Projetos/Sheels/start-gfp.command" />
+		</exec>
+	</target>
+
+	<target name="compile" depends="make-wrapper">
+		<copy todir="${deploy-dir}/common/components/preloader">
+			<fileset dir="${basedir}/src/main/flex/common/components/preloader" includes="*.swf" />
+		</copy>
+
+		<mxmlc file="${basedir}/src/main/flex/${main-app}.mxml" output="${deploy-dir}/${main-app}.swf" accessible="true" strict="true" show-actionscript-warnings="true" debug="false" optimize="false" target-player="10.2.0" keep-generated-actionscript="false" verify-digests="true" services="${lib-dir}/../flex/services-config.xml" context-root="${context-root}" locale="pt_BR" incremental="false">
+			<compiler.library-path dir="${basedir}/flex_libs" append="true">
+				<include name="*.swc" />
+			</compiler.library-path>
+
+			<compiler.library-path dir="${basedir}/src/main/flex/libs" append="true">
+				<include name="*.swc" />
+			</compiler.library-path>
+		</mxmlc>
+
+		<delete dir="${basedir}/bin-debug" />
+		<mkdir dir="${basedir}/bin-debug" />
+	</target>
+
+	<target name="make-wrapper">
+		<delete dir="${deploy-dir}" />
+		<delete dir="${deploy-dir}/../../work/Catalina/localhost/${context-root}" />
+		<mkdir dir="${deploy-dir}" />
+		<html-wrapper title="Gerente Financeiro Pessoal" file="${main-app}.html" height="100%" width="100%" application="${main-app}" swf="${main-app}" history="true" express-install="true" version-detection="true" output="${deploy-dir}" />
+	</target>
+
+	<!-- Ivy -->
+
+	<property name="ivy.install.version" value="2.2.0" />
+	<condition property="ivy.home" value="${env.IVY_HOME}">
+		<isset property="env.IVY_HOME" />
+	</condition>
+	<property name="ivy.home" value="${user.home}/.ant" />
+	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<property name="ivy.lib.dir" value="${lib-dir}" />
+
+
+	<target name="download-ivy" unless="offline">
+
+		<mkdir dir="${ivy.jar.dir}" />
+		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
+	</target>
+
+	<target name="init-ivy" depends="download-ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+	</target>
+
+	<target name="clean" description="--> clean the project">
+		<delete dir="${ivy.lib.dir}" />
+	</target>
+
+	<target name="resolve" depends="init-ivy, clean">
+		<ivy:settings file="ivy-settings.xml" />
+		<ivy:retrieve />
+	</target>
+</project>

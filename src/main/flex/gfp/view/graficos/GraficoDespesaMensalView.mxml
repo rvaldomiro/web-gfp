@@ -1,0 +1,33 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<graficos:ReceitaDespesaMensalHelper xmlns:fx = "http://ns.adobe.com/mxml/2009"
+									 xmlns:s = "library://ns.adobe.com/flex/spark"
+									 xmlns:mx = "library://ns.adobe.com/flex/mx"
+									 xmlns:graficos="gfp.view.graficos.*">
+	<fx:Script>
+		<![CDATA[
+			import common.custom.CustomEvent;
+			import common.custom.ICustomEvent;
+			
+			import gfp.event.TransacaoEvent;
+			import gfp.service.LancamentoService;
+			
+			import mx.rpc.events.ResultEvent;
+			
+			[Inject]
+			[Bindable]
+			public var service:LancamentoService;
+			
+			[EventHandler(event="AppEvent.ATUALIZAR_GRAFICO_MENSAL")]
+			public function atualizar(event:ICustomEvent):void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_DESPESA_MENSAL
+															, event.object, function(re:ResultEvent):void
+															{
+																grafico.dataProvider = service
+																	.listaDespesaMensal;
+																atualizarTotal("Despesas");
+															}));
+			}
+		]]>
+	</fx:Script>
+</graficos:ReceitaDespesaMensalHelper>

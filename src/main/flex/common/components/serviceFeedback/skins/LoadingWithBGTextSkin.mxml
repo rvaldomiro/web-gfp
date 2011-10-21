@@ -1,0 +1,51 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Skin xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		xmlns:s = "library://ns.adobe.com/flex/spark"
+		xmlns:mx = "library://ns.adobe.com/flex/mx">
+
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("common.components.serviceFeedback.ServiceFeedback")]
+	</fx:Metadata>
+
+	<!-- states -->
+	<s:states>
+		<s:State name = "processing"/>
+
+		<s:State name = "fail"/>
+
+		<s:State name = "success"/>
+	</s:states>
+
+	<s:BorderContainer backgroundColor = "0xFFFFFF"
+					   backgroundAlpha = ".5"
+					   borderVisible = "false"
+					   visible.processing = "true"
+					   visible.fail = "false"
+					   visible.success = "false"
+					   width = "100%"
+					   height = "100%">
+		<s:VGroup width = "100%"
+				  height = "100%"
+				  horizontalAlign = "center"
+				  verticalAlign = "middle"
+				  gap = "10">
+			<s:HGroup>
+				<mx:Image id = "loadingIcon"
+						  source = "@Embed('/common/assets/images/loading.swf')"
+						  visible.processing = "true"
+						  includeInLayout.processing = "true"
+						  visible.fail = "false"
+						  includeInLayout.fail = "false"
+						  visible.success = "false"/>
+
+				<mx:Image id = "failIcon"
+						  source = "@Embed('/common/assets/images/fail-icon.png')"
+						  includeInLayout = "false"
+						  visible = "false"/>
+			</s:HGroup>
+
+			<s:Label text = "Carregando..."/>
+		</s:VGroup>
+	</s:BorderContainer>
+</s:Skin>

@@ -1,0 +1,97 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx = "http://ns.adobe.com/mxml/2009"
+						  xmlns:s = "library://ns.adobe.com/flex/spark"
+						  xmlns:mx = "library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			import assets.images.ImageUtil;
+			
+			import common.custom.CustomEvent;
+			import common.utils.DateUtils;
+			import common.utils.MessageUtils;
+			
+			import gfp.event.AppEvent;
+			import gfp.event.TransacaoEvent;
+			import gfp.model.Lancamento;
+			import gfp.service.LancamentoService;
+			
+			import mx.rpc.events.ResultEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			[Inject]
+			public var service:LancamentoService;
+			
+			private function alterar():void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.EDITAR
+															, data));
+			}
+			
+			private function excluir():void
+			{
+				MessageUtils.confirmDelete(excluirHandler);
+			}
+			
+			private function excluirHandler():void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.EXCLUIR
+															, data, function(re:ResultEvent):void
+															{
+																dispatcher.dispatchEvent(new AppEvent(AppEvent
+																									  .ATUALIZAR_DASHBOARD));
+																dispatcher.dispatchEvent(new AppEvent(AppEvent
+																									  .TO_TRANSACOES));
+															}));
+			}
+			
+			private function pagarAgora():void
+			{
+				service.selecionado = data as Lancamento;
+				service.selecionado.dataPagamento = DateUtils.today;
+				service.selecionado.valorPago = (data as Lancamento).valorOriginal;
+				
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.SALVAR
+															, service.selecionado
+															, function(re:ResultEvent):void
+															{
+																dispatcher.dispatchEvent(new AppEvent(AppEvent
+																									  .ATUALIZAR_DASHBOARD));
+																dispatcher.dispatchEvent(new AppEvent(AppEvent
+																									  .TO_TRANSACOES));
+															}));
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup horizontalAlign = "right"
+			  width = "100%"
+			  paddingRight = "3"
+			  gap = "0">
+		<s:Image source = "{ImageUtil.CHECK}"
+				 click = "pagarAgora()"
+				 alpha = ".7"
+				 toolTip = "Efetivar agora"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 visible = "{!data.dataPagamento &amp;&amp; data.original == null}"/>
+
+		<s:Image source = "{ImageUtil.INFO}"
+				 click = "alterar()"
+				 alpha = ".7"
+				 toolTip = "Editar transação"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 visible = "{data.original == null}"/>
+
+		<s:Image source = "{ImageUtil.CANCEL}"
+				 click = "excluir()"
+				 alpha = ".7"
+				 toolTip = "Excluir esta transação"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 visible = "{data.original == null}"/>
+	</s:HGroup>
+</s:MXDataGridItemRenderer>

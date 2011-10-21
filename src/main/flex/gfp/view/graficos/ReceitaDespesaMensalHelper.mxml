@@ -1,0 +1,128 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  horizontalAlign = "center">
+	<fx:Script>
+		<![CDATA[
+			import common.components.custom.StyleColumnChart;
+			import common.custom.CustomEvent;
+			import common.custom.ICustomEvent;
+			import common.utils.DateUtils;
+			import common.utils.NumberUtils;
+			
+			import gfp.dto.LancamentoDto;
+			import gfp.event.AppEvent;
+			import gfp.event.TransacaoEvent;
+			import gfp.model.Categoria;
+			
+			import mx.charts.HitData;
+			import mx.charts.events.ChartItemEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			private var ano:Number;
+			
+			[Bindable]
+			private var descricao:String;
+			
+			private var mes:Number;
+			
+			private var total:Number = 0;
+			
+			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL")]
+			public function carregarMesAno(event:ICustomEvent):void
+			{
+				mes = (event.object as Date).month;
+				ano = (event.object as Date).fullYear;
+			}
+			
+			protected function atualizarTotal(descricao:String):void
+			{
+				this.descricao = descricao;
+				
+				total = 0;
+				
+				for each (var o:Object in grafico.dataProvider)
+				{
+					total += o.valor;
+				}
+				
+				labelDescricao.text = descricao;
+				labelTotal.text = NumberUtils.formatNumber(total, 2);
+				
+				if (descricao == "Receitas")
+				{
+					dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.ATUALIZAR_CREDITO
+																, total));
+				}
+				else
+				{
+					dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.ATUALIZAR_DEBITO
+																, total));
+				}
+			}
+			
+			private function dataTipFunction(e:HitData):String
+			{
+				var p:Number = (e.item).valor / total * 100;
+				return (e.item).categoria + "\n Total: " + NumberUtils.formatNumber((e
+																					.item)
+																					.valor
+																					, 2) +
+					" - " + NumberUtils.formatNumber(p, 1) + "%";
+			}
+			
+			private function itemClickHandler(event:ChartItemEvent):void
+			{
+				var dto:LancamentoDto = new LancamentoDto();
+				dto.tipoPeriodo = 3;
+				dto.dataInicio = DateUtils.firstDayOfMonth(mes, ano);
+				dto.dataFinal = DateUtils.lastDayOfMonth(mes, ano);
+				dto.categoria = event.hitData.item.categoria.id;
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES_DIA
+													  , dto));
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<mx:SeriesInterpolate id = "interpolateIn"
+							  duration = "1000"/>
+	</fx:Declarations>
+
+	<s:VGroup horizontalAlign = "center">
+		<s:Label id = "labelDescricao"
+				 fontFamily = "Title"
+				 fontSize = "14"
+				 color = "#014C6B"/>
+
+		<s:Label id = "labelTotal"
+				 fontSize = "12"/>
+	</s:VGroup>
+
+	<s:Group width = "100%"
+			 height = "100%">
+		<mx:BarChart id = "grafico"
+					 showDataTips = "true"
+					 dataTipFunction = "{dataTipFunction}"
+					 itemClick = "itemClickHandler(event)"
+					 width = "100%"
+					 height = "100%">
+			<mx:verticalAxis>
+				<mx:CategoryAxis categoryField = "categoria"/>
+			</mx:verticalAxis>
+
+			<mx:series>
+				<mx:BarSeries yField = "categoria"
+							  xField = "valor"
+							  showDataEffect = "{interpolateIn}"
+							  fontSize = "8"
+							  fill = "{descricao == 'Receitas' ? StyleColumnChart.greenLinearGradient : StyleColumnChart.redLinearGradient}">
+				</mx:BarSeries>
+			</mx:series>
+		</mx:BarChart>
+	</s:Group>
+</s:VGroup>

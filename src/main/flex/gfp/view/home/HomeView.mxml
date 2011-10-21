@@ -1,0 +1,131 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:home = "gfp.view.home.*"
+		  xmlns:menu = "gfp.view.menu.*"
+		  xmlns:saldoPorConta = "gfp.view.saldoPorConta.*"
+		  xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.custom.ICustomEvent;
+			import common.utils.DateUtils;
+			
+			import gfp.dto.LancamentoDto;
+			import gfp.event.AppEvent;
+			import gfp.event.TransacaoEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[EventHandler(event = "AppEvent.TO_TRANSACOES_ULTIMO_ANO")]
+			[EventHandler(event = "AppEvent.TO_TRANSACOES_DIA")]
+			public function navigatorTransacoes_showHandler(e:ICustomEvent = null):void
+			{
+				if (stackHome.selectedChild != navigatorTransacoes)
+				{
+					stackHome.selectedChild = navigatorTransacoes;
+				}
+				
+				if (e && (e as Event).type == AppEvent.TO_TRANSACOES_ULTIMO_ANO)
+				{
+					var dto:LancamentoDto = e.object as LancamentoDto;
+					dto.dataInicio = DateUtils.remove(DateUtils.today, 365);
+					dto.dataFinal = DateUtils.today;
+				}
+				
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES, e ?
+													  e.object : null));
+			}
+			
+			private function buttonNovaTransacao_clickHandler():void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.EDITAR));
+			}
+			
+			private function navigatorCadastros_showHandler():void
+			{
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_CADASTROS));
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:Parallel id = "showStackEffect">
+			<s:Fade alphaFrom = "0"
+					alphaTo = "1"/>
+
+			<s:Scale scaleXFrom = ".7"
+					 scaleXTo = "1"
+					 scaleYFrom = ".7"
+					 scaleYTo = "1"/>
+		</s:Parallel>
+
+		<s:Move id = "hideStackEffect"
+				startDelay = "100"
+				xTo = "{width}"
+				yTo = "{height}"/>
+	</fx:Declarations>
+
+	<custom:CustomButtonBar dataProvider = "{stackHome}"
+							width = "100%"
+							height = "30"
+							fontSize = "14"
+							requireSelection = "true"
+							skinClass = "assets.skins.CustomButtonBarSkin"/>
+
+	<s:HGroup width = "100%"
+			  height = "100%">
+		<s:VGroup width = "20%"
+				  height = "100%">
+			<saldoPorConta:SaldoPorContaView width = "100%"
+											 height = "100%"/>
+
+			<custom:CustomButton id = "buttonNovaTransacao"
+								 label = "Nova Transação"
+								 click = "buttonNovaTransacao_clickHandler()"
+								 width = "100%"
+								 height = "10%"
+								 styleName = "styleButtonAdd"/>
+		</s:VGroup>
+
+		<mx:ViewStack id = "stackHome"
+					  width = "80%"
+					  height = "100%">
+			<s:NavigatorContent id = "navigatorDashboard"
+								label = "Visão Geral"
+								width = "100%"
+								height = "100%"
+								showEffect = "{showStackEffect}"
+								hideEffect = "{hideStackEffect}">
+				<home:DashboardView id = "dashboardView"
+									width = "100%"
+									height = "100%"/>
+			</s:NavigatorContent>
+
+			<s:NavigatorContent id = "navigatorTransacoes"
+								label = "Transações"
+								width = "100%"
+								height = "100%"
+								showEffect = "{showStackEffect}"
+								hideEffect = "{hideStackEffect}"
+								show = "navigatorTransacoes_showHandler()">
+				<home:TransacoesView id = "transacoesView"
+									 width = "100%"
+									 height = "100%"/>
+			</s:NavigatorContent>
+
+			<s:NavigatorContent id = "navigatorCadastros"
+								label = "Cadastros"
+								width = "100%"
+								height = "100%"
+								showEffect = "{showStackEffect}"
+								hideEffect = "{hideStackEffect}"
+								show = "navigatorCadastros_showHandler()">
+				<home:CadastrosView id = "cadastrosView"
+									width = "100%"
+									height = "100%"/>
+			</s:NavigatorContent>
+		</mx:ViewStack>
+	</s:HGroup>
+</s:VGroup>

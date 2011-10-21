@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<receitaDespesaVencer:TransacaoVencerHelper xmlns:fx = "http://ns.adobe.com/mxml/2009"
+											xmlns:s = "library://ns.adobe.com/flex/spark"
+											xmlns:mx = "library://ns.adobe.com/flex/mx"
+											xmlns:receitaDespesaVencer="gfp.view.receitaDespesaVencer.*">
+	<fx:Script>
+		<![CDATA[
+			import assets.images.ImageUtil;
+			
+			import gfp.event.TransacaoEvent;
+			import gfp.service.LancamentoService;
+			
+			import mx.rpc.events.ResultEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Inject]
+			[Bindable]
+			public var service:LancamentoService;
+			
+			[EventHandler(event="AppEvent.ATUALIZAR_DASHBOARD")]
+			public function atualizar():void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_RECEITAS_VENCER
+															, null, function(re:ResultEvent):void
+															{
+																gridLancamentos.dataProvider = service
+																	.listaReceitasVencer;
+																image.source = ImageUtil
+																	.UP;
+																labelDescricao.text = "Receitas à Vencer";
+															}));
+			}
+		]]>
+	</fx:Script>
+</receitaDespesaVencer:TransacaoVencerHelper>

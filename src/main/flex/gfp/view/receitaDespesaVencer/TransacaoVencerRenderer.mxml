@@ -1,0 +1,146 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx = "http://ns.adobe.com/mxml/2009"
+						  xmlns:s = "library://ns.adobe.com/flex/spark"
+						  xmlns:mx = "library://ns.adobe.com/flex/mx"
+						  dataChange = "dataChangeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import assets.images.ImageUtil;
+			
+			import common.custom.CustomEvent;
+			import common.utils.DateUtils;
+			import common.utils.NumberUtils;
+			
+			import gfp.dto.LancamentoDto;
+			import gfp.event.AppEvent;
+			import gfp.helper.LancamentoHelper;
+			import gfp.model.Lancamento;
+			import gfp.type.FormaPagamentoType;
+			
+			import mx.events.FlexEvent;
+			
+			override public function set data(value:Object):void
+			{
+				o = value as Lancamento;
+				super.data = value;
+			}
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			private var o:Lancamento;
+			
+			private function dataChangeHandler(event:FlexEvent):void
+			{
+				var compareHoje:int = DateUtils.compareToday(o.dataVencimento) *
+					-1;
+				
+				if (compareHoje >= 0)
+				{
+					if (!o.dataPagamento)
+					{
+						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à " +
+							compareHoje + " dia" + (compareHoje == 1 ? "" : "s")) :
+							"Vencendo hoje";
+						labelPrevisaoPagamento.setStyle("color", 0xff0000);
+					}
+					else if (DateUtils.compare(o.dataPagamento, o.dataVencimento) <=
+						0)
+					{
+						labelPrevisaoPagamento.toolTip = "Paga em dia";
+						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
+					}
+					else
+					{
+						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtils
+							.compare(o.dataPagamento, o.dataVencimento) + " dias de atraso";
+						labelPrevisaoPagamento.setStyle("color", 0xd59600);
+					}
+				}
+				else
+				{
+					if (o.dataPagamento && DateUtils.compare(o.dataPagamento, o.dataVencimento) <=
+						0)
+					{
+						labelPrevisaoPagamento.toolTip = "Paga em dia";
+						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
+					}
+					else
+					{
+						labelPrevisaoPagamento.toolTip = "Vencendo em " + DateUtils
+							.compareToday(o.dataVencimento) + " dia" + (DateUtils
+							.compareToday(o.dataVencimento) == 1 ? "" : "s");
+						labelPrevisaoPagamento.setStyle("color", 0x828282);
+					}
+				}
+				
+				if (o.formaPagamento == FormaPagamentoType.CHEQUE)
+				{
+					imageFormaPagamento.source = ImageUtil.CHEQUE32;
+					descricaoFormaPagamento.text = "Cheque";
+				}
+				else if (o.formaPagamento == FormaPagamentoType.CARTAO)
+				{
+					imageFormaPagamento.source = ImageUtil.CARD32;
+					descricaoFormaPagamento.text = "Cartão";
+				}
+				else
+				{
+					imageFormaPagamento.source = ImageUtil.MONEY32;
+					descricaoFormaPagamento.text = "Dinheiro";
+				}
+			}
+			
+			private function labelCategoria_clickHandler(event:MouseEvent):void
+			{
+				var dto:LancamentoDto = new LancamentoDto();
+				dto.categoria = o.categoria.id;
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES_ULTIMO_ANO
+													  , dto));
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup width = "100%"
+			  paddingLeft = "2"
+			  paddingRight = "2"
+			  paddingTop = "2"
+			  paddingBottom = "2">
+		<s:VGroup width = "70"
+				  horizontalAlign = "center">
+			<s:Label id = "labelPrevisaoPagamento"
+					 text = "{DateUtils.formatSimple(o.dataPrevisaoPagamento)}"/>
+
+			<s:Label id = "labelVencimento"
+					 text = "{LancamentoHelper.intervaloPrevisaoPagamento(o)}"
+					 width = "100%"
+					 textAlign = "center"
+					 fontSize = "10"/>
+		</s:VGroup>
+
+		<s:Image id = "imageFormaPagamento"/>
+
+		<s:VGroup width = "100%">
+			<s:Label id = "labelCategoria"
+					 click = "labelCategoria_clickHandler(event)"
+					 toolTip = "Visualizar transações nos últimos 12 meses"
+					 buttonMode = "true"
+					 useHandCursor = "true"
+					 text = "{o.categoria + (o.parcelaQuantidade &gt; 1 ? ' (' + o.parcelaNumero + '/' + o.parcelaQuantidade + ')' : '')}"/>
+
+			<s:HGroup>
+				<s:Label id = "descricaoFormaPagamento"
+						 fontSize = "10"
+						 width = "50"/>
+
+				<s:Label text = "{o.conta}"
+						 fontSize = "10"/>
+			</s:HGroup>
+		</s:VGroup>
+
+		<s:Label text = "{NumberUtils.formatNumber(o.valorOriginal, 2)}"
+				 textAlign = "right"
+				 width = "70"/>
+	</s:HGroup>
+</s:MXDataGridItemRenderer>

@@ -1,0 +1,62 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.custom.CustomEvent;
+			
+			import gfp.event.CategoriaEvent;
+			import gfp.service.CategoriaService;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			[Inject]
+			public var service:CategoriaService;
+			
+			[EventHandler(event="AppEvent.TO_CADASTROS")]
+			public function refresh():void
+			{
+				dispatcher.dispatchEvent(new CategoriaEvent(CategoriaEvent.LISTAR));
+			}
+			
+			private function buttonNovaCategoria_clickHandler():void
+			{
+				dispatcher.dispatchEvent(new CategoriaEvent(CategoriaEvent.EDITAR));
+			}
+		]]>
+	</fx:Script>
+
+	
+
+	<custom:CustomButton id = "buttonNovaCategoria"
+						 label = "Nova Categoria"
+						 click = "buttonNovaCategoria_clickHandler()"
+						 styleName = "styleButtonAdd"/>
+
+	<s:Group width = "100%"
+			 height = "100%">
+		<mx:DataGrid dataProvider = "{service.lista}"
+					 showHeaders = "false"
+					 width = "100%"
+					 height = "100%">
+			<mx:columns>
+				<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaRenderer"
+								   width = "200"/>
+
+				<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaActionRenderer"
+								   width = "44"/>
+			</mx:columns>
+		</mx:DataGrid>
+
+		<serviceFeedback:ServiceFeedback watchForCall = "listarCategorias"
+										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 width = "100%"
+										 height = "100%"/>
+	</s:Group>
+</s:VGroup>

@@ -1,0 +1,255 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.custom.ICustomEvent;
+			import common.utils.NumberUtils;
+			
+			import gfp.dto.LancamentoDto;
+			import gfp.event.TransacaoEvent;
+			import gfp.model.Categoria;
+			import gfp.model.Lancamento;
+			import gfp.service.CategoriaService;
+			import gfp.service.ContaService;
+			import gfp.service.LancamentoService;
+			import gfp.type.CategoriaType;
+			import gfp.view.transacao.TransacaoComplementoRenderer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			public var dto:LancamentoDto = new LancamentoDto();
+			
+			[Bindable]
+			[Inject]
+			public var service:LancamentoService;
+			
+			[Bindable]
+			[Inject]
+			public var serviceCategoria:CategoriaService;
+			
+			[Bindable]
+			[Inject]
+			public var serviceConta:ContaService;
+			
+			[Bindable]
+			private var categorias:ArrayCollection;
+			
+			[EventHandler(event = "TransacaoEvent.CALCULAR_TOTAIS")]
+			public function calcularTotais(e:ICustomEvent = null):void
+			{
+				var valor:Number = 0;
+				var quantidade:int = 0;
+				var media:Number = 0;
+				var saldo:Number = 0;
+				var selecionado:Boolean = false;
+				
+				for each (var o:Lancamento in service.lista)
+				{
+					if (o.selected)
+					{
+						selecionado = true;
+						break;
+					}
+				}
+				
+				for each (var lancamento:Lancamento in service.lista)
+				{
+					if (!selecionado || lancamento.selected)
+					{
+						var valorConsiderado:Number = lancamento.dataPagamento &&
+							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento
+							.valorOriginal;
+						
+						quantidade++;
+						valor += valorConsiderado;
+						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA ?
+							valorConsiderado : valorConsiderado * -1;
+						media = valor / quantidade;
+					}
+				}
+				
+				textValor.text = "Valor: " + NumberUtils.formatNumber(valor, 2);
+				textQuantidade.text = "Lançamentos: " + quantidade;
+				textMedia.text = "Média: " + NumberUtils.formatNumber(media, 2);
+				textSaldo.text = "Saldo: " + NumberUtils.formatNumber(saldo, 2);
+				textSaldo.setStyle("color", saldo < 0 ? "#ff0000" : "#62ae34");
+			}
+			
+			[EventHandler(event = "AppEvent.TO_TRANSACOES")]
+			public function pesquisar(e:ICustomEvent = null):void
+			{
+				if (!categorias || categorias.length == 0)
+				{
+					carregarCategorias();
+				}
+				
+				if (e && e.object)
+				{
+					checkContas.selected = true;
+					checkCategorias.selected = false;
+					
+					var o:LancamentoDto = e.object as LancamentoDto;
+					dto.dataInicio = o.dataInicio;
+					dto.dataFinal = o.dataFinal;
+					dto.situacao = o.situacoes[0].data;
+					dto.conta = null;
+					dto.observacao = null;
+					comboTiposPeriodo.selectedIndex = o.tipoPeriodo;
+					comboCategorias.selectedIndex = categoriaIndex(o.categoria);
+				}
+				
+				dto.categoria = comboCategorias.selectedItem ? comboCategorias.selectedItem
+					.data as Object : null;
+				
+				if (!dto.categoria)
+				{
+					checkCategorias.selected = true;
+				}
+				
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR
+															, this.dto, function(re:ResultEvent):void
+															{
+																calcularTotais();
+															}));
+			}
+			
+			private function carregarCategorias():void
+			{
+				categorias = new ArrayCollection();
+				
+				for each (var categoria:Categoria in serviceCategoria.lista)
+				{
+					var item:Object = new Object();
+					item.data = categoria.id;
+					item.label = categoria.toString();
+					categorias.addItem(item);
+				}
+			}
+			
+			private function categoriaIndex(categoria:Object):int
+			{
+				for (var index:int = 0; index < categorias.length; index++)
+				{
+					if (categorias.getItemAt(index).data == categoria)
+					{
+						return index;
+					}
+				}
+				
+				return -1;
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup width = "100%"
+			  verticalAlign = "middle">
+		<s:VGroup width = "100%">
+			<s:HGroup width = "100%">
+				<s:DropDownList id = "comboTiposPeriodo"
+								width = "150"
+								dataProvider = "{dto.tiposPeriodo}"
+								selectedIndex = "@{dto.tipoPeriodo}"/>
+
+				<custom:CustomDateField selectedDate = "@{dto.dataInicio}"
+										editable = "true"/>
+
+				<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
+										editable = "true"/>
+
+				<s:DropDownList dataProvider = "{dto.situacoes}"
+								selectedIndex = "@{dto.situacao}"/>
+
+				<s:CheckBox id = "checkContas"
+							change = "if (event.target.selected) comboContas.selectedItem = null"
+							selected = "true"
+							skinClass = "spark.skins.spark.CheckBoxSkin"/>
+
+				<s:DropDownList id = "comboContas"
+								dataProvider = "{serviceConta.lista}"
+								prompt = "Conta"
+								enabled = "{!checkContas.selected}"
+								selectedItem = "@{dto.conta}"/>
+
+				<s:CheckBox id = "checkCategorias"
+							change = "if (event.target.selected) comboCategorias.selectedItem = null"
+							selected = "true"
+							skinClass = "spark.skins.spark.CheckBoxSkin"/>
+
+				<s:DropDownList id = "comboCategorias"
+								dataProvider = "{categorias}"
+								prompt = "Categoria"
+								enabled = "{!checkCategorias.selected}"
+								width = "100%"/>
+			</s:HGroup>
+
+			<s:HGroup width = "100%">
+				<s:Label text = "Observação:"/>
+
+				<s:TextInput id = "textObservacao"
+							 text = "@{dto.observacao}"
+							 width = "100%"
+							 enter = "pesquisar()"/>
+			</s:HGroup>
+		</s:VGroup>
+
+		<s:VGroup>
+			<custom:CustomButton label = "Buscar"
+								 click = "pesquisar()"
+								 height = "100%"
+								 styleName = "styleButtonBlack"/>
+		</s:VGroup>
+	</s:HGroup>
+
+	<s:Group width = "100%"
+			 height = "100%">
+		<mx:DataGrid dataProvider = "{service.lista}"
+					 showHeaders = "false"
+					 width = "100%"
+					 height = "100%">
+			<mx:columns>
+				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoSelectionRenderer"
+								   width = "26"/>
+
+				<mx:DataGridColumn itemRenderer = "gfp.view.receitaDespesaVencer.TransacaoVencerRenderer"
+								   width = "400"/>
+
+				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoComplementoRenderer"/>
+
+				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoActionRenderer"
+								   width = "66"/>
+			</mx:columns>
+		</mx:DataGrid>
+
+		<serviceFeedback:ServiceFeedback watchForCall = "listarLancamentos"
+										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 width = "100%"
+										 height = "100%"/>
+	</s:Group>
+
+	<s:HGroup width = "100%">
+		<s:Label id = "textQuantidade"
+				 width = "100%"/>
+
+		<s:Label id = "textValor"
+				 width = "100%"
+				 textAlign = "center"/>
+
+		<s:Label id = "textMedia"
+				 width = "100%"
+				 textAlign = "center"/>
+
+		<s:Label id = "textSaldo"
+				 width = "100%"
+				 textAlign = "right"/>
+	</s:HGroup>
+</s:VGroup>

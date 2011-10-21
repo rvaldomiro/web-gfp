@@ -1,0 +1,287 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Panel xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		 xmlns:s = "library://ns.adobe.com/flex/spark"
+		 xmlns:mx = "library://ns.adobe.com/flex/mx"
+		 creationComplete = "creationCompleteHandler(event)"
+		 xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		 xmlns:usuarios = "gfp.view.usuarios.*"
+		 skinClass = "assets.skins.CustomPanelSkin"
+		 title.Login = "Bem-Vindo ao GFP"
+		 title.Cadastro = "Novo Usuário"
+		 resizeEffect = "{mx.effects.Resize}"
+		 currentStateChange = "panel1_currentStateChangeHandler(event)"
+		 xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.components.custom.RequiredValidator;
+			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.utils.MessageEvent;
+			
+			import gfp.dto.UsuarioDto;
+			import gfp.event.AppEvent;
+			import gfp.event.UsuarioEvent;
+			import gfp.model.Usuario;
+			import gfp.service.UsuarioService;
+			
+			import mx.core.FlexGlobals;
+			import mx.effects.Fade;
+			import mx.events.StateChangeEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Inject]
+			[Bindable]
+			public var service:UsuarioService;
+			
+			protected function buttonCancelar_clickHandler(event:MouseEvent = null):void
+			{
+				currentState = "Login";
+				textUsuario.text = null;
+				textSenha.text = null;
+				textUsuario.setFocus();
+			}
+			
+			protected function panel1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				if (event.newState == "Login")
+				{
+					new RequiredValidator(null, [textUsuario, textSenha]).clearAllValidators();
+				}
+				else
+				{
+					new RequiredValidator(null, [textCadastroUsuario, textCadastroSenha
+												 , textCadastroConfirmacao, textCadastroNome])
+						.clearAllValidators();
+				}
+			}
+			
+			private function autoLogin(re:ResultEvent):void
+			{
+				textUsuario.text = (FlexGlobals.topLevelApplication as Main).params['user'];
+				textSenha.text = (FlexGlobals.topLevelApplication as Main).params['password'];
+				
+				if (textUsuario.text && textSenha.text)
+				{
+					callLater(buttonEntrar_clickHandler);
+				}
+			}
+			
+			private function buttonConfirmar_clickHandler(event:MouseEvent):void
+			{
+				if (validateForm())
+				{
+					dispatcher.dispatchEvent(new UsuarioEvent(UsuarioEvent.SALVAR
+															  , service.selecionado
+															  , function(re:ResultEvent):void
+															  {
+																  dispatcher.dispatchEvent(new MessageEvent("Sua conta foi criada com sucesso!"));
+																  buttonCancelar_clickHandler();
+															  }, function(fe:FaultEvent):void
+															  {
+																  dispatcher.dispatchEvent(new MessageEvent(fe));
+															  }));
+				}
+			}
+			
+			private function buttonCriarConta_clickHandler(event:MouseEvent):void
+			{
+				currentState = "Cadastro";
+				service.selecionado = new Usuario();
+				textCadastroConfirmacao.text = null;
+				textCadastroUsuario.setFocus();
+			}
+			
+			private function buttonEntrar_clickHandler():void
+			{
+				if (!validate())
+				{
+					return;
+				}
+				
+				dispatcher.dispatchEvent(new UsuarioEvent(UsuarioEvent.LOGIN, new UsuarioDto(textUsuario
+																							 .text
+																							 , textSenha
+																							 .text)
+														  , function(re:ResultEvent):void
+														  {
+															  dispatcher.dispatchEvent(new AppEvent(AppEvent
+																									.TO_HOME));
+														  }, function(fe:FaultEvent):void
+														  {
+															  dispatcher.dispatchEvent(new MessageEvent(fe));
+														  }));
+			}
+			
+			private function creationCompleteHandler(event:Event):void
+			{
+				dispatchEvent(new AppEvent(AppEvent.OBTER_VERSAO_ATUAL, null, autoLogin));
+			}
+			
+			private function validate():Boolean
+			{
+				return RequiredValidator.validate(RequiredValidator.STRING, [textUsuario
+																			 , textSenha]
+												  , dispatcher);
+			}
+			
+			private function validateForm():Boolean
+			{
+				var result:Boolean = RequiredValidator.validate(RequiredValidator
+																.STRING, [textCadastroUsuario
+																		  , textCadastroSenha
+																		  , textCadastroConfirmacao
+																		  , textCadastroNome]
+																, dispatcher);
+				
+				if (result)
+				{
+					if (textCadastroSenha.text != textCadastroConfirmacao.text)
+					{
+						dispatcher.dispatchEvent(new MessageEvent("Senhas não conferem"));
+						textCadastroSenha.setFocus();
+						result = false;
+					}
+					else if (textCadastroEMail.text.length > 0)
+					{
+						result = RequiredValidator.validate(RequiredValidator.EMAIL
+															, [textCadastroEMail]
+															, dispatcher);
+					}
+				}
+				
+				return result;
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name = "Login"/>
+
+		<s:State name = "Cadastro"/>
+	</s:states>
+
+	<s:transitions>
+		<s:Transition toState = "Cadastro"
+					  fromState = "*">
+			<s:Parallel target = "{formCadastro}">
+				<s:Fade alphaFrom = "0"
+						alphaTo = "1"/>
+			</s:Parallel>
+		</s:Transition>
+
+		<s:Transition toState = "Login"
+					  fromState = "*">
+			<s:Parallel target = "{formLogin}">
+				<s:Fade alphaFrom = "0"
+						alphaTo = "1"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
+
+	<s:VGroup id = "formLogin"
+			  width = "100%"
+			  includeIn = "Login">
+		<s:Label text = "Por favor, informe suas credenciais de acesso e clique em 'Entrar'"
+				 height = "40"
+				 verticalAlign = "middle"
+				 color = "#B33333"/>
+
+		<s:Label text = "Usuário:"/>
+
+		<s:TextInput id = "textUsuario"
+					 width = "100%"/>
+
+		<s:Label text = "Senha:"/>
+
+		<s:TextInput id = "textSenha"
+					 width = "100%"
+					 displayAsPassword = "true"
+					 enter = "buttonEntrar_clickHandler()"/>
+
+		<s:HGroup width = "100%"
+				  horizontalAlign = "right">
+			<custom:CustomButton id = "buttonEntrar"
+								 label = "Entrar"
+								 click = "buttonEntrar_clickHandler()"
+								 styleName = "styleButtonGreen"/>
+		</s:HGroup>
+
+		<mx:HRule width = "100%"/>
+
+		<s:Label text = "Ainda não é usuário?"
+				 width = "100%"
+				 textAlign = "center"
+				 color = "#B33333"/>
+
+		<s:HGroup width = "100%"
+				  horizontalAlign = "center">
+			<custom:CustomButton id = "buttonCriarConta"
+								 label = "Crie sua conta agora mesmo!"
+								 click = "buttonCriarConta_clickHandler(event)"
+								 styleName = "styleButtonCriarConta"/>
+		</s:HGroup>
+	</s:VGroup>
+
+	<serviceFeedback:ServiceFeedback watchForCall = "login"
+									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 width = "100%"
+									 height = "100%"
+									 includeIn = "Login"/>
+
+	<s:VGroup id = "formCadastro"
+			  width = "{formLogin.width}"
+			  includeIn = "Cadastro">
+		<s:Label text = "Usuário:"/>
+
+		<s:TextInput id = "textCadastroUsuario"
+					 text = "@{service.selecionado.login}"
+					 width = "100%"/>
+
+		<s:Label text = "Senha:"/>
+
+		<s:TextInput id = "textCadastroSenha"
+					 text = "@{service.selecionado.senha}"
+					 width = "100%"
+					 displayAsPassword = "true"/>
+
+		<s:Label text = "Confirmação:"/>
+
+		<s:TextInput id = "textCadastroConfirmacao"
+					 width = "100%"
+					 displayAsPassword = "true"/>
+
+		<s:Label text = "Nome Completo:"/>
+
+		<s:TextInput id = "textCadastroNome"
+					 text = "@{service.selecionado.nome}"
+					 width = "100%"/>
+
+		<s:Label text = "E-Mail:"/>
+
+		<s:TextInput id = "textCadastroEMail"
+					 text = "@{service.selecionado.email}"
+					 width = "100%"/>
+
+		<s:HGroup width = "100%"
+				  horizontalAlign = "center">
+			<custom:CustomButton id = "buttonCancelar"
+								 label = "Cancelar"
+								 click = "buttonCancelar_clickHandler(event)"
+								 styleName = "styleButtonRed"/>
+
+			<custom:CustomButton id = "buttonConfirmar"
+								 label = "Criar Conta"
+								 click = "buttonConfirmar_clickHandler(event)"
+								 styleName = "styleButtonGreen"/>
+		</s:HGroup>
+	</s:VGroup>
+
+	<serviceFeedback:ServiceFeedback watchForCall = "salvarUsuario"
+									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 width = "100%"
+									 height = "100%"
+									 includeIn = "Cadastro"/>
+</s:Panel>

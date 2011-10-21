@@ -1,0 +1,167 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		  xmlns:s = "library://ns.adobe.com/flex/spark"
+		  xmlns:mx = "library://ns.adobe.com/flex/mx"
+		  xmlns:receitaDespesaVencer="gfp.view.receitaDespesaVencer.*"
+		  xmlns:despesaVencer = "gfp.view.despesaVencer.*"
+		  xmlns:graficos="gfp.view.graficos.*"
+		  xmlns:custom = "common.components.custom.*">
+	<fx:Script>
+		<![CDATA[
+			import common.utils.DateUtils;
+			
+			import gfp.event.AppEvent;
+			import gfp.service.LancamentoService;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Dispatcher]
+			public var dispatcher:IEventDispatcher;
+			
+			[Inject]
+			[Bindable]
+			public var service:LancamentoService;
+			
+			private function get anoAtual():int
+			{
+				return DateUtils.today.fullYear;
+			}
+			
+			[Bindable]
+			private var listaGraficos:ArrayCollection = new ArrayCollection([{label: "Balanço Mensal"}
+																			 , {label: "Previsão de Saldo Diário"}]);
+			
+			private function get mesAtual():int
+			{
+				return DateUtils.today.month;
+			}
+			
+			[Bindable]
+			private var meses:ArrayCollection = new ArrayCollection([{id: 1, label: "Jan"}
+																	 , {id: 2, label: "Fev"}
+																	 , {id: 3, label: "Mar"}
+																	 , {id: 4, label: "Abr"}
+																	 , {id: 5, label: "Mai"}
+																	 , {id: 6, label: "Jun"}
+																	 , {id: 7, label: "Jul"}
+																	 , {id: 8, label: "Ago"}
+																	 , {id: 9, label: "Set"}
+																	 , {id: 10, label: "Out"}
+																	 , {id: 11, label: "Nov"}
+																	 , {id: 12, label: "Dez"}]);
+			
+			[EventHandler(event="AppEvent.ATUALIZAR_DASHBOARD")]
+			public function mesAno_changeHandler():void
+			{
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_GRAFICO_MENSAL
+													  , new Date(stepperAno.value
+																 , barMeses.selectedIndex
+																 , 1)));
+			}
+			
+			private function barTrocaGrafico_changeHandler(event:IndexChangeEvent):void
+			{
+				currentState = event.newIndex == 1 ? "statePrevisaoSaldo" : "stateBalanco";
+				
+				if (currentState == "statePrevisaoSaldo")
+				{
+					service.listaReceitaMensal = null;
+					service.listaDespesaMensal = null;
+					graficoPrevisaoSaldoDiarioView.atualizar();
+				}
+				else
+				{
+					service.listaPrevisaoSaldoDiario = null;
+					mesAno_changeHandler();
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name = "stateBalanco"/>
+
+		<s:State name = "statePrevisaoSaldo"/>
+	</s:states>
+
+	<s:transitions>
+		<s:Transition toState = "*">
+			<s:Parallel target = "{groupGraficos}">
+				<s:Rotate3D angleXFrom = "180"
+							angleXTo = "360"
+							autoCenterTransform = "true"
+							autoCenterProjection = "true"/>
+
+				<s:Fade alphaFrom = "0"
+						alphaTo = "1"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
+
+	<s:HGroup width = "100%"
+			  horizontalAlign = "center">
+		<custom:CustomButtonBar id = "barTrocaGrafico"
+								dataProvider = "{listaGraficos}"
+								requireSelection = "true"
+								height = "25"
+								change = "barTrocaGrafico_changeHandler(event)"
+								skinClass = "assets.skins.CustomButtonBarSkin"/>
+	</s:HGroup>
+
+	<s:HGroup id = "groupGraficos"
+			  width = "100%"
+			  height = "50%">
+		<s:VGroup width = "100%"
+				  height = "100%"
+				  includeIn = "stateBalanco">
+			<s:HGroup width = "100%"
+					  verticalAlign = "middle">
+				<custom:CustomButtonBar id = "barMeses"
+										dataProvider = "{meses}"
+										selectedIndex = "{mesAtual}"
+										width = "100%"
+										height = "25"
+										requireSelection = "true"
+										change = "mesAno_changeHandler()"
+										skinClass = "assets.skins.CustomButtonBarSkin"/>
+
+				<s:NumericStepper id = "stepperAno"
+								  value = "{anoAtual}"
+								  minimum = "1000"
+								  maximum = "9999"
+								  width = "60"
+								  change = "mesAno_changeHandler()"/>
+			</s:HGroup>
+
+			<s:HGroup width = "100%"
+					  height = "100%"
+					  verticalAlign = "middle">
+				<graficos:GraficoReceitaMensalView id = "graficoReceitaMensalView"
+												   width = "50%"
+												   height = "100%"/>
+
+				<receitaDespesaVencer:ResultadoBalancoView width = "120"
+														   height = "50"/>
+
+				<graficos:GraficoDespesaMensalView width = "50%"
+												   height = "100%"/>
+			</s:HGroup>
+		</s:VGroup>
+
+		<graficos:GraficoPrevisaoSaldoDiarioView id = "graficoPrevisaoSaldoDiarioView"
+												 width = "100%"
+												 height = "100%"
+												 includeIn = "statePrevisaoSaldo"/>
+	</s:HGroup>
+
+	<s:HGroup width = "100%"
+			  height = "50%">
+		<receitaDespesaVencer:ReceitaVencerView width = "50%"
+												height = "100%"/>
+
+		<receitaDespesaVencer:DespesaVencerView width = "50%"
+												height = "100%"/>
+	</s:HGroup>
+</s:VGroup>

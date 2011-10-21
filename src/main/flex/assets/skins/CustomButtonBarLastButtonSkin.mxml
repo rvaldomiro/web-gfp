@@ -1,0 +1,160 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:SparkButtonSkin xmlns:fx = "http://ns.adobe.com/mxml/2009"
+				   xmlns:s = "library://ns.adobe.com/flex/spark"
+				   xmlns:fb = "http://ns.adobe.com/flashbuilder/2009"
+				   minWidth = "21"
+				   minHeight = "21"
+				   alpha.disabled = "0.5">
+	<fx:Metadata>
+		<![CDATA[ 
+           
+            [HostComponent("spark.components.ButtonBarButton")]
+        ]]>
+	</fx:Metadata>
+
+	<fx:Script fb:purpose = "styling">
+		private static const exclusions:Array = ["labelDisplay"];
+		
+		override public function get colorizeExclusions():Array
+		{
+			return exclusions;
+		}
+		
+		private var cornerRadius:Number = 2;
+		
+		override protected function initializationComplete():void
+		{
+			useChromeColor = true;
+			super.initializationComplete();
+		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaleHeight:Number):void
+		{
+			var cr:Number = getStyle("cornerRadius");
+			
+			if (cornerRadius != cr)
+			{
+				cornerRadius = cr;
+				fill.topRightRadiusX = cornerRadius;
+				fill.bottomRightRadiusX = cornerRadius;
+				highlight.topRightRadiusX = cornerRadius;
+				highlight.bottomRightRadiusX = cornerRadius;
+			}
+			
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+		}
+	</fx:Script>
+
+	<s:states>
+		<s:State name = "up"/>
+
+		<s:State name = "over"
+				 stateGroups = "overStates"/>
+
+		<s:State name = "down"
+				 stateGroups = "downStates"/>
+
+		<s:State name = "disabled"
+				 stateGroups = "disabledStates"/>
+
+		<s:State name = "upAndSelected"
+				 stateGroups = "selectedStates, selectedUpStates"/>
+
+		<s:State name = "overAndSelected"
+				 stateGroups = "overStates, selectedStates"/>
+
+		<s:State name = "downAndSelected"
+				 stateGroups = "downStates, selectedStates"/>
+
+		<s:State name = "disabledAndSelected"
+				 stateGroups = "selectedUpStates, disabledStates, selectedStates"/>
+	</s:states>
+
+	<s:Group left = "0"
+			 right = "-1"
+			 top = "-1"
+			 bottom = "-1">
+		<s:Rect id = "fill"
+				left = "1"
+				right = "2"
+				top = "2"
+				bottom = "2"
+				topRightRadiusX = "15"
+				bottomRightRadiusX = "15">
+			<s:fill>
+				<s:LinearGradient rotation = "90">
+					<s:GradientEntry color = "0xFFFFFF"
+									 color.selectedUpStates = "#004C6B"
+									 color.overStates = "0xBBBDBD"
+									 color.downStates = "0xAAAAAA"
+									 alpha = ".9"
+									 alpha.overAndSelected = ".9"/>
+
+					<s:GradientEntry color = "0xD8D8D8"
+									 color.selectedUpStates = "#004C6B"
+									 color.over = "0x9FA0A1"
+									 color.overAndSelected = "0x8E8F90"
+									 color.downStates = "0x929496"
+									 alpha = "1"
+									 alpha.overAndSelected = "1"/>
+				</s:LinearGradient>
+			</s:fill>
+
+			<s:filters>
+				<s:DropShadowFilter color = "#000000"
+									alpha = ".5"
+									angle = "90"/>
+			</s:filters>
+		</s:Rect>
+
+		<s:Rect id = "highlight"
+				left = "1"
+				right = "2"
+				top = "2"
+				bottom = "2"
+				topRightRadiusX = "2"
+				bottomRightRadiusX = "2">
+			<s:fill>
+				<s:LinearGradient rotation = "90">
+					<s:GradientEntry color = "0xFFFFFF"
+									 ratio = "0.0"
+									 alpha = "0.33"
+									 alpha.selectedUpStates = "0.22"
+									 alpha.overStates = "0.22"
+									 alpha.downStates = "0.12"/>
+
+					<s:GradientEntry color = "0xFFFFFF"
+									 ratio = "0.48"
+									 alpha = "0.33"
+									 alpha.selectedUpStates = "0.22"
+									 alpha.overStates = "0.22"
+									 alpha.downStates = "0.12"/>
+
+					<s:GradientEntry color = "0xFFFFFF"
+									 ratio = "0.48001"
+									 alpha = "0"/>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+
+	<s:Label id = "labelDisplay"
+			 textAlign = "center"
+			 verticalAlign = "middle"
+			 maxDisplayedLines = "1"
+			 horizontalCenter = "0"
+			 verticalCenter = "1"
+			 left = "10"
+			 right = "10"
+			 top = "2"
+			 bottom = "2"
+			 color.selectedStates = "#FFFFFF"
+			 color.over = "#FFFFFF">
+		<s:filters>
+			<s:DropShadowFilter distance = "1"
+								quality = "1"
+								color = "#000000"
+								includeIn = "selectedStates, over"/>
+		</s:filters>
+	</s:Label>
+</s:SparkButtonSkin>

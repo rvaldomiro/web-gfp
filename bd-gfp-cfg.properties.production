@@ -1,0 +1,8 @@
+hibernate.connection.url=jdbc:postgresql://localhost:5432/gfp_prd
+hibernate.connection.username=postgres
+hibernate.connection.password=postgres
+hibernate.show_sql=false
+hibernate.format_sql=false
+hibernate.hbm2ddl.auto=update
+hibernate.use_c3p0_pool=true
+#hibernate.c3p0.preferredTestQuery=select 1;

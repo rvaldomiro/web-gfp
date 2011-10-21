@@ -1,0 +1,64 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:SkinnableContainer xmlns:fx = "http://ns.adobe.com/mxml/2009"
+					  xmlns:s = "library://ns.adobe.com/flex/spark"
+					  xmlns:mx = "library://ns.adobe.com/flex/mx"
+					  width = "100%"
+					  height = "100%">
+	<fx:Script>
+		<![CDATA[
+			import common.custom.ICustomEvent;
+			import common.utils.NumberUtils;
+			
+			[Bindable]
+			private var credito:Number = 0;
+			
+			[Bindable]
+			private var debito:Number = 0;
+			
+			[EventHandler(event="TransacaoEvent.ATUALIZAR_CREDITO")]
+			public function atualizarCredito(event:ICustomEvent):void
+			{
+				credito = event.object as Number;
+			}
+			
+			[EventHandler(event="TransacaoEvent.ATUALIZAR_DEBITO")]
+			public function atualizarDebito(event:ICustomEvent):void
+			{
+				debito = event.object as Number;
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:DropShadowFilter id = "shadow"
+							color = "#c0c0c0"/>
+	</fx:Declarations>
+
+	<s:Rect width = "100%"
+			height = "100%"
+			radiusX = "5"
+			radiusY = "5"
+			filters = "{[shadow]}">
+		<s:fill>
+			<s:SolidColor color = "{credito - debito > 0 ? 0x017601 : 0xbd0000}"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:VGroup width = "100%"
+			  height = "100%"
+			  paddingLeft = "3"
+			  paddingRight = "3"
+			  paddingTop = "3"
+			  paddingBottom = "3"
+			  verticalAlign = "middle"
+			  horizontalAlign = "center">
+		<s:Label text = "Resultado"
+				 color = "#FFFFFF"
+				 fontFamily = "Title"
+				 fontSize = "14"/>
+
+		<s:Label text = "{NumberUtils.formatNumber(credito - debito, 2)}"
+				 color = "#FFFFFF"
+				 fontSize = "20"/>
+	</s:VGroup>
+</s:SkinnableContainer>

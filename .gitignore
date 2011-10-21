@@ -1,0 +1,6 @@
+bin-debug/**
+bin-release/**
+src/main/webapp/WEB-INF/lib/**
+src/main/webapp/WEB-INF/classes/**
+*.log
+*.class

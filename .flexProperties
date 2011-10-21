@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="8" flexWarLocation="/Users/roberto/Documents/Projetos/Eclipse/resources/lib/blazeds/initialize/4.0.0/blazeds.war" serverContextRoot="/src/main/webapp" serverRoot="/Users/roberto/Documents/Projetos/Eclipse/web-gfp/src/main/webapp" serverRootURL="http://localhost:8080/gfp" toolCompile="true" useServerFlexSDK="false" version="2"/>

@@ -1,0 +1,56 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<mx:DateField xmlns:fx = "http://ns.adobe.com/mxml/2009"
+			  xmlns:s = "library://ns.adobe.com/flex/spark"
+			  xmlns:mx = "library://ns.adobe.com/flex/mx"
+			  firstDayOfWeek = "0"
+			  restrict = "0-9/"
+			  focusIn = "focusInHandler(event)"
+			  focusOut = "focusOutHandler(event)"
+			  keyUp = "keyUpHandler(event)"
+			  showToday = "true"
+			  width = "95">
+	<fx:Script>
+		<![CDATA[
+			override protected function focusInHandler(event:FocusEvent):void
+			{
+				textInput.selectRange(0, text.length);
+			}
+			
+			override protected function focusOutHandler(event:FocusEvent):void
+			{
+				var size:int = text.length;
+				var ano:int;
+				var mes:int;
+				var dia:int;
+				
+				if (size == 6)
+				{
+					ano = (Number(text.substr(4, 2)) >= 20 ? 1900 : 2000) + Number(text
+																				   .substr(4
+																						   , 2));
+					mes = Number(text.substr(2, 2)) - 1;
+					dia = Number(text.substr(0, 2));
+					
+					selectedDate = new Date(ano, mes, dia, 0, 0, 0, 0);
+				}
+				else if (size == 8)
+				{
+					ano = Number(text.substr(4, 4));
+					mes = Number(text.substr(2, 2)) - 1;
+					dia = Number(text.substr(0, 2));
+					
+					selectedDate = new Date(ano, mes, dia, 0, 0, 0, 0);
+				}
+			}
+			
+			override protected function keyUpHandler(event:KeyboardEvent):void
+			{
+				if (event.keyCode == Keyboard.DELETE)
+				{
+					selectedDate = null;
+					dispatchEvent(new Event(Event.CHANGE));
+				}
+			}
+		]]>
+	</fx:Script>
+</mx:DateField>
