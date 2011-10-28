@@ -6,45 +6,85 @@
 	<dependencies>
 		<dependency org = "org.hibernate"
 					name = "hibernate-annotations"
-					rev = "3.5.6-Final"/>
+					rev = "3.5.6-Final"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "org.hibernate"
 					name = "hibernate-validator"
-					rev = "4.1.0.Final"/>
+					rev = "4.1.0.Final"
+					conf = "*->*,!sources,!javadoc"/>
 
-		<dependency org = "log4j"
-					name = "log4j"
-					rev = "1.2.14"/>
+		<dependency org = "net.sf.beanlib"
+					name = "beanlib-hibernate"
+					rev = "5.0.2beta"
+					conf = "*->*,!sources,!javadoc">
+			<exclude module = "spring"/>
+
+			<exclude module = "hibernate"/>
+		</dependency>
+
+		<dependency org = "commons-net"
+					name = "commons-net"
+					rev = "3.0.1"
+					conf = "*->*,!sources,!javadoc"/>
+
+		<dependency org = "commons-io"
+					name = "commons-io"
+					rev = "1.3.2"
+					conf = "*->*,!sources,!javadoc"/>
+
+		<dependency org = "net.sf.jasperreports"
+					name = "jasperreports"
+					rev = "4.0.2"
+					conf = "*->*,!sources,!javadoc">
+			<exclude module = "commons-javaflow"/>
+
+			<exclude module = "mondrian"/>
+
+			<exclude module = "hibernate"/>
+		</dependency>
+
+		<dependency org = "javax.mail"
+					name = "mail"
+					rev = "1.4.4"
+					conf = "*->*,!sources,!javadoc"/>
+
+		<dependency org = "myfaces"
+					name = "myfaces-all"
+					rev = "1.1.1"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "commons-beanutils"
-					name = "commons-beanutils"
-					rev = "1.5"/>
-
-		<dependency org = "javassist"
-					name = "javassist"
-					rev = "3.9.0.GA"/>
+					name = "commons-beanutils-bean-collections"
+					rev = "1.8.3"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "postgresql"
 					name = "postgresql"
-					rev = "8.3-606.jdbc3"/>
+					rev = "8.3-606.jdbc3"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "org.hsqldb"
 					name = "hsqldb"
-					rev = "2.2.4"/>
+					rev = "2.2.4"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "org.springframework"
 					name = "spring-context"
-					rev = "3.0.5.RELEASE">
+					rev = "3.0.5.RELEASE"
+					conf = "*->*,!sources,!javadoc">
 			<exclude module = "com.springsource.org.hibernate.validator"/>
 		</dependency>
 
 		<dependency org = "org.springframework"
 					name = "spring-test"
-					rev = "3.0.5.RELEASE"/>
+					rev = "3.0.5.RELEASE"
+					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "org.springframework.flex"
 					name = "spring-flex"
-					rev = "1.0.3.RELEASE">
+					rev = "1.0.3.RELEASE"
+					conf = "*->*,!sources,!javadoc">
 			<exclude module = "jms"/>
 		</dependency>
 	</dependencies>
