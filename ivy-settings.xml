@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "ISO-8859-1"?>
 <ivysettings>
-	<settings defaultResolver = "spring.compass.ibiblio"/>
+	<settings defaultResolver = "ibiblio"/>
 
 	<resolvers>
 		<chain name = "spring.chain">

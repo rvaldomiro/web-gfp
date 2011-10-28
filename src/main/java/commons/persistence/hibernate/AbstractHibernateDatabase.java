@@ -30,6 +30,11 @@ public abstract class AbstractHibernateDatabase {
 					"com.mysql.jdbc.Driver");
 			arg0.put(HibernateConfigurationKey.DIALECT.value(),
 					"org.hibernate.dialect.MySQLDialect");
+		} else if (s.indexOf("jdbc:hsqldb") >= 0) {
+			arg0.put(HibernateConfigurationKey.DRIVER_CLASS.value(),
+					"org.hsqldb.jdbcDriver");
+			arg0.put(HibernateConfigurationKey.DIALECT.value(),
+					"org.hibernate.dialect.HSQLDialect");
 		} else {
 			throw new IllegalArgumentException("Dialeto não classificado!");
 		}
@@ -98,6 +103,7 @@ public abstract class AbstractHibernateDatabase {
 			if (f.exists()) {
 				final Properties p = new Properties();
 				p.load(new FileInputStream(f));
+				p.setProperty("hibernate.connection.url",p.getProperty("hibernate.connection.url").replace("${basedir}", f.getParent()));
 				return setup(p);
 			}
 			

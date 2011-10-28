@@ -8,6 +8,10 @@
 					name = "hibernate-annotations"
 					rev = "3.5.6-Final"/>
 
+		<dependency org = "org.hibernate"
+					name = "hibernate-validator"
+					rev = "4.1.0.Final"/>
+
 		<dependency org = "log4j"
 					name = "log4j"
 					rev = "1.2.14"/>
@@ -16,10 +20,7 @@
 					name = "commons-beanutils"
 					rev = "1.5"/>
 
-		<dependency org = "org.slf4j"
-					name = "slf4j-api"
-					rev = "1.6.2"/>
-
+		<!-- <dependency org = "org.slf4j" name = "slf4j-api" rev = "1.6.2"/> -->
 		<dependency org = "javassist"
 					name = "javassist"
 					rev = "3.9.0.GA"/>
@@ -28,9 +29,15 @@
 					name = "postgresql"
 					rev = "8.3-606.jdbc3"/>
 
+		<dependency org = "org.hsqldb"
+					name = "hsqldb"
+					rev = "2.2.4"/>
+
 		<dependency org = "org.springframework"
 					name = "spring-context"
-					rev = "3.0.5.RELEASE"/>
+					rev = "3.0.5.RELEASE">
+			<exclude module = "com.springsource.org.hibernate.validator"/>
+		</dependency>
 
 		<dependency org = "org.springframework"
 					name = "spring-test"

@@ -16,7 +16,16 @@
 	<property name="class-dir" value="${basedir}/src/main/webapp/WEB-INF/classes" />
 	<property name="deploy-dir" value="${user.home}/Sites/apache-tomcat-7.0.11/webapps/${context-root}" />
 
-	<property name="FLEX_HOME" value="/Applications/Adobe Flash Builder 4.5/sdks/4.5.1" />
+	<condition property="FLEX_ROOT" value="C:/Program Files/Adobe\Adobe Flash Builder 4.5/sdks">
+		<os family="windows" />
+	</condition>
+
+	<condition property="FLEX_ROOT" value="/Applications/Adobe Flash Builder 4.5/sdks">
+		<os family="mac" />
+	</condition>
+
+	<property name="FLEX_SDK" value="4.5.1" />
+	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 
 	<path id="test.class.path">
@@ -108,7 +117,7 @@
 	<property name="ivy.home" value="${user.home}/.ant" />
 	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
-	<property name="ivy.lib.dir" value="${lib-dir}" />
+	<property name="ivy.lib.dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
 
 
 	<target name="download-ivy" unless="offline">
