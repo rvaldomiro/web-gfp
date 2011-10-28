@@ -103,10 +103,22 @@ public abstract class AbstractHibernateDatabase {
 			if (f.exists()) {
 				final Properties p = new Properties();
 				p.load(new FileInputStream(f));
+				
+				String basedir = f.getCanonicalPath();
+				
+				if (basedir != null) {
+					int lastSlash = basedir.lastIndexOf("/");
+					
+					if (lastSlash > 0){
+						basedir = basedir.substring(0, lastSlash);
+					}
+				}
+				
 				p.setProperty(
 						"hibernate.connection.url",
 						p.getProperty("hibernate.connection.url").replace(
-								"${basedir}", f.getCanonicalPath() + "/.."));
+								"${basedir}", (basedir != null ? basedir : "<database-not-found>")));
+				
 				return setup(p);
 			}
 			

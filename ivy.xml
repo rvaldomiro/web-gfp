@@ -18,9 +18,11 @@
 					name = "beanlib-hibernate"
 					rev = "5.0.2beta"
 					conf = "*->*,!sources,!javadoc">
-			<exclude module = "spring"/>
+			<exclude module = "cglib"/>
 
 			<exclude module = "hibernate"/>
+
+			<exclude module = "spring"/>
 		</dependency>
 
 		<dependency org = "commons-net"
@@ -42,6 +44,8 @@
 			<exclude module = "mondrian"/>
 
 			<exclude module = "hibernate"/>
+
+			<exclude module = "commons-beanutils"/>
 		</dependency>
 
 		<dependency org = "javax.mail"
@@ -49,14 +53,13 @@
 					rev = "1.4.4"
 					conf = "*->*,!sources,!javadoc"/>
 
+		<dependency org = "javassist"
+					name = "javassist"
+					rev = "3.9.0.GA"/>
+
 		<dependency org = "myfaces"
 					name = "myfaces-all"
 					rev = "1.1.1"
-					conf = "*->*,!sources,!javadoc"/>
-
-		<dependency org = "commons-beanutils"
-					name = "commons-beanutils-bean-collections"
-					rev = "1.8.3"
 					conf = "*->*,!sources,!javadoc"/>
 
 		<dependency org = "postgresql"
