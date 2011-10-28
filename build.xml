@@ -2,11 +2,81 @@
 <!DOCTYPE project [
 <!ENTITY common SYSTEM "build.xml">
 ]>
-<project name="gfp" basedir="." default="deploy" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="gfp" basedir="." default="install" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<condition property="FLEX_ROOT" value="C:/Program Files/Adobe\Adobe Flash Builder 4.5/sdks">
+		<os family="windows" />
+	</condition>
+
+	<condition property="FLEX_ROOT" value="/Applications/Adobe Flash Builder 4.5/sdks">
+		<os family="mac" />
+	</condition>
+
+	<property name="web" value="web" />
+	<property name="web-lib-dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
+
+	<property name="context-root" value="gfp" />
+	<property name="FLEX_SDK" value="4.5.1" />
+	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+	<property name="ivy.install.version" value="2.2.0" />
+	<condition property="ivy.home" value="${env.IVY_HOME}">
+		<isset property="env.IVY_HOME" />
+	</condition>
+	<property name="ivy.home" value="${user.home}/.ant" />
+	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<property name="ivy.lib.dir" value="${web-lib-dir}" />
+
+	<target name="install" depends="clean, copy-dependencies" />
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="${web-lib-dir}" />
+		</delete>
+
+		<delete failonerror="false">
+			<fileset dir="${basedir}/flex_libs" excludes="swiz-framework*" />
+		</delete>
+
+		<delete dir="${basedir}/bin-debug/assets" />
+		<delete dir="${basedir}/bin-debug/common" />
+	</target>
+
+	<target name="copy-dependencies" depends="ivy-resolve">
+		<copy todir="${basedir}/src/main/flex/assets/skins" preservelastmodified="true">
+			<fileset dir="${basedir}/flex_commons/src/assets/skins" />
+		</copy>
+
+		<copy todir="${basedir}/src/main/flex/assets/fonts" preservelastmodified="true">
+			<fileset dir="${basedir}/flex_commons/src/assets/fonts" />
+		</copy>
+	</target>
+
+	<target name="ivy-download" unless="offline">
+		<mkdir dir="${ivy.jar.dir}" />
+		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
+	</target>
+
+	<target name="ivy-init" depends="ivy-download">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+	</target>
+
+	<target name="ivy-resolve" depends="ivy-init">
+		<ivy:settings file="ivy-settings.xml" />
+		<ivy:retrieve />
+	</target>
+
+
+	<!--		
+		
+	
+	
 	<property name="main-app" value="Main" />
 	<property name="context-root" value="gfp" />
-
-	<import file="${basedir}/../resources/lib/git/build.xml" />
 
 	<property name="prop-file" value="src/main/java/gfp/config/gfp.properties" />
 	<property file="${prop-file}" />
@@ -58,13 +128,6 @@
 		</junit>
 	</target>
 
-	<!--
-		Adicionar o parâmetro:
-		
-		-Xms768m -Xmx1024m -XX:MaxPermSize=512m
-		
-		Em External Tools Configurations->JRE->VM arguments 
-	-->
 	<target name="deploy" depends="install, test, compile">
 		<copy file="${basedir}/bd-gfp-cfg.properties.production" tofile="${deploy-dir}/../../bin/bd-gfp-cfg.properties" overwrite="true" />
 
@@ -108,37 +171,8 @@
 		<html-wrapper title="Gerente Financeiro Pessoal" file="${main-app}.html" height="100%" width="100%" application="${main-app}" swf="${main-app}" history="true" express-install="true" version-detection="true" output="${deploy-dir}" />
 	</target>
 
-	<!-- Ivy -->
+	
 
-	<property name="ivy.install.version" value="2.2.0" />
-	<condition property="ivy.home" value="${env.IVY_HOME}">
-		<isset property="env.IVY_HOME" />
-	</condition>
-	<property name="ivy.home" value="${user.home}/.ant" />
-	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
-	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
-	<property name="ivy.lib.dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
-
-
-	<target name="download-ivy" unless="offline">
-
-		<mkdir dir="${ivy.jar.dir}" />
-		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
-	</target>
-
-	<target name="init-ivy" depends="download-ivy">
-		<path id="ivy.lib.path">
-			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
-		</path>
-		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
-	</target>
-
-	<target name="clean" description="--> clean the project">
-		<delete dir="${ivy.lib.dir}" />
-	</target>
-
-	<target name="resolve" depends="init-ivy, clean">
-		<ivy:settings file="ivy-settings.xml" />
-		<ivy:retrieve />
-	</target>
+	
+-->
 </project>

@@ -1,0 +1,6 @@
+[submodule "java_commons"]
+	path = java_commons
+	url = git:logus-commons.git
+[submodule "flex_commons"]
+	path = flex_commons
+	url = git:flex-commons.git

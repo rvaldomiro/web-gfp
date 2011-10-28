@@ -8,7 +8,21 @@
 	src: url("../fonts/VAGRounded Lt Normal.ttf");
 	fontFamily: VAGRounded;
 	fontWeight: normal;
-	embedAsCff: true;
+	embedAsCff: true;	
+}
+
+@font-face {
+	src: url("../fonts/VAG Rounded BT.ttf");
+	fontFamily: VAGRoundedBold;
+	fontWeight: bold;
+	embedAsCff: true;	
+}
+
+@font-face {
+	src: url("../fonts/VAG Round.ttf");
+	fontFamily: VAGRound;
+	fontWeight: normal;
+	embedAsCff: true;	
 }
 
 @font-face {

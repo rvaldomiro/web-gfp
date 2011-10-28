@@ -1,11 +1,15 @@
+
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import test.commons.AllTestsCommons;
-import test.gfp.AllTestsGfp;
+import test.gfp.model.LancamentoTest;
+import test.gfp.service.LancamentoServiceTest;
+import test.gfp.service.UsuarioServiceTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AllTestsCommons.class, AllTestsGfp.class })
+@Suite.SuiteClasses({ LancamentoServiceTest.class, UsuarioServiceTest.class,
+		LancamentoTest.class })
 public class AllTests {
 	//
 }

@@ -103,7 +103,10 @@ public abstract class AbstractHibernateDatabase {
 			if (f.exists()) {
 				final Properties p = new Properties();
 				p.load(new FileInputStream(f));
-				p.setProperty("hibernate.connection.url",p.getProperty("hibernate.connection.url").replace("${basedir}", f.getParent()));
+				p.setProperty(
+						"hibernate.connection.url",
+						p.getProperty("hibernate.connection.url").replace(
+								"${basedir}", f.getCanonicalPath() + "/.."));
 				return setup(p);
 			}
 			

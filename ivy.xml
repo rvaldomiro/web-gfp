@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <ivy-module version = "2.0">
-	<info organisation = "rssystems"
+	<info organisation = "rvaldomiro"
 		  module = "gfp"/>
 
 	<dependencies>
@@ -20,7 +20,6 @@
 					name = "commons-beanutils"
 					rev = "1.5"/>
 
-		<!-- <dependency org = "org.slf4j" name = "slf4j-api" rev = "1.6.2"/> -->
 		<dependency org = "javassist"
 					name = "javassist"
 					rev = "3.9.0.GA"/>
