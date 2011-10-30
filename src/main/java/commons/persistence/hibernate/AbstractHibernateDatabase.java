@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import commons.log.LogBuilder;
+import logus.commons.log.LogBuilder;
 
 public abstract class AbstractHibernateDatabase {
 	
@@ -107,9 +107,9 @@ public abstract class AbstractHibernateDatabase {
 				String basedir = f.getCanonicalPath();
 				
 				if (basedir != null) {
-					int lastSlash = basedir.lastIndexOf("/");
+					final int lastSlash = basedir.lastIndexOf("/");
 					
-					if (lastSlash > 0){
+					if (lastSlash > 0) {
 						basedir = basedir.substring(0, lastSlash);
 					}
 				}
@@ -117,7 +117,9 @@ public abstract class AbstractHibernateDatabase {
 				p.setProperty(
 						"hibernate.connection.url",
 						p.getProperty("hibernate.connection.url").replace(
-								"${basedir}", (basedir != null ? basedir : "<database-not-found>")));
+								"${basedir}",
+								basedir != null ? basedir
+										: "<database-not-found>"));
 				
 				return setup(p);
 			}

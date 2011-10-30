@@ -18,6 +18,8 @@ import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import logus.commons.log.LogBuilder;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,7 +28,6 @@ import org.hibernate.cfg.Configuration;
 
 import commons.file.ClassFileFilter;
 import commons.file.JarFileFilter;
-import commons.log.LogBuilder;
 import commons.persistence.ApplicationContext;
 import commons.persistence.Entity;
 

@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 
-import commons.log.LogBuilder;
-import commons.sql.QueryLoader;
+import logus.commons.log.LogBuilder;
+import logus.commons.sql.QueryLoader;
 
 public class JdbcConnection implements Connection {
 	

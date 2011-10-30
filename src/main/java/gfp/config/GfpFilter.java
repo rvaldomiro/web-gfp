@@ -7,8 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import logus.commons.web.AbstractFilter;
+
 import commons.persistence.ApplicationContext;
-import commons.web.AbstractFilter;
 
 public class GfpFilter extends AbstractFilter {
 	

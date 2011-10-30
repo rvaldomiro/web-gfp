@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import commons.util.DateUtils;
+import logus.commons.datetime.AbstractDateTime;
 
 public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 	
@@ -47,7 +47,7 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 			final Date dataFinal) {
 		final List<SaldoDiarioDto> result = new ArrayList<SaldoDiarioDto>();
 		
-		for (Date data = dataInicio; !data.after(dataFinal); data = DateUtils
+		for (Date data = dataInicio; !data.after(dataFinal); data = AbstractDateTime
 				.addDay(data, 1)) {
 			result.add(new SaldoDiarioDto(data));
 		}

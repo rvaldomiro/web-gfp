@@ -24,10 +24,11 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.datetime.AbstractDateTime;
+
 import org.apache.commons.beanutils.BeanUtils;
 
 import commons.persistence.AbstractEntity;
-import commons.util.DateUtils;
 
 @Entity
 public class Lancamento extends AbstractEntity<Lancamento> {
@@ -179,8 +180,8 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 		this.categoria = categoria;
 		this.valorOriginal = valorOriginal;
 		this.valorPago = 0.0;
-		this.dataVencimento = DateUtils.today();
-		this.dataPrevisaoPagamento = DateUtils.today();
+		this.dataVencimento = AbstractDateTime.today();
+		this.dataPrevisaoPagamento = AbstractDateTime.today();
 		this.formaPagamento = formaPagamento.ordinal();
 		this.parcelaNumero = 1;
 		this.parcelaQuantidade = 1;
@@ -195,15 +196,16 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 			int dias = 1;
 			
 			while (dias <= prazoCompensacao) {
-				previsaoPagamento = DateUtils.addDay(previsaoPagamento, 1);
+				previsaoPagamento = AbstractDateTime.addDay(previsaoPagamento,
+						1);
 				
-				if (DateUtils.dayOfWeek(previsaoPagamento) != Calendar.SATURDAY &&
-						DateUtils.dayOfWeek(previsaoPagamento) != Calendar.SUNDAY) {
+				if (AbstractDateTime.dayOfWeek(previsaoPagamento) != Calendar.SATURDAY &&
+						AbstractDateTime.dayOfWeek(previsaoPagamento) != Calendar.SUNDAY) {
 					dias++;
 				}
 				
 				if (dias == prazoCompensacao &&
-						DateUtils.dayOfWeek(previsaoPagamento) == Calendar.SATURDAY) {
+						AbstractDateTime.dayOfWeek(previsaoPagamento) == Calendar.SATURDAY) {
 					break;
 				}
 			}
@@ -213,11 +215,11 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 	}
 	
 	private void corrigirHorarioDeVerao() {
-		this.dataVencimento = DateUtils.parseBRST(this.dataVencimento);
-		this.dataPrevisaoPagamento = DateUtils
+		this.dataVencimento = AbstractDateTime.parseBRST(this.dataVencimento);
+		this.dataPrevisaoPagamento = AbstractDateTime
 				.parseBRST(this.dataPrevisaoPagamento);
-		this.dataPagamento = DateUtils.parseBRST(this.dataPagamento);
-		this.dataCompensacao = DateUtils.parseBRST(this.dataCompensacao);
+		this.dataPagamento = AbstractDateTime.parseBRST(this.dataPagamento);
+		this.dataCompensacao = AbstractDateTime.parseBRST(this.dataCompensacao);
 	}
 	
 	private void sincronizarVinculado() throws Exception {

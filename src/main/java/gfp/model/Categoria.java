@@ -11,8 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.string.StringUtil;
+
 import commons.persistence.AbstractEntity;
-import commons.util.StringUtils;
 
 @Entity
 public class Categoria extends AbstractEntity<Categoria> {
@@ -137,7 +138,7 @@ public class Categoria extends AbstractEntity<Categoria> {
 	public void validate() throws Exception {
 		super.validate();
 		nextSequence("id");
-		this.descricao = StringUtils.capitalize(this.descricao);
+		this.descricao = StringUtil.capitalize(this.descricao);
 	}
 	
 }

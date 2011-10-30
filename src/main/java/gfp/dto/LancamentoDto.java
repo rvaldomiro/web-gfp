@@ -7,7 +7,7 @@ import gfp.type.LancamentoSituacaoType;
 
 import java.util.Date;
 
-import commons.util.DateUtils;
+import logus.commons.datetime.AbstractDateTime;
 
 public class LancamentoDto {
 	
@@ -34,8 +34,8 @@ public class LancamentoDto {
 	public LancamentoDto(final Usuario usuario) throws Exception {
 		super();
 		this.idUsuario = usuario.getId();
-		this.dataInicio = DateUtils.today();
-		this.dataFinal = DateUtils.today();
+		this.dataInicio = AbstractDateTime.today();
+		this.dataFinal = AbstractDateTime.today();
 		this.tipoPeriodo = LancamentoPeriodoType.VENCIMENTO.ordinal();
 		this.situacao = LancamentoSituacaoType.INDEFINIDA.ordinal();
 	}
@@ -81,11 +81,11 @@ public class LancamentoDto {
 	}
 	
 	public void setDataFinal(final Date dataFinal) {
-		this.dataFinal = DateUtils.parseBRST(dataFinal);
+		this.dataFinal = AbstractDateTime.parseBRST(dataFinal);
 	}
 	
 	public void setDataInicio(final Date dataInicio) {
-		this.dataInicio = DateUtils.parseBRST(dataInicio);
+		this.dataInicio = AbstractDateTime.parseBRST(dataInicio);
 	}
 	
 	public void setIdUsuario(final Long idUsuario) {

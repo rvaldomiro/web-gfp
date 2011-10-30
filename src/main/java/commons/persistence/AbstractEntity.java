@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logus.commons.log.LogBuilder;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import commons.log.LogBuilder;
 import commons.persistence.hibernate.HibernateManager;
 
 public abstract class AbstractEntity<T> implements Entity<T> {

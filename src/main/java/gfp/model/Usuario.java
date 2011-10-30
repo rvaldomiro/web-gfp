@@ -5,8 +5,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.string.StringUtil;
+
 import commons.persistence.AbstractEntity;
-import commons.util.StringUtils;
 
 @Entity
 public class Usuario extends AbstractEntity<Usuario> {
@@ -113,7 +114,7 @@ public class Usuario extends AbstractEntity<Usuario> {
 	@Override
 	public void validate() throws Exception {
 		super.validate();
-		this.nome = StringUtils.capitalize(this.nome);
+		this.nome = StringUtil.capitalize(this.nome);
 		
 		if (this.id == null) {
 			nextSequence("id");
