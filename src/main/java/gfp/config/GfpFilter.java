@@ -7,9 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import logus.commons.persistence.ApplicationContext;
 import logus.commons.web.AbstractFilter;
 
-import commons.persistence.ApplicationContext;
 
 public class GfpFilter extends AbstractFilter {
 	
@@ -19,7 +19,7 @@ public class GfpFilter extends AbstractFilter {
 		try {
 			arg2.doFilter(arg0, arg1);
 		} finally {
-			ApplicationContext.closeSessions();
+			ApplicationContext.closeAllCurrentSessions();
 		}
 	}
 	

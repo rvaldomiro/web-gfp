@@ -27,7 +27,7 @@ package gfp.service
 		[Inject]
 		public var usuarioService:UsuarioService;
 		
-		[EventHandler(event="CategoriaEvent.EXCLUIR")]
+		[EventHandler(event = "CategoriaEvent.EXCLUIR")]
 		public function excluir(event:ICustomEvent):void
 		{
 			executeService(service.excluir(event.object), event, function(re:ResultEvent):void
@@ -36,29 +36,35 @@ package gfp.service
 			});
 		}
 		
-		[EventHandler(event="CategoriaEvent.LISTAR")]
+		[EventHandler(event = "CategoriaEvent.LISTAR")]
 		public function listar(event:ICustomEvent):void
 		{
 			executeService(service.listarCategorias(usuarioService.idUsuarioLogado)
 						   , event, function(re:ResultEvent):void
-			{
-				lista = re.result as ArrayCollection;
-				SortUtils.sortText(lista, "descricao");
-			});
+						   {
+							   lista = re.result as ArrayCollection;
+							   lista.filterFunction = listaFilter;
+							   SortUtils.sortText(lista, "descricao");
+						   });
 		}
 		
-		[EventHandler(event="CategoriaEvent.EDITAR")]
+		[EventHandler(event = "CategoriaEvent.EDITAR")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
-			selecionada = event.object ? ObjectUtil.copy(event.object) as Categoria
-				: new Categoria();
+			selecionada = event.object ? ObjectUtil.copy(event.object) as Categoria :
+				new Categoria();
 			selecionada.usuario ||= usuarioService.usuarioLogado;
 		}
 		
-		[EventHandler(event="CategoriaEvent.SALVAR")]
+		[EventHandler(event = "CategoriaEvent.SALVAR")]
 		public function salvar(event:ICustomEvent):void
 		{
 			executeService(service.salvarCategoria(event.object), event, event.result);
+		}
+		
+		private function listaFilter(categoria:Categoria):Boolean
+		{
+			return !categoria.interna;
 		}
 	}
 }

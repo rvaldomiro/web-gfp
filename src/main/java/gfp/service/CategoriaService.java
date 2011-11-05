@@ -4,6 +4,8 @@ import gfp.model.Categoria;
 
 import java.util.List;
 
+import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
+
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class CategoriaService {
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public void excluir(final Categoria categoria) throws Exception {
 		categoria.delete();
 	}
@@ -24,6 +27,7 @@ public class CategoriaService {
 	}
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public Categoria salvarCategoria(final Categoria categoria)
 			throws Exception {
 		return categoria.save();

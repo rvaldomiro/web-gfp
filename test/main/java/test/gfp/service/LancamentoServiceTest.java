@@ -71,11 +71,11 @@ public class LancamentoServiceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		new Lancamento().deleteAll();
-		new Categoria().deleteAll();
-		new Conta().deleteAll();
-		new Banco().deleteAll();
-		new Usuario().deleteAll();
+		Lancamento.dao.deleteAll();
+		Categoria.dao.deleteAll();
+		Conta.dao.deleteAll();
+		Banco.dao.deleteAll();
+		Usuario.dao.deleteAll();
 	}
 	
 	@Test
@@ -237,7 +237,7 @@ public class LancamentoServiceTest {
 		
 		Lancamento l;
 		
-		new Lancamento().deleteAll();
+		Lancamento.dao.deleteAll();
 		
 		l = new Lancamento(u, cr, 200.0, FormaPagamentoType.CARTAO);
 		l.setDataPagamento(AbstractDateTime.date(26, 10, 2010));
@@ -274,7 +274,7 @@ public class LancamentoServiceTest {
 		assertEquals(0.0, dto.despesas);
 		assertEquals(168.32, dto.saldoFinal);
 		
-		new Lancamento().deleteAll();
+		Lancamento.dao.deleteAll();
 		
 		l = new Lancamento(u, cr, 100.0, FormaPagamentoType.CARTAO);
 		l.setDataPagamento(l.getDataVencimento());
@@ -331,22 +331,30 @@ public class LancamentoServiceTest {
 		l.setContaTransferencia(carteira);
 		this.controller.salvarLancamento(l);
 		
-		l = new Lancamento().find(l.getId());
-		assertEquals(corrente, l.getConta());
+		l = Lancamento.dao.find(l.getId());
 		assertNotNull(l);
 		assertNotNull(l.getVinculados());
 		assertEquals(1, l.getVinculados().size());
+		assertEquals(corrente, l.getConta());
+		assertEquals(true, l.getCategoria().isTransferencia());
+		assertEquals(Categoria.obterTransferencia(u), l.getVinculados().get(0).getCategoria());
 		
-		final Categoria ct = new Categoria()
-				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-						u, "Transferência", CategoriaType.RECEITA.ordinal());
-		assertNotNull(ct);
+//		final Categoria template = new Categoria(u, "Transferência", CategoriaType.RECEITA);
+//		template.setEstatistica(false);
+//		template.setInterna(true);
+//		final Categoria ct = Categoria.dao.findFirstByTemplate(template);
+//		
+	
+//		final Categoria ct = new Categoria()
+//				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
+//						u, "Transferência", CategoriaType.RECEITA.ordinal());
+//		assertNotNull(ct);
 		
 		Lancamento l2 = l.getVinculados().get(0);
 		assertEquals(carteira, l2.getConta());
 		assertEquals(FormaPagamentoType.DINHEIRO.ordinal(), l2
 				.getFormaPagamento().intValue());
-		assertEquals(ct, l2.getCategoria());
+		assertEquals(l.getCategoria(), l2.getCategoria());
 		assertEquals(l.getId() + 1, l2.getId().intValue());
 		assertNull(l2.getContaTransferencia());
 		
@@ -358,7 +366,7 @@ public class LancamentoServiceTest {
 		assertEquals(corrente, l2.getConta());
 		assertEquals(FormaPagamentoType.CARTAO.ordinal(), l2
 				.getFormaPagamento().intValue());
-		assertEquals(ct, l2.getCategoria());
+		assertEquals(l.getCategoria(), l2.getCategoria());
 		assertEquals(l.getId() + 1, l2.getId().intValue());
 		assertNull(l2.getContaTransferencia());
 		
@@ -383,17 +391,17 @@ public class LancamentoServiceTest {
 		l.setContaTransferencia(null);
 		this.controller.salvarLancamento(l);
 		assertEquals(0, l.getVinculados().size());
-		assertNull(new Lancamento().find(idVinculado));
+		assertNull(Lancamento.dao.find(idVinculado));
 		
 		l = new Lancamento(u, cd, 10, FormaPagamentoType.CARTAO);
 		l.setContaTransferencia(carteira);
 		this.controller.salvarLancamento(l);
 		final Long id = l.getId();
 		idVinculado = l.getVinculados().get(0).getId();
-		assertNotNull(new Lancamento().find(idVinculado));
+		assertNotNull(Lancamento.dao.find(idVinculado));
 		this.controller.excluir(l);
-		assertNull(new Lancamento().find(id));
-		assertNull(new Lancamento().find(idVinculado));
+		assertNull(Lancamento.dao.find(id));
+		assertNull(Lancamento.dao.find(idVinculado));
 	}
 	
 }

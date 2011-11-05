@@ -5,30 +5,37 @@ import gfp.type.ContaType;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import commons.persistence.AbstractEntity;
+import logus.commons.persistence.AbstractPersistentClass;
+import logus.commons.persistence.hibernate.dao.HibernateDao;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Conta extends AbstractEntity<Conta> {
+public class Conta extends AbstractPersistentClass<Conta> {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static HibernateDao<Conta> dao;
+	
 	public static List<Conta> listar(final Long usuarioId) throws Exception {
-		return new Conta().where("usuario.id = ?1", usuarioId);
+		return dao.findAllByField("usuario.id", usuarioId);
 	}
 	
 	public static List<Conta> listarAtivas(final Long usuarioId)
 			throws Exception {
-		return new Conta().where("usuario.id = ?1 and ativa = ?2", usuarioId,
-				true);
+		return dao.findAllByFields("usuario.id", usuarioId, "ativa", true);
 	}
 	
 	@Id
+	@GeneratedValue(generator = "generator")
+	@GenericGenerator(name = "generator", strategy = "increment")
 	private Long id;
 	
 	@NotNull
@@ -72,9 +79,34 @@ public class Conta extends AbstractEntity<Conta> {
 		this.tipo = ContaType.CARTEIRA.ordinal();
 	}
 	
-	public void criarPadrao(final Usuario arg0) throws Exception {
-		new Conta(arg0, "Carteira").save();
+	public Conta(Usuario usuario, ContaType tipo) {
+		super();
+		this.usuario=usuario;
+		this.tipo=tipo.ordinal();
 	}
+
+	public Conta(Usuario usuario, ContaType tipo, String identificacao) {
+		super();
+		this.usuario=usuario;
+		this.tipo=tipo.ordinal();
+		this.identificacao=identificacao;
+		this.ativa=true;
+	}
+
+	public static Conta obterCarteira(final Usuario usuario) throws Exception {
+		final Conta template = new Conta(usuario, ContaType.CARTEIRA, "Carteira");
+		Conta result = Conta.dao.findFirstByTemplate(template);
+		
+		if (result==null){
+			result=template.save();
+		}
+
+		return result;
+	}
+
+//	public void criarPadrao(final Usuario arg0) throws Exception {
+//		new Conta(arg0, "Carteira").save();
+//	}
 	
 	@Override
 	public void delete() throws Exception {
@@ -104,7 +136,7 @@ public class Conta extends AbstractEntity<Conta> {
 		return true;
 	}
 	
-	public boolean getAtiva() {
+	public boolean isAtiva() {
 		return this.ativa;
 	}
 	
@@ -112,7 +144,6 @@ public class Conta extends AbstractEntity<Conta> {
 		return this.banco;
 	}
 	
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -145,7 +176,6 @@ public class Conta extends AbstractEntity<Conta> {
 		this.banco = banco;
 	}
 	
-	@Override
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -163,9 +193,13 @@ public class Conta extends AbstractEntity<Conta> {
 	}
 	
 	@Override
-	public void validate() throws Exception {
-		super.validate();
-		nextSequence("id");
+	protected HibernateDao<Conta> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(HibernateDao<Conta> arg0) {
+		dao = arg0;
 	}
 	
 }

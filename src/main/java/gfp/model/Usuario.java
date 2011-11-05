@@ -5,14 +5,16 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.persistence.AbstractPersistentClass;
+import logus.commons.persistence.hibernate.dao.HibernateDao;
 import logus.commons.string.StringUtil;
 
-import commons.persistence.AbstractEntity;
-
 @Entity
-public class Usuario extends AbstractEntity<Usuario> {
+public class Usuario extends AbstractPersistentClass<Usuario> {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static HibernateDao<Usuario> dao;
 	
 	@Id
 	private Long id;
@@ -48,6 +50,21 @@ public class Usuario extends AbstractEntity<Usuario> {
 		this.senha = senha;
 		this.ativo = true;
 	}
+	public Usuario(final String nome, final String login, final String senha, boolean administrador) {
+		super();
+		this.nome = nome;
+		this.login = login;
+		this.senha = senha;
+		this.administrador=administrador;
+		this.ativo = true;
+	}
+	
+	public Usuario(final String login, final String senha) {
+		super();
+		this.login = login;
+		this.senha = senha;
+//		this.ativo = true;
+	}
 	
 	private void alterarSenha() {
 		this.senha = String.valueOf(this.senha.hashCode());
@@ -57,7 +74,6 @@ public class Usuario extends AbstractEntity<Usuario> {
 		return this.email;
 	}
 	
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -94,7 +110,6 @@ public class Usuario extends AbstractEntity<Usuario> {
 		this.email = email;
 	}
 	
-	@Override
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -117,9 +132,52 @@ public class Usuario extends AbstractEntity<Usuario> {
 		this.nome = StringUtil.capitalize(this.nome);
 		
 		if (this.id == null) {
-			nextSequence("id");
+			this.id = dao.getNextSequence(this, "id").longValue();
 			alterarSenha();
 		}
 	}
+
+	
+	
+	@Override
+	public Usuario save() throws Exception {
+		boolean novo=this.id == null;
+		Usuario result = super.save();
+		
+		if (novo){
+			Categoria.criarPadroes(result);
+		}
+		
+		return result;
+	}
+
+	@Override
+	protected HibernateDao<Usuario> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(HibernateDao<Usuario> arg0) {
+		dao = arg0;
+	}
+
+	@Override
+	public void delete() throws Exception {
+		for (final Lancamento o : Lancamento.dao.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		for (final Categoria o : Categoria.dao.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		for (final Conta o : Conta.dao.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		super.delete();
+	}
+	
+	
 	
 }

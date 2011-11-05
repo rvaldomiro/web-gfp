@@ -25,40 +25,69 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import logus.commons.datetime.AbstractDateTime;
+import logus.commons.persistence.AbstractPersistentClass;
+import logus.commons.persistence.hibernate.dao.HibernateDao;
 
 import org.apache.commons.beanutils.BeanUtils;
-
-import commons.persistence.AbstractEntity;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 @Entity
-public class Lancamento extends AbstractEntity<Lancamento> {
+public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static void excluir(final Categoria categoria) throws Exception {
-		new Lancamento().delete("categoria = ?1", categoria);
+	public static HibernateDao<Lancamento> dao;
+	
+	public static void excluir(final Categoria categoria) throws Exception {		
+		final Query q = dao.createQuery("delete from Lancamento where categoria = :categoria");
+		q.setEntity("categoria", categoria);
+		q.executeUpdate();
 	}
 	
 	public static void excluir(final Conta conta) throws Exception {
-		new Lancamento().delete("conta = ?1", conta);
+		final Query q = dao.createQuery("delete from Lancamento where conta = :conta");
+		q.setEntity("conta", conta);
+		q.executeUpdate();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Lancamento> listarAVencer(final Long usuarioId,
 			final Date previsaoPagamento, final CategoriaType categoria)
 			throws Exception {
-		return new Lancamento()
-				.where("usuario.id = ?1 and dataPrevisaoPagamento <= ?2 and categoria.tipo = ?3 and dataPagamento is null",
-						usuarioId, previsaoPagamento, categoria.ordinal());
+		final Query q = dao.createQuery("from Lancamento where usuario.id = :usuarioId and dataPrevisaoPagamento <= :previsaoPagamento and categoria.tipo = :categoriaTipo and dataPagamento is null");
+		q.setLong("usuarioId", usuarioId);
+		q.setDate("previsaoPagamento", previsaoPagamento);
+		q.setInteger("categoriaTipo", categoria.ordinal());
+		return q.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static List<Object[]> listarPrevisaoSaldoDiario(
 			final Long usuarioId, final CategoriaType categoria,
 			final Date dataInicio, final Date dataFinal) throws Exception {
-		return (List<Object[]>) new Lancamento()
-				.allByQuery(
-						"select dataCompensacao, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 and (dataPagamento is null or dataPagamento <> dataCompensacao) group by dataCompensacao",
-						usuarioId, categoria.ordinal(), dataInicio, dataFinal);
+		final Criteria c = dao.createCriteria();
+		c.createAlias("categoria", "_categoria");
+		
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.groupProperty("dataCompensacao"));
+		p.add(Projections.sum("valorOriginal"));
+		c.add(Restrictions.eq("usuario.id", usuarioId));
+		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
+		c.add(Restrictions.eq("_categoria.estatistica", true));
+		c.add(Restrictions.between("dataCompensacao", dataInicio, dataFinal));
+		c.add(Restrictions.or(Restrictions.isNull("dataPagamento"), Restrictions.neProperty("dataPagamento", "dataCompensacao")));
+		c.setProjection(p);
+		return c.list();
+//		final List<Object[]> totais = c.list();
+//		return totais;
+//		return (List<Object[]>) new Lancamento()
+//				.allByQuery(
+//						"select dataCompensacao, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 and (dataPagamento is null or dataPagamento <> dataCompensacao) group by dataCompensacao",
+//						usuarioId, categoria.ordinal(), dataInicio, dataFinal);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -67,13 +96,26 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 			final Date dataInicio, final Date dataFinal) throws Exception {
 		final List<SaldoCategoriaDto> result = new ArrayList<SaldoCategoriaDto>();
 		
-		final List<Object[]> saldoCategoria = (List<Object[]>) new Lancamento()
-				.allByQuery(
-						"select categoria.id, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 group by categoria.id",
-						usuarioId, tipoCategoria, dataInicio, dataFinal);
+		final Criteria c = dao.createCriteria();
+		c.createAlias("categoria", "_categoria");
+		
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.groupProperty("categoria.id"));
+		p.add(Projections.sum("valorOriginal"));
+		c.add(Restrictions.eq("usuario.id", usuarioId));
+		c.add(Restrictions.eq("_categoria.tipo", tipoCategoria));
+		c.add(Restrictions.eq("_categoria.estatistica", true));
+		c.add(Restrictions.between("dataCompensacao", dataInicio, dataFinal));
+		c.setProjection(p);
+		
+		final List<Object[]> saldoCategoria = c.list();
+//		final List<Object[]> saldoCategoria = (List<Object[]>) new Lancamento()
+//				.allByQuery(
+//						"select categoria.id, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 group by categoria.id",
+//						usuarioId, tipoCategoria, dataInicio, dataFinal);
 		
 		for (final Object[] o : saldoCategoria) {
-			result.add(new SaldoCategoriaDto(new Categoria()
+			result.add(new SaldoCategoriaDto(Categoria.dao
 					.find((Serializable) o[0]), (Double) o[1]));
 		}
 		
@@ -83,20 +125,44 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 	public static double obterSaldoBloqueado(final Conta conta,
 			final CategoriaType categoria, final Date dataSaldo)
 			throws Exception {
-		final Double result = (Double) new Lancamento()
-				.firstByQuery(
-						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao > ?3",
-						conta, categoria.ordinal(), dataSaldo);
+		final Criteria c = dao.createCriteria();
+		c.createAlias("categoria", "_categoria");
+		
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.sum("valorPago"));
+		c.add(Restrictions.eq("conta", conta));
+		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
+		c.add(Restrictions.le("dataPagamento", dataSaldo));
+		c.add(Restrictions.gt("dataCompensacao", dataSaldo));
+		c.setProjection(p);
+		
+		final Double result = (Double) c.uniqueResult();
+//		final Double result = (Double) new Lancamento()
+//				.firstByQuery(
+//						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao > ?3",
+//						conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	
 	public static double obterSaldoDisponivel(final Conta conta,
 			final CategoriaType categoria, final Date dataSaldo)
 			throws Exception {
-		final Double result = (Double) new Lancamento()
-				.firstByQuery(
-						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao <= ?3",
-						conta, categoria.ordinal(), dataSaldo);
+		final Criteria c = dao.createCriteria();
+		c.createAlias("categoria", "_categoria");
+		
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.sum("valorPago"));
+		c.add(Restrictions.eq("conta", conta));
+		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
+		c.add(Restrictions.le("dataPagamento", dataSaldo));
+		c.add(Restrictions.le("dataCompensacao", dataSaldo));
+		c.setProjection(p);
+
+		final Double result = (Double) c.uniqueResult();
+//		final Double result = (Double) new Lancamento()
+//				.firstByQuery(
+//						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao <= ?3",
+//						conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	
@@ -225,6 +291,8 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 	private void sincronizarVinculado() throws Exception {
 		if (this.contaTransferencia != null) {
 			if (this.vinculados == null || this.vinculados.size() == 0) {
+//				this.categoria=Categoria.obterTransferencia(this.usuario);
+				
 				final Lancamento l = new Lancamento();
 				BeanUtils.copyProperties(l, this);
 				l.setId(this.id + 1);
@@ -232,12 +300,18 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 				l.setOriginal(this);
 				l.setContaTransferencia(null);
 				
-				final Categoria ct = new Categoria()
-						.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false",
-								this.usuario, "Transferência",
-								CategoriaType.RECEITA.ordinal());
+//				final Categoria template = new Categoria(this.usuario, "Transferência", CategoriaType.RECEITA);
+//				template.setEstatistica(false);
+//				Categoria ct = Categoria.dao.findFirstByTemplate(template);
 				
-				l.setCategoria(ct);
+//					ct = ;
+//				final Categoria ct = new Categoria()
+//						.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false",
+//								this.usuario, "Transferência",
+//								CategoriaType.RECEITA.ordinal());
+				
+//				l.setCategoria(this.categoria);
+				l.setCategoria(Categoria.obterTransferencia(this.usuario));
 				l.setFormaPagamento(this.contaTransferencia.getTipo().equals(
 						ContaType.CARTEIRA.ordinal()) ? FormaPagamentoType.DINHEIRO
 						.ordinal() : FormaPagamentoType.CARTAO.ordinal());
@@ -304,7 +378,6 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 		return this.formaPagamento;
 	}
 	
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -373,7 +446,6 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 		this.formaPagamento = formaPagamento;
 	}
 	
-	@Override
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -413,9 +485,23 @@ public class Lancamento extends AbstractEntity<Lancamento> {
 	@Override
 	public void validate() throws Exception {
 		super.validate();
-		nextSequence("id");
+		
+		if (this.id==null){
+			this.id = dao.getNextSequence(this, "id").longValue();
+		}
+		
 		corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
+	}
+	
+	@Override
+	protected HibernateDao<Lancamento> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(HibernateDao<Lancamento> arg0) {
+		dao = arg0;
 	}
 }

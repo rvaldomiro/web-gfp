@@ -5,7 +5,6 @@ import gfp.dto.LancamentoDto;
 import gfp.dto.SaldoCategoriaDto;
 import gfp.dto.SaldoDiarioDto;
 import gfp.dto.SaldoDto;
-import gfp.model.Categoria;
 import gfp.model.Conta;
 import gfp.model.Lancamento;
 import gfp.type.CategoriaType;
@@ -19,8 +18,10 @@ import java.util.Date;
 import java.util.List;
 
 import logus.commons.datetime.AbstractDateTime;
+import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
 import logus.commons.string.StringUtil;
 
+import org.hibernate.Query;
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 public class LancamentoService {
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public List<Lancamento> agendarLancamentos(final AgendamentoDto dto)
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
@@ -120,6 +122,7 @@ public class LancamentoService {
 	}
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public void excluir(final Lancamento lancamento) throws Exception {
 		lancamento.delete();
 	}
@@ -131,26 +134,27 @@ public class LancamentoService {
 				AbstractDateTime.daysAhead(15), CategoriaType.DESPESA);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RemotingInclude
 	public List<Lancamento> listarLancamentos(final LancamentoDto dto)
 			throws Exception {
 		final List<String> cdt = new ArrayList<String>();
 		final List<Object> prm = new ArrayList<Object>();
 		
-		cdt.add("usuario.id = ?1");
+		cdt.add("usuario.id = :params1");
 		prm.add(dto.getIdUsuario());
 		
 		if (dto.getTipoPeriodo() == LancamentoPeriodoType.VENCIMENTO.ordinal()) {
-			cdt.add("dataVencimento between ?2 and ?3");
+			cdt.add("dataVencimento between :params2 and :params3");
 		} else if (dto.getTipoPeriodo() == LancamentoPeriodoType.PREVISAO_PAGAMENTO
 				.ordinal()) {
-			cdt.add("dataPrevisaoPagamento between ?2 and ?3");
+			cdt.add("dataPrevisaoPagamento between :params2 and :params3");
 		} else if (dto.getTipoPeriodo() == LancamentoPeriodoType.PAGAMENTO
 				.ordinal()) {
-			cdt.add("dataPagamento between ?2 and ?3");
+			cdt.add("dataPagamento between :params2 and :params3");
 		} else if (dto.getTipoPeriodo() == LancamentoPeriodoType.COMPENSACAO
 				.ordinal()) {
-			cdt.add("dataCompensacao between ?2 and ?3");
+			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
 		prm.add(dto.getDataInicio());
@@ -163,32 +167,39 @@ public class LancamentoService {
 		}
 		
 		if (dto.getCategoria() != null && dto.getCategoria() > 0) {
-			cdt.add("categoria.id = ?" + (prm.size() + 1));
+			cdt.add("categoria.id = :params" + (prm.size() + 1));
 			prm.add(dto.getCategoria());
 		}
 		
 		if (dto.getConta() != null) {
-			cdt.add("conta = ?" + (prm.size() + 1));
+			cdt.add("conta = :params" + (prm.size() + 1));
 			prm.add(dto.getConta());
 		}
 		
 		if (dto.getObservacao() != null && dto.getObservacao().length() > 0) {
-			cdt.add("observacao like ?" + (prm.size() + 1));
+			cdt.add("observacao like :params" + (prm.size() + 1));
 			prm.add("%" + dto.getObservacao() + "%");
 		}
 		
-		return new Lancamento().where(StringUtil.join(cdt, " and "), prm);
+		Query q = Lancamento.dao.createQuery("from Lancamento where " + StringUtil.join(cdt, " and "));
+		
+		for (int i = 1; i <= prm.size(); i++) {
+			q.setParameter("params"+i, prm.get(i - 1));
+		}
+		
+		return q.list();
+//		return new Lancamento().where(StringUtil.join(cdt, " and "), prm);
 	}
 	
 	@RemotingInclude
-	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId) {
+	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId) throws Exception {
 		return listarPrevisaoSaldoDiario(usuarioId, AbstractDateTime.today());
 	}
 	
 	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
-			final Date dataInicio) {
-		try {
+			final Date dataInicio) throws Exception {
+//		try {
 			final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
 			final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 					dataInicio, dataFinal);
@@ -220,10 +231,10 @@ public class LancamentoService {
 			
 			return SaldoDiarioDto.calcular(usuarioId,
 					saldoAnterior.get(saldoAnterior.size() - 1).saldo, result);
-		} catch (final Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+//		} catch (final Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
 	
 	@RemotingInclude
@@ -290,20 +301,26 @@ public class LancamentoService {
 	}
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public void salvarLancamento(final Lancamento lancamento) throws Exception {
-		Categoria ct = new Categoria()
-				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-						lancamento.getUsuario(), "Transferência",
-						CategoriaType.RECEITA.ordinal());
+//		final Categoria template = new Categoria(lancamento.getUsuario(), "Transferência", CategoriaType.RECEITA);
+//		template.setEstatistica(false);
+//		template.setInterna(true);
+//		Categoria ct = new Categoria()
+//		Categoria ct = ;
+//				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
+//						lancamento.getUsuario(), "Transferência",
+//						CategoriaType.RECEITA.ordinal());
 		
-		if (ct == null) {
-			ct = new Categoria(lancamento.getUsuario(), "Transferência",
-					CategoriaType.RECEITA);
-			ct.setEstatistica(false);
-			ct.setInterna(true);
-			ct.save();
-		}
-		
+//		if (Categoria.dao.findFirstByTemplate(template) == null) {
+//			template.save();
+//			ct = new Categoria(lancamento.getUsuario(), "Transferência",
+//					CategoriaType.RECEITA);
+//			ct.setEstatistica(false);
+//			ct.setInterna(true);
+//			ct.save();
+//		}
+//		Categoria.obterTransferencia(lancamento.getUsuario());
 		lancamento.save();
 	}
 	

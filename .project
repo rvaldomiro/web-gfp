@@ -3,8 +3,6 @@
 	<name>web-gfp</name>
 	<comment></comment>
 	<projects>
-		<project>gfp-migration</project>
-		<project>resources</project>
 		<project>Servers</project>
 	</projects>
 	<buildSpec>

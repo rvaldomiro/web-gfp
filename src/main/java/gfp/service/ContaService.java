@@ -4,6 +4,8 @@ import gfp.model.Conta;
 
 import java.util.List;
 
+import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
+
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class ContaService {
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public void excluir(final Conta conta) throws Exception {
 		conta.delete();
 	}
@@ -29,6 +32,7 @@ public class ContaService {
 	}
 	
 	@RemotingInclude
+	@HibernateTransaction
 	public void salvarConta(final Conta conta) throws Exception {
 		conta.save();
 	}

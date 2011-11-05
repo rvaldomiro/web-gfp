@@ -31,19 +31,24 @@ public class UsuarioServiceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		new Conta().deleteAll();
-		new Categoria().deleteAll();
-		new Usuario().deleteAll();
+		Conta.dao.deleteAll();
+		Categoria.dao.deleteAll();
+		Usuario.dao.deleteAll();
 	}
 	
 	@Test
 	public void testCriarContaCarteira() throws Exception {
 		final Usuario u = new Usuario("usuario", "usuario", "usuario");
 		this.controller.salvarUsuario(u);
-		final Conta conta = new Conta().first(
-				"usuario = ?1 and tipo = ?2 and identificacao = ?3", u,
-				ContaType.CARTEIRA.ordinal(), "Carteira");
+		
+		final Conta template=new Conta(u, ContaType.CARTEIRA, "Carteira");
+		
+//		final Conta conta = new Conta().first(
+				final Conta conta = Conta.dao.findFirstByTemplate(template);
+//				"usuario = ?1 and tipo = ?2 and identificacao = ?3", u,
+//				ContaType.CARTEIRA.ordinal(), "Carteira");
 		assertNotNull(conta);
+		assertEquals(true, conta.isAtiva());
 	}
 	
 	@Test
@@ -55,9 +60,7 @@ public class UsuarioServiceTest {
 			assertEquals("Usuário e/ou Senha inválidos!", e.getMessage());
 		}
 		
-		final Usuario u = new Usuario("nome sobrenome", "login", "senha");
-		u.setAtivo(false);
-		u.save();
+		new Usuario("login", "senha").save();
 		
 		try {
 			this.controller.login("login", "senha");
@@ -78,7 +81,8 @@ public class UsuarioServiceTest {
 		assertTrue(u.isAtivo());
 		assertFalse(u.isAdministrador());
 		assertEquals("senha".hashCode(), Integer.parseInt(u.getSenha()));
-		assertEquals(7, new Categoria().where("usuario = ?1", u).size());
+		assertEquals(9, Categoria.dao.findAllByField("usuario", u).size());
+		assertEquals(1, Conta.dao.findAllByField("usuario", u).size());
 		
 		final Usuario u1 = new Usuario("nome sobrenome", "login", "senha");
 		

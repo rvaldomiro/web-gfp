@@ -1,6 +1,6 @@
 package gfp.config;
-
 import gfp.model.Banco;
+import gfp.model.Usuario;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +11,10 @@ import logus.commons.web.AbstractServlet;
 public class GfpServlet extends AbstractServlet {
 	
 	private void setup() throws Exception {
+		if (Usuario.dao.findAll().size() == 0) {
+			new Usuario("Administrador", "admin", "admin", true).save();
+		}
+		
 		if (Banco.listar().size() == 0) {
 			new Banco("Real").save();
 			new Banco("Itaú").save();

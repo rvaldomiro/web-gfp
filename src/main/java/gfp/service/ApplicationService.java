@@ -1,27 +1,23 @@
 package gfp.service;
 
-import java.io.IOException;
+import logus.commons.persistence.ApplicationContext;
+import logus.commons.persistence.hibernate.transaction.TransactionClass;
 
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
-import commons.file.ConfigProperty;
-
 @Service
 @RemotingDestination
-public class ApplicationService {
+public class ApplicationService extends TransactionClass<ApplicationService> {
 	
-	private static String CURRENT_VERSION = null;
+	public static ApplicationService getInstance() throws Exception {
+		return new ApplicationService().getEnhancerInstance();
+	}
 	
 	@RemotingInclude
-	public String obterVersaoAtual() throws IOException {
-		if (CURRENT_VERSION == null) {
-			CURRENT_VERSION = new ConfigProperty("gfp/config/gfp.properties")
-					.getProperty("current-version");
-		}
-		
-		return CURRENT_VERSION;
+	public String obterVersaoAtual() throws Exception {
+		return ApplicationContext.getCurrentVersion();
 	}
 	
 }

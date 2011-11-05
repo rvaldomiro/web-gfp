@@ -3,6 +3,28 @@
 <!ENTITY common SYSTEM "build.xml">
 ]>
 <project name="gfp" basedir="." default="install" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<import file="${basedir}/../resources/lib/git/build.xml" />
+
+	<property name="web" value="web" />
+
+	<property name="context-root" value="gfp" />
+	<property name="FLEX_SDK" value="4.5.1" />
+	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+	<target name="install" depends="clean_web, copy-common-dependencies-ivy_web, copy-locale">
+		<copy todir="${basedir}/flex_libs" preservelastmodified="true">
+			<fileset dir="${repository-dir}/swiz/1.3" />
+		</copy>
+	</target>
+
+
+
+
+
+
+
+
 	<condition property="FLEX_ROOT" value="C:/Program Files/Adobe\Adobe Flash Builder 4.5/sdks">
 		<os family="windows" />
 	</condition>
@@ -28,6 +50,7 @@
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
 	<property name="ivy.lib.dir" value="${web-lib-dir}" />
 
+	<!--
 	<target name="install" depends="clean, copy-dependencies" />
 
 	<target name="clean">
@@ -52,23 +75,11 @@
 			<fileset dir="${basedir}/flex_commons/src/assets/fonts" />
 		</copy>
 	</target>
+	-->
+	
 
-	<target name="ivy-download" unless="offline">
-		<mkdir dir="${ivy.jar.dir}" />
-		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
-	</target>
 
-	<target name="ivy-init" depends="ivy-download">
-		<path id="ivy.lib.path">
-			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
-		</path>
-		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
-	</target>
-
-	<target name="ivy-resolve" depends="ivy-init">
-		<ivy:settings file="ivy-settings.xml" />
-		<ivy:retrieve />
-	</target>
+	
 
 
 	<!--		

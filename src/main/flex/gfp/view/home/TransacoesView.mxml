@@ -64,7 +64,8 @@
 				
 				for each (var lancamento:Lancamento in service.lista)
 				{
-					if (!selecionado || lancamento.selected)
+					if ((!selecionado || lancamento.selected) && !lancamento.categoria
+						.interna && !lancamento.categoria.transferencia)
 					{
 						var valorConsiderado:Number = lancamento.dataPagamento &&
 							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento

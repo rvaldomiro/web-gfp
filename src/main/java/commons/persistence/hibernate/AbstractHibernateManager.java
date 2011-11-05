@@ -26,8 +26,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
-import commons.file.ClassFileFilter;
-import commons.file.JarFileFilter;
+import logus.commons.file.ClassFileFilter;
+import logus.commons.file.JarFileFilter;
 import commons.persistence.ApplicationContext;
 import commons.persistence.Entity;
 

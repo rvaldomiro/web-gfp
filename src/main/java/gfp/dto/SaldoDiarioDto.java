@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+
 import logus.commons.datetime.AbstractDateTime;
 
 public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
@@ -20,16 +25,47 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 		for (final SaldoDiarioDto o : result) {
 			if (hoje) {
 				saldoInicialDia = saldoAnterior;
-				o.setReceitas((Double) new Lancamento()
-						.firstByQuery(
-								"select sum(valorOriginal) from Lancamento where usuario.id = ?1 and dataCompensacao = ?2 and categoria.tipo = ?3 and categoria.estatistica = true",
-								usuarioId, o.dataCompensacao,
-								CategoriaType.RECEITA.ordinal()));
-				o.setDespesas((Double) new Lancamento()
-						.firstByQuery(
-								"select sum(valorOriginal) from Lancamento where usuario.id = ?1 and dataCompensacao = ?2 and categoria.tipo = ?3 and categoria.estatistica = true",
-								usuarioId, o.dataCompensacao,
-								CategoriaType.DESPESA.ordinal()));
+				
+				Criteria c = Lancamento.dao.createCriteria();
+				c.createAlias("categoria", "_categoria");
+				
+				 ProjectionList p = Projections.projectionList();
+				p.add(Projections.sum("valorOriginal"));
+				c.add(Restrictions.eq("usuario.id", usuarioId));
+				c.add(Restrictions.eq("dataCompensacao", o.dataCompensacao));
+				c.add(Restrictions.eq("_categoria.tipo", CategoriaType.RECEITA.ordinal()));
+				c.add(Restrictions.eq("_categoria.estatistica", true));
+				c.setProjection(p);
+				
+				final Double totalReceitas = (Double) c.uniqueResult();
+				
+				o.setReceitas(totalReceitas);
+//				o.setReceitas((Double) new Lancamento()
+//						.firstByQuery(
+//								"select sum(valorOriginal) from Lancamento where usuario.id = ?1 and dataCompensacao = ?2 and categoria.tipo = ?3 and categoria.estatistica = true",
+//								usuarioId, o.dataCompensacao,
+//								CategoriaType.RECEITA.ordinal()));
+				
+				 c = Lancamento.dao.createCriteria();
+				 c.createAlias("categoria", "_categoria");
+				 
+				  p = Projections.projectionList();
+				p.add(Projections.sum("valorOriginal"));
+				c.add(Restrictions.eq("usuario.id", usuarioId));
+				c.add(Restrictions.eq("dataCompensacao", o.dataCompensacao));
+				c.add(Restrictions.eq("_categoria.tipo", CategoriaType.DESPESA.ordinal()));
+				c.add(Restrictions.eq("_categoria.estatistica", true));
+				c.setProjection(p);
+				
+				final Double totalDespesas = (Double) c.uniqueResult();
+				
+				
+				o.setDespesas(totalDespesas);
+//				o.setDespesas((Double) new Lancamento()
+//						.firstByQuery(
+//								"select sum(valorOriginal) from Lancamento where usuario.id = ?1 and dataCompensacao = ?2 and categoria.tipo = ?3 and categoria.estatistica = true",
+//								usuarioId, o.dataCompensacao,
+//								CategoriaType.DESPESA.ordinal()));
 				hoje = false;
 			}
 			
