@@ -2,13 +2,13 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:receitaDespesaVencer="gfp.view.receitaDespesaVencer.*"
+		  xmlns:receitaDespesaVencer = "gfp.view.receitaDespesaVencer.*"
 		  xmlns:despesaVencer = "gfp.view.despesaVencer.*"
-		  xmlns:graficos="gfp.view.graficos.*"
-		  xmlns:custom = "common.components.custom.*">
+		  xmlns:graficos = "gfp.view.graficos.*"
+		  xmlns:custom = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
-			import common.utils.DateUtils;
+			import common.util.DateUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.service.LancamentoService;
@@ -26,7 +26,7 @@
 			
 			private function get anoAtual():int
 			{
-				return DateUtils.today.fullYear;
+				return DateUtil.today.fullYear;
 			}
 			
 			[Bindable]
@@ -35,7 +35,7 @@
 			
 			private function get mesAtual():int
 			{
-				return DateUtils.today.month;
+				return DateUtil.today.month;
 			}
 			
 			[Bindable]
@@ -52,7 +52,7 @@
 																	 , {id: 11, label: "Nov"}
 																	 , {id: 12, label: "Dez"}]);
 			
-			[EventHandler(event="AppEvent.ATUALIZAR_DASHBOARD")]
+			[EventHandler(event = "AppEvent.ATUALIZAR_DASHBOARD")]
 			public function mesAno_changeHandler():void
 			{
 				dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_GRAFICO_MENSAL

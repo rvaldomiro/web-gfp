@@ -1,12 +1,12 @@
 package gfp.dto
 {
-	import common.utils.DateUtils;
+	import common.util.DateUtil;
 	
 	import gfp.model.Lancamento;
 	
 	import mx.collections.ArrayCollection;
 	
-	[RemoteClass(alias="gfp.dto.AgendamentoDto")]
+	[RemoteClass(alias = "gfp.dto.AgendamentoDto")]
 	[Bindable]
 	public class AgendamentoDto
 	{
@@ -20,9 +20,9 @@ package gfp.dto
 		
 		public var anteciparFinaisSemana:Boolean = false;
 		
-		public var dataFinal:Date = DateUtils.add(DateUtils.today, 30);
+		public var dataFinal:Date = DateUtil.add(DateUtil.today, 30);
 		
-		public var dataInicio:Date = DateUtils.today;
+		public var dataInicio:Date = DateUtil.today;
 		
 		public var dia:int = 1;
 		

@@ -17,7 +17,7 @@
 			[Bindable]
 			public var service:LancamentoService;
 			
-			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL")]
+			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL", properties = "event")]
 			public function atualizar(event:ICustomEvent = null):void
 			{
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_RECEITA_MENSAL

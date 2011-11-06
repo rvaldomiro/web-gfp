@@ -1,10 +1,11 @@
 package gfp.service
 {
-	import common.components.service.AbstractService;
-	import common.components.service.IService;
+	import common.component.service.AbstractService;
+	import common.component.service.IService;
 	import common.custom.CustomRemoteObject;
 	import common.custom.ICustomEvent;
-	import common.utils.SortUtils;
+	import common.util.RemoteUtil;
+	import common.util.SortUtil;
 	
 	import gfp.model.Conta;
 	
@@ -13,7 +14,7 @@ package gfp.service
 	import mx.rpc.remoting.RemoteObject;
 	import mx.utils.ObjectUtil;
 	
-	public class ContaService extends AbstractService implements IService
+	public class ContaService extends AbstractService 
 	{
 		
 		[Bindable]
@@ -22,52 +23,53 @@ package gfp.service
 		[Bindable]
 		public var selecionada:Conta;
 		
-		public function get service():RemoteObject
+		private function get service():RemoteObject
 		{
-			return new CustomRemoteObject("contaService");
+			return RemoteUtil.createRemoteObject("contaService") as RemoteObject;
 		}
 		
 		[Inject]
 		public var usuarioService:UsuarioService;
 		
-		[EventHandler(event="ContaEvent.EXCLUIR")]
+		[EventHandler(event = "ContaEvent.EXCLUIR", properties = "event")]
 		public function excluir(event:ICustomEvent):void
 		{
-			executeService(service.excluir(event.object), event, function(re:ResultEvent):void
+			executeService(service.excluir(event.object), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});
 		}
 		
-		[EventHandler(event="ContaEvent.LISTAR")]
+		[EventHandler(event = "ContaEvent.LISTAR", properties = "event")]
 		public function listar(event:ICustomEvent):void
 		{
 			executeService(service.listarContasAtivas(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
-			{
-				lista = re.result as ArrayCollection;
-				SortUtils.sortText(lista, "identificacao");
-			});
-			
-			executeService(service.listarContas(usuarioService.idUsuarioLogado), event
 						   , function(re:ResultEvent):void
-			{
-				listaCompleta = re.result as ArrayCollection;
-				SortUtils.sortText(listaCompleta, "identificacao");
-			});
+						   {
+							   list = re.result as ArrayCollection;
+							   SortUtil.sortText(list, "identificacao");
+						   });
+			
+			executeService(service.listarContas(usuarioService.idUsuarioLogado)
+						   , function(re:ResultEvent):void
+						   {
+							   listaCompleta = re.result as ArrayCollection;
+							   SortUtil.sortText(listaCompleta, "identificacao");
+						   });
 		}
 		
-		[EventHandler(event="ContaEvent.EDITAR")]
+		[EventHandler(event = "ContaEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
-			selecionada = event.object ? ObjectUtil.copy(event.object) as Conta : new Conta();
+			selecionada = event.object ? ObjectUtil.copy(event.object) as Conta :
+				new Conta();
 			selecionada.usuario ||= usuarioService.usuarioLogado;
 		}
 		
-		[EventHandler(event="ContaEvent.SALVAR")]
+		[EventHandler(event = "ContaEvent.SALVAR", properties = "event")]
 		public function salvar(event:ICustomEvent):void
 		{
-			executeService(service.salvarConta(selecionada), event, function(re:ResultEvent):void
+			executeService(service.salvarConta(selecionada), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});

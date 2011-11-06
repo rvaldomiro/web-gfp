@@ -1,10 +1,11 @@
 package gfp.service
 {
-	import common.components.service.AbstractService;
-	import common.components.service.IService;
+	import common.component.service.AbstractService;
+	import common.component.service.IService;
 	import common.custom.CustomRemoteObject;
 	import common.custom.ICustomEvent;
-	import common.utils.SortUtils;
+	import common.util.RemoteUtil;
+	import common.util.SortUtil;
 	
 	import gfp.model.Categoria;
 	
@@ -13,42 +14,42 @@ package gfp.service
 	import mx.rpc.remoting.RemoteObject;
 	import mx.utils.ObjectUtil;
 	
-	public class CategoriaService extends AbstractService implements IService
+	public class CategoriaService extends AbstractService
 	{
 		
 		[Bindable]
 		public var selecionada:Categoria;
 		
-		public function get service():RemoteObject
-		{
-			return new CustomRemoteObject("categoriaService");
-		}
-		
 		[Inject]
 		public var usuarioService:UsuarioService;
 		
-		[EventHandler(event = "CategoriaEvent.EXCLUIR")]
+		private function get service():RemoteObject
+		{
+			return RemoteUtil.createRemoteObject("categoriaService") as RemoteObject;
+		}
+		
+		[EventHandler(event = "CategoriaEvent.EXCLUIR", properties = "event")]
 		public function excluir(event:ICustomEvent):void
 		{
-			executeService(service.excluir(event.object), event, function(re:ResultEvent):void
+			executeService(service.excluir(event.object), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});
 		}
 		
-		[EventHandler(event = "CategoriaEvent.LISTAR")]
+		[EventHandler(event = "CategoriaEvent.LISTAR", properties = "event")]
 		public function listar(event:ICustomEvent):void
 		{
 			executeService(service.listarCategorias(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
-							   lista = re.result as ArrayCollection;
-							   lista.filterFunction = listaFilter;
-							   SortUtils.sortText(lista, "descricao");
+							   list = re.result as ArrayCollection;
+							   list.filterFunction = listaFilter;
+							   SortUtil.sortText(list, "descricao");
 						   });
 		}
 		
-		[EventHandler(event = "CategoriaEvent.EDITAR")]
+		[EventHandler(event = "CategoriaEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
 			selecionada = event.object ? ObjectUtil.copy(event.object) as Categoria :
@@ -56,10 +57,10 @@ package gfp.service
 			selecionada.usuario ||= usuarioService.usuarioLogado;
 		}
 		
-		[EventHandler(event = "CategoriaEvent.SALVAR")]
+		[EventHandler(event = "CategoriaEvent.SALVAR", properties = "event")]
 		public function salvar(event:ICustomEvent):void
 		{
-			executeService(service.salvarCategoria(event.object), event, event.result);
+			executeService(service.salvarCategoria(event.object), event.result);
 		}
 		
 		private function listaFilter(categoria:Categoria):Boolean

@@ -1,6 +1,6 @@
 package gfp.dto
 {
-	import common.utils.DateUtils;
+	import common.util.DateUtil;
 	
 	import gfp.model.Categoria;
 	import gfp.model.Conta;
@@ -20,9 +20,9 @@ package gfp.dto
 		
 		public var conta:Conta;
 		
-		public var dataFinal:Date = DateUtils.lastDayOfCurrentMonth();
+		public var dataFinal:Date = DateUtil.lastDayOfCurrentMonth();
 		
-		public var dataInicio:Date = DateUtils.today;
+		public var dataInicio:Date = DateUtil.today;
 		
 		public var idUsuario:Number;
 		

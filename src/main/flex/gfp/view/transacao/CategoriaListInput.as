@@ -1,7 +1,7 @@
 package gfp.view.transacao
 {
 	import common.custom.CustomEvent;
-	import common.utils.MessageUtils;
+	import common.util.MessageUtil;
 	
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -28,7 +28,7 @@ package gfp.view.transacao
 		
 		public function validate(callBack:Function):void
 		{
-			MessageUtils.confirmBoolean("'" + textInput.text + "' será uma categoria de Receitas?"
+			MessageUtil.confirmBoolean("'" + textInput.text + "' será uma categoria de Receitas?"
 										, function(result:Boolean):void
 										{
 											var categoria:Categoria = new Categoria();

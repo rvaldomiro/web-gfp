@@ -2,14 +2,14 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		  width = "100%"
 		  height = "100%">
 	<fx:Script>
 		<![CDATA[
 			import assets.images.ImageUtil;
 			
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			
 			import gfp.event.TransacaoEvent;
 			import gfp.service.LancamentoService;
@@ -21,7 +21,7 @@
 			[Bindable]
 			public var service:LancamentoService;
 			
-			[EventHandler(event="AppEvent.ATUALIZAR_DASHBOARD")]
+			[EventHandler(event = "AppEvent.ATUALIZAR_DASHBOARD")]
 			public function atualizar():void
 			{
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_SALDO_POR_CONTA
@@ -58,7 +58,7 @@
 		</mx:DataGrid>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarSaldoPorConta"
-										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 										 width = "100%"
 										 height = "100%"/>
 	</s:Group>

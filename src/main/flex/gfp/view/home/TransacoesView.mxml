@@ -2,13 +2,15 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
-		  xmlns:custom = "common.components.custom.*">
+		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
+		  xmlns:custom = "common.spark.component.*"
+		  xmlns:component = "common.component.*">
 	<fx:Script>
 		<![CDATA[
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.custom.ICustomEvent;
-			import common.utils.NumberUtils;
+			
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.util.NumberUtil;
 			
 			import gfp.dto.LancamentoDto;
 			import gfp.event.TransacaoEvent;
@@ -45,7 +47,7 @@
 			private var categorias:ArrayCollection;
 			
 			[EventHandler(event = "TransacaoEvent.CALCULAR_TOTAIS")]
-			public function calcularTotais(e:ICustomEvent = null):void
+			public function calcularTotais(event:ICustomEvent = null):void
 			{
 				var valor:Number = 0;
 				var quantidade:int = 0;
@@ -53,7 +55,7 @@
 				var saldo:Number = 0;
 				var selecionado:Boolean = false;
 				
-				for each (var o:Lancamento in service.lista)
+				for each (var o:Lancamento in service.list)
 				{
 					if (o.selected)
 					{
@@ -62,7 +64,7 @@
 					}
 				}
 				
-				for each (var lancamento:Lancamento in service.lista)
+				for each (var lancamento:Lancamento in service.list)
 				{
 					if ((!selecionado || lancamento.selected) && !lancamento.categoria
 						.interna && !lancamento.categoria.transferencia)
@@ -79,27 +81,27 @@
 					}
 				}
 				
-				textValor.text = "Valor: " + NumberUtils.formatNumber(valor, 2);
+				textValor.text = "Valor: " + NumberUtil.formatNumber(valor, 2);
 				textQuantidade.text = "Lançamentos: " + quantidade;
-				textMedia.text = "Média: " + NumberUtils.formatNumber(media, 2);
-				textSaldo.text = "Saldo: " + NumberUtils.formatNumber(saldo, 2);
+				textMedia.text = "Média: " + NumberUtil.formatNumber(media, 2);
+				textSaldo.text = "Saldo: " + NumberUtil.formatNumber(saldo, 2);
 				textSaldo.setStyle("color", saldo < 0 ? "#ff0000" : "#62ae34");
 			}
 			
 			[EventHandler(event = "AppEvent.TO_TRANSACOES")]
-			public function pesquisar(e:ICustomEvent = null):void
+			public function pesquisar(event:ICustomEvent = null):void
 			{
 				if (!categorias || categorias.length == 0)
 				{
 					carregarCategorias();
 				}
 				
-				if (e && e.object)
+				if (event && event.object)
 				{
 					checkContas.selected = true;
 					checkCategorias.selected = false;
 					
-					var o:LancamentoDto = e.object as LancamentoDto;
+					var o:LancamentoDto = event.object as LancamentoDto;
 					dto.dataInicio = o.dataInicio;
 					dto.dataFinal = o.dataFinal;
 					dto.situacao = o.situacoes[0].data;
@@ -128,7 +130,7 @@
 			{
 				categorias = new ArrayCollection();
 				
-				for each (var categoria:Categoria in serviceCategoria.lista)
+				for each (var categoria:Categoria in serviceCategoria.list)
 				{
 					var item:Object = new Object();
 					item.data = categoria.id;
@@ -161,11 +163,11 @@
 								dataProvider = "{dto.tiposPeriodo}"
 								selectedIndex = "@{dto.tipoPeriodo}"/>
 
-				<custom:CustomDateField selectedDate = "@{dto.dataInicio}"
-										editable = "true"/>
+				<component:CustomDateField selectedDate = "@{dto.dataInicio}"
+										   editable = "true"/>
 
-				<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
-										editable = "true"/>
+				<component:CustomDateField selectedDate = "@{dto.dataFinal}"
+										   editable = "true"/>
 
 				<s:DropDownList dataProvider = "{dto.situacoes}"
 								selectedIndex = "@{dto.situacao}"/>
@@ -176,7 +178,7 @@
 							skinClass = "spark.skins.spark.CheckBoxSkin"/>
 
 				<s:DropDownList id = "comboContas"
-								dataProvider = "{serviceConta.lista}"
+								dataProvider = "{serviceConta.list}"
 								prompt = "Conta"
 								enabled = "{!checkContas.selected}"
 								selectedItem = "@{dto.conta}"/>
@@ -213,7 +215,7 @@
 
 	<s:Group width = "100%"
 			 height = "100%">
-		<mx:DataGrid dataProvider = "{service.lista}"
+		<mx:DataGrid dataProvider = "{service.list}"
 					 showHeaders = "false"
 					 width = "100%"
 					 height = "100%">
@@ -232,7 +234,7 @@
 		</mx:DataGrid>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarLancamentos"
-										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 										 width = "100%"
 										 height = "100%"/>
 	</s:Group>

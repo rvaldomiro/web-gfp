@@ -6,8 +6,8 @@
 		<![CDATA[
 			import assets.images.ImageUtil;
 			
-			import common.utils.DateUtils;
-			import common.utils.NumberUtils;
+			import common.util.DateUtil;
+			import common.util.NumberUtil;
 			import gfp.model.Lancamento;
 			
 			import gfp.type.FormaPagamentoType;
@@ -30,11 +30,11 @@
 			  paddingRight = "2"
 			  paddingTop = "2"
 			  paddingBottom = "2">
-		<s:Label text = "{DateUtils.formatSimple(o.dataPagamento)}"
+		<s:Label text = "{DateUtil.formatSimple(o.dataPagamento)}"
 				 width = "70"
 				 textAlign = "center"/>
 
-		<s:Label text = "{NumberUtils.formatNumber(o.valorPago, 2)}"
+		<s:Label text = "{NumberUtil.formatNumber(o.valorPago, 2)}"
 				 textAlign = "right"
 				 width = "70"/>
 

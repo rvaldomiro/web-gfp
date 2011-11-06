@@ -1,7 +1,7 @@
 /* CSS file */
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
-@namespace ah "common.components.com.hulstkamp.flex.spark.components.*";
+@namespace ah "common.spark.component.tooltip.*";
 @namespace chartClasses "mx.charts.chartClasses.*";
 
 @font-face {

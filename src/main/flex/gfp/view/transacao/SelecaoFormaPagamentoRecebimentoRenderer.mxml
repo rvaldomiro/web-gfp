@@ -29,7 +29,7 @@
 				_lancamento = lancamento;
 				_dataProvider = new ArrayCollection();
 				
-				for each (var conta:Conta in contaService.lista)
+				for each (var conta:Conta in contaService.list)
 				{
 					if (conta.tipo == ContaType.CARTEIRA)
 					{

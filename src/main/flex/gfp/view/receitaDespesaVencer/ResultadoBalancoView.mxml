@@ -7,7 +7,7 @@
 	<fx:Script>
 		<![CDATA[
 			import common.custom.ICustomEvent;
-			import common.utils.NumberUtils;
+			import common.util.NumberUtil;
 			
 			[Bindable]
 			private var credito:Number = 0;
@@ -15,13 +15,13 @@
 			[Bindable]
 			private var debito:Number = 0;
 			
-			[EventHandler(event="TransacaoEvent.ATUALIZAR_CREDITO")]
+			[EventHandler(event = "TransacaoEvent.ATUALIZAR_CREDITO", properties = "event")]
 			public function atualizarCredito(event:ICustomEvent):void
 			{
 				credito = event.object as Number;
 			}
 			
-			[EventHandler(event="TransacaoEvent.ATUALIZAR_DEBITO")]
+			[EventHandler(event = "TransacaoEvent.ATUALIZAR_DEBITO", properties = "event")]
 			public function atualizarDebito(event:ICustomEvent):void
 			{
 				debito = event.object as Number;
@@ -57,7 +57,7 @@
 				 fontFamily = "Title"
 				 fontSize = "14"/>
 
-		<s:Label text = "{NumberUtils.formatNumber(credito - debito, 2)}"
+		<s:Label text = "{NumberUtil.formatNumber(credito - debito, 2)}"
 				 color = "#FFFFFF"
 				 fontSize = "20"/>
 	</s:VGroup>

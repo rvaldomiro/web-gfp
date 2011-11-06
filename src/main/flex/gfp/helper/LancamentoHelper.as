@@ -1,6 +1,6 @@
 package gfp.helper
 {
-	import common.utils.DateUtils;
+	import common.util.DateUtil;
 	
 	import gfp.model.Lancamento;
 	
@@ -8,7 +8,7 @@ package gfp.helper
 	{
 		public static function intervaloPrevisaoPagamento(o:Lancamento):String
 		{
-			var diasParaPrevisaoPagamento:int = DateUtils.compareToday(o.dataPrevisaoPagamento);
+			var diasParaPrevisaoPagamento:int = DateUtil.compareToday(o.dataPrevisaoPagamento);
 			
 			if (diasParaPrevisaoPagamento < -1)
 			{

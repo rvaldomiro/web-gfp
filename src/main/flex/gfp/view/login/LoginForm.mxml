@@ -2,20 +2,20 @@
 <s:Panel xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		 xmlns:s = "library://ns.adobe.com/flex/spark"
 		 xmlns:mx = "library://ns.adobe.com/flex/mx"
-		 creationComplete = "creationCompleteHandler(event)"
-		 xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		 creationComplete = "creationCompleteHandler()"
+		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		 xmlns:usuarios = "gfp.view.usuarios.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
 		 title.Login = "Bem-Vindo ao GFP"
 		 title.Cadastro = "Novo Usuário"
 		 resizeEffect = "{mx.effects.Resize}"
 		 currentStateChange = "panel1_currentStateChangeHandler(event)"
-		 xmlns:custom = "common.components.custom.*">
+		 xmlns:custom = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
-			import common.components.custom.RequiredValidator;
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
-			import common.utils.MessageEvent;
+			import common.component.validator.RequiredValidator;
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.util.MessageEvent;
 			
 			import gfp.dto.UsuarioDto;
 			import gfp.event.AppEvent;
@@ -48,13 +48,12 @@
 			{
 				if (event.newState == "Login")
 				{
-					new RequiredValidator(null, [textUsuario, textSenha]).clearAllValidators();
+					RequiredValidator.reset([textUsuario, textSenha]);
 				}
 				else
 				{
-					new RequiredValidator(null, [textCadastroUsuario, textCadastroSenha
-												 , textCadastroConfirmacao, textCadastroNome])
-						.clearAllValidators();
+					RequiredValidator.reset([textCadastroUsuario, textCadastroSenha
+											 , textCadastroConfirmacao, textCadastroNome]);
 				}
 			}
 			
@@ -77,11 +76,13 @@
 															  , service.selecionado
 															  , function(re:ResultEvent):void
 															  {
-																  dispatcher.dispatchEvent(new MessageEvent("Sua conta foi criada com sucesso!"));
+																  dispatcher.dispatchEvent(new MessageEvent("Sua conta foi criada com sucesso!"
+																											, parent));
 																  buttonCancelar_clickHandler();
 															  }, function(fe:FaultEvent):void
 															  {
-																  dispatcher.dispatchEvent(new MessageEvent(fe));
+																  dispatcher.dispatchEvent(new MessageEvent(fe
+																											, parent));
 															  }));
 				}
 			}
@@ -111,11 +112,12 @@
 																									.TO_HOME));
 														  }, function(fe:FaultEvent):void
 														  {
-															  dispatcher.dispatchEvent(new MessageEvent(fe));
+															  dispatcher.dispatchEvent(new MessageEvent(fe
+																										, parent));
 														  }));
 			}
 			
-			private function creationCompleteHandler(event:Event):void
+			private function creationCompleteHandler():void
 			{
 				dispatchEvent(new AppEvent(AppEvent.OBTER_VERSAO_ATUAL, null, autoLogin));
 			}
@@ -140,7 +142,8 @@
 				{
 					if (textCadastroSenha.text != textCadastroConfirmacao.text)
 					{
-						dispatcher.dispatchEvent(new MessageEvent("Senhas não conferem"));
+						dispatcher.dispatchEvent(new MessageEvent("Senhas não conferem"
+																  , this));
 						textCadastroSenha.setFocus();
 						result = false;
 					}
@@ -226,7 +229,7 @@
 	</s:VGroup>
 
 	<serviceFeedback:ServiceFeedback watchForCall = "login"
-									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 									 width = "100%"
 									 height = "100%"
 									 includeIn = "Login"/>
@@ -280,7 +283,7 @@
 	</s:VGroup>
 
 	<serviceFeedback:ServiceFeedback watchForCall = "salvarUsuario"
-									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 									 width = "100%"
 									 height = "100%"
 									 includeIn = "Cadastro"/>

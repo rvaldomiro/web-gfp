@@ -1,10 +1,11 @@
 package gfp.service
 {
-	import common.components.service.AbstractService;
-	import common.components.service.IService;
+	import common.component.service.AbstractService;
+	import common.component.service.IService;
 	import common.custom.CustomRemoteObject;
 	import common.custom.ICustomEvent;
-	import common.utils.SortUtils;
+	import common.util.RemoteUtil;
+	import common.util.SortUtil;
 	
 	import gfp.dto.LancamentoDto;
 	import gfp.factory.LancamentoFactory;
@@ -16,7 +17,7 @@ package gfp.service
 	import mx.rpc.remoting.RemoteObject;
 	import mx.utils.ObjectUtil;
 	
-	public class LancamentoService extends AbstractService implements IService
+	public class LancamentoService extends AbstractService
 	{
 		
 		[Bindable]
@@ -40,48 +41,48 @@ package gfp.service
 		[Bindable]
 		public var selecionado:Lancamento;
 		
-		public function get service():RemoteObject
-		{
-			return new CustomRemoteObject("lancamentoService");
-		}
-		
 		[Inject]
 		public var usuarioService:UsuarioService;
 		
-		[EventHandler(event = "TransacaoEvent.AGENDAR")]
+		private function get service():RemoteObject
+		{
+			return RemoteUtil.createRemoteObject("lancamentoService") as RemoteObject;
+		}
+		
+		[EventHandler(event = "TransacaoEvent.AGENDAR", properties = "event")]
 		public function agendar(event:ICustomEvent):void
 		{
-			executeService(service.agendarLancamentos(event.object), event, function(re:ResultEvent):void
+			executeService(service.agendarLancamentos(event.object), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});
 		}
 		
-		[EventHandler(event = "TransacaoEvent.EXCLUIR")]
+		[EventHandler(event = "TransacaoEvent.EXCLUIR", properties = "event")]
 		public function excluir(event:ICustomEvent):void
 		{
-			executeService(service.excluir(event.object), event, function(re:ResultEvent):void
+			executeService(service.excluir(event.object), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR")]
+		[EventHandler(event = "TransacaoEvent.LISTAR", properties = "event")]
 		public function listar(event:ICustomEvent):void
 		{
 			var dto:LancamentoDto = event.object as LancamentoDto;
 			dto.idUsuario = usuarioService.idUsuarioLogado;
 			
-			executeService(service.listarLancamentos(event.object), event, function(re:ResultEvent):void
+			executeService(service.listarLancamentos(event.object), function(re:ResultEvent):void
 			{
-				lista = re.result as ArrayCollection;
-				SortUtils.sortDateArray(lista, ["dataPrevisaoPagamento", "dataVencimento"]);
-				lista.refresh();
+				list = re.result as ArrayCollection;
+				SortUtil.sortDateArray(list, ["dataPrevisaoPagamento", "dataVencimento"]);
+				list.refresh();
 				event.result(re);
 			});
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_DESPESA_MENSAL")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_DESPESA_MENSAL", properties = "event")]
 		public function listarDespesaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
@@ -89,38 +90,38 @@ package gfp.service
 															  Date).month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.DESPESA)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaDespesaMensal = re.result as ArrayCollection;
-							   SortUtils.sortValue(listaDespesaMensal, "valor");
+							   SortUtil.sortValue(listaDespesaMensal, "valor");
 							   event.result(re);
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_DESPESAS_VENCER")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_DESPESAS_VENCER", properties = "event")]
 		public function listarDespesasVencer(event:ICustomEvent):void
 		{
 			executeService(service.listarDespesasVencer(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaDespesasVencer = re.result as ArrayCollection;
-							   SortUtils.sortDateArray(listaDespesasVencer, ["dataPrevisaoPagamento"
-																			 , "dataVencimento"]);
+							   SortUtil.sortDateArray(listaDespesasVencer, ["dataPrevisaoPagamento"
+																			, "dataVencimento"]);
 							   event.result(re);
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO", properties = "event")]
 		public function listarPrevisaoSaldoDiario(event:ICustomEvent):void
 		{
 			executeService(service.listarPrevisaoSaldoDiario(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaPrevisaoSaldoDiario = re.result as ArrayCollection;
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_RECEITA_MENSAL")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_RECEITA_MENSAL", properties = "event")]
 		public function listarReceitaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
@@ -128,38 +129,38 @@ package gfp.service
 															  Date).month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.RECEITA)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaReceitaMensal = re.result as ArrayCollection;
-							   SortUtils.sortValue(listaReceitaMensal, "valor");
+							   SortUtil.sortValue(listaReceitaMensal, "valor");
 							   event.result(re);
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_RECEITAS_VENCER")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_RECEITAS_VENCER", properties = "event")]
 		public function listarReceitasVencer(event:ICustomEvent):void
 		{
 			executeService(service.listarReceitasVencer(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaReceitasVencer = re.result as ArrayCollection;
-							   SortUtils.sortDateArray(listaReceitasVencer, ["dataPrevisaoPagamento"
-																			 , "dataVencimento"]);
+							   SortUtil.sortDateArray(listaReceitasVencer, ["dataPrevisaoPagamento"
+																			, "dataVencimento"]);
 							   event.result(re);
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.LISTAR_SALDO_POR_CONTA")]
+		[EventHandler(event = "TransacaoEvent.LISTAR_SALDO_POR_CONTA", properties = "event")]
 		public function listarSaldoPorConta(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoPorConta(usuarioService.idUsuarioLogado)
-						   , event, function(re:ResultEvent):void
+						   , function(re:ResultEvent):void
 						   {
 							   listaSaldoAtual = re.result as ArrayCollection;
 						   });
 		}
 		
-		[EventHandler(event = "TransacaoEvent.EDITAR")]
+		[EventHandler(event = "TransacaoEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
 			selecionado = event.object ? ObjectUtil.copy(event.object) as Lancamento :
@@ -167,10 +168,10 @@ package gfp.service
 			selecionado.usuario ||= usuarioService.usuarioLogado;
 		}
 		
-		[EventHandler(event = "TransacaoEvent.SALVAR")]
+		[EventHandler(event = "TransacaoEvent.SALVAR", properties = "event")]
 		public function salvar(event:ICustomEvent):void
 		{
-			executeService(service.salvarLancamento(selecionado), event, function(re:ResultEvent):void
+			executeService(service.salvarLancamento(selecionado), function(re:ResultEvent):void
 			{
 				event.result(re);
 			});

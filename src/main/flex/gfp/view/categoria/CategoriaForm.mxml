@@ -3,17 +3,18 @@
 		 xmlns:s = "library://ns.adobe.com/flex/spark"
 		 xmlns:mx = "library://ns.adobe.com/flex/mx"
 		 creationCompleteEffect = "{fadeIn}"
-		 xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
 		 title = "Categoria"
-		 xmlns:custom = "common.components.custom.*">
+		 xmlns:custom = "common.components.custom.*"
+		 xmlns:component = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
-			import common.components.custom.RequiredValidator;
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.component.validator.RequiredValidator;
 			import common.custom.CustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.MessageUtils;
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.util.DateUtil;
+			import common.util.MessageUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.CategoriaEvent;
@@ -129,25 +130,25 @@
 		<s:CheckBox id = "checkTransferencia"
 					selected = "@{service.selecionada.transferencia}"
 					label = "Transferência entre contas"/>
-		
+
 		<s:CheckBox id = "checkConciliada"
 					selected = "@{service.selecionada.estatistica}"
 					label = "{checkConciliada.selected ? 'Conciliada' : 'Não Conciliada'}"/>
 
 		<s:HGroup width = "100%"
 				  horizontalAlign = "center">
-			<custom:CustomButton label = "Cancelar"
-								 click = "cancelar()"
-								 styleName = "styleButtonRed"/>
+			<component:CustomButton label = "Cancelar"
+									click = "cancelar()"
+									styleName = "styleButtonRed"/>
 
-			<custom:CustomButton label = "Salvar"
-								 click = "salvar()"
-								 styleName = "styleButtonGreen"/>
+			<component:CustomButton label = "Salvar"
+									click = "salvar()"
+									styleName = "styleButtonGreen"/>
 		</s:HGroup>
 	</s:VGroup>
 
 	<serviceFeedback:ServiceFeedback watchForCall = "salvarCategoria"
-									 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+									 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 									 width = "100%"
 									 height = "100%"/>
 </s:Panel>

@@ -5,11 +5,11 @@
 		  xmlns:home = "gfp.view.home.*"
 		  xmlns:menu = "gfp.view.menu.*"
 		  xmlns:saldoPorConta = "gfp.view.saldoPorConta.*"
-		  xmlns:custom = "common.components.custom.*">
+		  xmlns:custom = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
 			import common.custom.ICustomEvent;
-			import common.utils.DateUtils;
+			import common.util.DateUtil;
 			
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
@@ -20,22 +20,23 @@
 			
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_ULTIMO_ANO")]
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_DIA")]
-			public function navigatorTransacoes_showHandler(e:ICustomEvent = null):void
+			public function navigatorTransacoes_showHandler(event:ICustomEvent =
+															null):void
 			{
 				if (stackHome.selectedChild != navigatorTransacoes)
 				{
 					stackHome.selectedChild = navigatorTransacoes;
 				}
 				
-				if (e && (e as Event).type == AppEvent.TO_TRANSACOES_ULTIMO_ANO)
+				if (event && (event as Event).type == AppEvent.TO_TRANSACOES_ULTIMO_ANO)
 				{
-					var dto:LancamentoDto = e.object as LancamentoDto;
-					dto.dataInicio = DateUtils.remove(DateUtils.today, 365);
-					dto.dataFinal = DateUtils.today;
+					var dto:LancamentoDto = event.object as LancamentoDto;
+					dto.dataInicio = DateUtil.remove(DateUtil.today, 365);
+					dto.dataFinal = DateUtil.today;
 				}
 				
-				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES, e ?
-													  e.object : null));
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES, event ?
+													  event.object : null));
 			}
 			
 			private function buttonNovaTransacao_clickHandler():void

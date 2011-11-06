@@ -1,6 +1,6 @@
 package gfp.factory
 {
-	import common.utils.DateUtils;
+	import common.util.DateUtil;
 	
 	import gfp.model.Lancamento;
 	import gfp.type.FormaPagamentoType;
@@ -10,8 +10,8 @@ package gfp.factory
 		public static function criar():Lancamento
 		{
 			var o:Lancamento = new Lancamento();
-			o.dataVencimento = DateUtils.today;
-			o.dataPrevisaoPagamento = DateUtils.today;
+			o.dataVencimento = DateUtil.today;
+			o.dataPrevisaoPagamento = DateUtil.today;
 			o.valorOriginal = 0;
 			o.valorPago = 0;
 			o.formaPagamento = FormaPagamentoType.DINHEIRO;

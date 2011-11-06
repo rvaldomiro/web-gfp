@@ -1,30 +1,31 @@
 package gfp.service
 {
-	import common.components.service.AbstractService;
-	import common.components.service.IService;
+	import common.component.service.AbstractService;
+	import common.component.service.IService;
 	import common.custom.CustomRemoteObject;
 	import common.custom.ICustomEvent;
-	import common.utils.SortUtils;
+	import common.util.RemoteUtil;
+	import common.util.SortUtil;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
-	public class BancoService extends AbstractService implements IService
+	public class BancoService extends AbstractService 
 	{
 		
-		public function get service():RemoteObject
+		private function get service():RemoteObject
 		{
-			return new CustomRemoteObject("bancoService");
+			return RemoteUtil.createRemoteObject("bancoService") as RemoteObject;
 		}
 		
-		[EventHandler(event="CategoriaEvent.LISTAR")]
+		[EventHandler(event = "CategoriaEvent.LISTAR", properties = "event")]
 		public function listar(event:ICustomEvent):void
 		{
-			executeService(service.listarBancos(), event, function(re:ResultEvent):void
+			executeService(service.listarBancos(), function(re:ResultEvent):void
 			{
-				lista = re.result as ArrayCollection;
-				SortUtils.sortText(lista, "nome");
+				list = re.result as ArrayCollection;
+				SortUtil.sortText(list, "nome");
 			});
 		}
 	}

@@ -2,17 +2,18 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
+		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		  width = "100%"
 		  height = "100%"
 		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.NumberUtils;
+			
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.util.DateUtil;
+			import common.util.NumberUtil;
 			
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
@@ -42,15 +43,15 @@
 			{
 				var s:String;
 				
-				s = DateUtils.formatSimple((e.item).dataCompensacao);
-				s += "\n Inicial: " + NumberUtils.formatNumber((e.item).saldoInicial
+				s = DateUtil.formatSimple((e.item).dataCompensacao);
+				s += "\n Inicial: " + NumberUtil.formatNumber((e.item).saldoInicial
+															  , 2);
+				s += "\n Receitas: " + NumberUtil.formatNumber((e.item).receitas
 															   , 2);
-				s += "\n Receitas: " + NumberUtils.formatNumber((e.item).receitas
-																, 2);
-				s += "\n Despesas: " + NumberUtils.formatNumber((e.item).despesas
-																, 2);
-				s += "\n Saldo: " + NumberUtils.formatNumber((e.item).saldoAcumulado
-															 , 2);
+				s += "\n Despesas: " + NumberUtil.formatNumber((e.item).despesas
+															   , 2);
+				s += "\n Saldo: " + NumberUtil.formatNumber((e.item).saldoAcumulado
+															, 2);
 				return s;
 			}
 			
@@ -116,7 +117,7 @@
 		</mx:LineChart>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarPrevisaoSaldoDiario"
-										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 										 width = "100%"
 										 height = "100%"/>
 	</s:Group>

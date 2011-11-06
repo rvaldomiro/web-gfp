@@ -1,28 +1,29 @@
 package gfp.service
 {
-	import common.components.service.AbstractService;
-	import common.components.service.IService;
+	import common.component.service.AbstractService;
+	import common.component.service.IService;
 	import common.custom.CustomRemoteObject;
 	import common.custom.ICustomEvent;
+	import common.util.RemoteUtil;
 	
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
-	public class ApplicationService extends AbstractService implements IService
+	public class ApplicationService extends AbstractService
 	{
-		
-		public function get service():RemoteObject
-		{
-			return new CustomRemoteObject("applicationService");
-		}
 		
 		[Bindable]
 		public var versaoAtual:String;
 		
-		[EventHandler(event="AppEvent.OBTER_VERSAO_ATUAL")]
+		private function get service():RemoteObject
+		{
+			return RemoteUtil.createRemoteObject("applicationService") as RemoteObject;
+		}
+		
+		[EventHandler(event = "AppEvent.OBTER_VERSAO_ATUAL", properties = "event")]
 		public function obterVersaoAtual(event:ICustomEvent):void
 		{
-			executeService(service.obterVersaoAtual(), event, function(re:ResultEvent):void
+			executeService(service.obterVersaoAtual(), function(re:ResultEvent):void
 			{
 				versaoAtual = re.result as String;
 				event.result(re);

@@ -35,14 +35,14 @@
 
 	<fx:Script>
 		<![CDATA[
-			import common.utils.EffectUtils;
-			import common.utils.MessageEvent;
+			import common.spark.util.EffectUtils;
+			import common.util.MessageEvent;
 			
 			import mx.events.EffectEvent;
 			
 			private var shake:Boolean;
 			
-			[EventHandler(event="MessageEvent_Show")]
+			[EventHandler(event = "MessageEvent_Show", properties = "event")]
 			public function showMessage(event:MessageEvent):void
 			{
 				labelRodape.text = event.message;

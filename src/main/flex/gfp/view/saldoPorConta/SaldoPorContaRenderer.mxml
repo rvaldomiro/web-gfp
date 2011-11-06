@@ -4,8 +4,8 @@
 						  xmlns:mx = "library://ns.adobe.com/flex/mx">
 	<fx:Script>
 		<![CDATA[
-			import common.utils.NumberUtils;
-			import common.utils.StringUtils;
+			import common.util.NumberUtil;
+			import common.util.StringUtil;
 		]]>
 	</fx:Script>
 
@@ -23,12 +23,12 @@
 					 fontSize = "10"
 					 width = "100%"/>
 
-			<s:Label text = "{StringUtils.decode(data.situacao)}"
+			<s:Label text = "{StringUtil.decode(data.situacao)}"
 					 fontSize = "10"
 					 width = "70"
 					 textAlign = "right"/>
 
-			<s:Label text = "{NumberUtils.formatNumber(data.saldo, 2)}"
+			<s:Label text = "{NumberUtil.formatNumber(data.saldo, 2)}"
 					 fontSize = "11"
 					 width = "60"
 					 textAlign = "right"/>

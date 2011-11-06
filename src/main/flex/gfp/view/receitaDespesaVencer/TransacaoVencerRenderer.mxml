@@ -8,8 +8,8 @@
 			import assets.images.ImageUtil;
 			
 			import common.custom.CustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.NumberUtils;
+			import common.util.DateUtil;
+			import common.util.NumberUtil;
 			
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
@@ -33,8 +33,7 @@
 			
 			private function dataChangeHandler(event:FlexEvent):void
 			{
-				var compareHoje:int = DateUtils.compareToday(o.dataVencimento) *
-					-1;
+				var compareHoje:int = DateUtil.compareToday(o.dataVencimento) * -1;
 				
 				if (compareHoje >= 0)
 				{
@@ -45,7 +44,7 @@
 							"Vencendo hoje";
 						labelPrevisaoPagamento.setStyle("color", 0xff0000);
 					}
-					else if (DateUtils.compare(o.dataPagamento, o.dataVencimento) <=
+					else if (DateUtil.compare(o.dataPagamento, o.dataVencimento) <=
 						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
@@ -53,14 +52,17 @@
 					}
 					else
 					{
-						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtils
-							.compare(o.dataPagamento, o.dataVencimento) + " dias de atraso";
+						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compare(o
+																						.dataPagamento
+																						, o
+																						.dataVencimento) +
+							" dias de atraso";
 						labelPrevisaoPagamento.setStyle("color", 0xd59600);
 					}
 				}
 				else
 				{
-					if (o.dataPagamento && DateUtils.compare(o.dataPagamento, o.dataVencimento) <=
+					if (o.dataPagamento && DateUtil.compare(o.dataPagamento, o.dataVencimento) <=
 						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
@@ -68,8 +70,8 @@
 					}
 					else
 					{
-						labelPrevisaoPagamento.toolTip = "Vencendo em " + DateUtils
-							.compareToday(o.dataVencimento) + " dia" + (DateUtils
+						labelPrevisaoPagamento.toolTip = "Vencendo em " + DateUtil
+							.compareToday(o.dataVencimento) + " dia" + (DateUtil
 							.compareToday(o.dataVencimento) == 1 ? "" : "s");
 						labelPrevisaoPagamento.setStyle("color", 0x828282);
 					}
@@ -110,7 +112,7 @@
 		<s:VGroup width = "70"
 				  horizontalAlign = "center">
 			<s:Label id = "labelPrevisaoPagamento"
-					 text = "{DateUtils.formatSimple(o.dataPrevisaoPagamento)}"/>
+					 text = "{DateUtil.formatSimple(o.dataPrevisaoPagamento)}"/>
 
 			<s:Label id = "labelVencimento"
 					 text = "{LancamentoHelper.intervaloPrevisaoPagamento(o)}"
@@ -139,7 +141,7 @@
 			</s:HGroup>
 		</s:VGroup>
 
-		<s:Label text = "{NumberUtils.formatNumber(o.valorOriginal, 2)}"
+		<s:Label text = "{NumberUtil.formatNumber(o.valorOriginal, 2)}"
 				 textAlign = "right"
 				 width = "70"/>
 	</s:HGroup>

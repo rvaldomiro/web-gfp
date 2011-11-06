@@ -2,7 +2,7 @@
 <graficos:ReceitaDespesaMensalHelper xmlns:fx = "http://ns.adobe.com/mxml/2009"
 									 xmlns:s = "library://ns.adobe.com/flex/spark"
 									 xmlns:mx = "library://ns.adobe.com/flex/mx"
-									 xmlns:graficos="gfp.view.graficos.*">
+									 xmlns:graficos = "gfp.view.graficos.*">
 	<fx:Script>
 		<![CDATA[
 			import common.custom.CustomEvent;
@@ -17,7 +17,7 @@
 			[Bindable]
 			public var service:LancamentoService;
 			
-			[EventHandler(event="AppEvent.ATUALIZAR_GRAFICO_MENSAL")]
+			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL", properties = "event")]
 			public function atualizar(event:ICustomEvent):void
 			{
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_DESPESA_MENSAL

@@ -7,8 +7,8 @@
 			import assets.images.ImageUtil;
 			
 			import common.custom.CustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.MessageUtils;
+			import common.util.DateUtil;
+			import common.util.MessageUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.CategoriaEvent;
@@ -31,7 +31,7 @@
 			
 			private function excluir():void
 			{
-				MessageUtils.confirmDelete(excluirHandler, "Obs: Todas as transações vinculadas serão excluídas!");
+				MessageUtil.confirmDelete(excluirHandler, "Obs: Todas as transações vinculadas serão excluídas!");
 			}
 			
 			private function excluirHandler():void

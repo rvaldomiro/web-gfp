@@ -6,11 +6,11 @@
 		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
-			import common.components.custom.StyleColumnChart;
+			import common.component.custom.StyleColumnChart;
 			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.NumberUtils;
+			import common.util.DateUtil;
+			import common.util.NumberUtil;
 			
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
@@ -32,7 +32,7 @@
 			
 			private var total:Number = 0;
 			
-			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL")]
+			[EventHandler(event = "AppEvent.ATUALIZAR_GRAFICO_MENSAL", properties = "event")]
 			public function carregarMesAno(event:ICustomEvent):void
 			{
 				mes = (event.object as Date).month;
@@ -51,7 +51,7 @@
 				}
 				
 				labelDescricao.text = descricao;
-				labelTotal.text = NumberUtils.formatNumber(total, 2);
+				labelTotal.text = NumberUtil.formatNumber(total, 2);
 				
 				if (descricao == "Receitas")
 				{
@@ -68,19 +68,19 @@
 			private function dataTipFunction(e:HitData):String
 			{
 				var p:Number = (e.item).valor / total * 100;
-				return (e.item).categoria + "\n Total: " + NumberUtils.formatNumber((e
-																					.item)
-																					.valor
-																					, 2) +
-					" - " + NumberUtils.formatNumber(p, 1) + "%";
+				return (e.item).categoria + "\n Total: " + NumberUtil.formatNumber((e
+																				   .item)
+																				   .valor
+																				   , 2) +
+					" - " + NumberUtil.formatNumber(p, 1) + "%";
 			}
 			
 			private function itemClickHandler(event:ChartItemEvent):void
 			{
 				var dto:LancamentoDto = new LancamentoDto();
 				dto.tipoPeriodo = 3;
-				dto.dataInicio = DateUtils.firstDayOfMonth(mes, ano);
-				dto.dataFinal = DateUtils.lastDayOfMonth(mes, ano);
+				dto.dataInicio = DateUtil.firstDayOfMonth(mes, ano);
+				dto.dataFinal = DateUtil.lastDayOfMonth(mes, ano);
 				dto.categoria = event.hitData.item.categoria.id;
 				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES_DIA
 													  , dto));

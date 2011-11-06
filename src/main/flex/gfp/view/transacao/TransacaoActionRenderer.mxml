@@ -7,8 +7,8 @@
 			import assets.images.ImageUtil;
 			
 			import common.custom.CustomEvent;
-			import common.utils.DateUtils;
-			import common.utils.MessageUtils;
+			import common.util.DateUtil;
+			import common.util.MessageUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.TransacaoEvent;
@@ -32,7 +32,7 @@
 			
 			private function excluir():void
 			{
-				MessageUtils.confirmDelete(excluirHandler);
+				MessageUtil.confirmDelete(excluirHandler);
 			}
 			
 			private function excluirHandler():void
@@ -50,7 +50,7 @@
 			private function pagarAgora():void
 			{
 				service.selecionado = data as Lancamento;
-				service.selecionado.dataPagamento = DateUtils.today;
+				service.selecionado.dataPagamento = DateUtil.today;
 				service.selecionado.valorPago = (data as Lancamento).valorOriginal;
 				
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.SALVAR

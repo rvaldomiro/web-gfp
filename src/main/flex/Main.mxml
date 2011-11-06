@@ -9,7 +9,7 @@
 			   xmlns:service = "gfp.service.*"
 			   creationComplete = "creationCompleteHandler(event)"
 			   creationPolicy = "all"
-			   preloader = "common.components.preloader.CustomPreloader"
+			   preloader = "common.spark.component.preloader.CustomPreloader"
 			   backgroundColor = "#F6F9F6"
 			   xmlns:mxml = "org.swizframework.core.mxml.*"
 			   xmlns:core = "org.swizframework.core.*"
@@ -19,9 +19,9 @@
 		<![CDATA[
 			import assets.images.ImageUtil;
 			
-			import common.components.com.hulstkamp.flex.spark.components.NiceToolTip;
-			import common.utils.AppUtils;
-			import common.utils.PopUpUtils;
+			import common.spark.component.tooltip.NiceToolTip;
+			import common.util.AppUtil;
+			import common.util.PopUpUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.CategoriaEvent;
@@ -50,19 +50,19 @@
 			[EventHandler(event = "CategoriaEvent.EDITAR")]
 			public function toEditarCategoria():void
 			{
-				PopUpUtils.createAndCenter(this, CategoriaForm, dispatcher);
+				PopUpUtil.createAndCenter(this, CategoriaForm, dispatcher);
 			}
 			
 			[EventHandler(event = "ContaEvent.EDITAR")]
 			public function toEditarConta():void
 			{
-				PopUpUtils.createAndCenter(this, ContaForm, dispatcher);
+				PopUpUtil.createAndCenter(this, ContaForm, dispatcher);
 			}
 			
 			[EventHandler(event = "TransacaoEvent.EDITAR")]
 			public function toEditarTransacao():void
 			{
-				PopUpUtils.createAndCenter(this, TransacaoForm, dispatcher);
+				PopUpUtil.createAndCenter(this, TransacaoForm, dispatcher);
 			}
 			
 			[EventHandler(event = "AppEvent.TO_HOME")]
@@ -81,7 +81,7 @@
 			
 			private function creationCompleteHandler(event:FlexEvent):void
 			{
-				params = AppUtils.urlParams();
+				params = AppUtil.urlParams();
 				new NiceToolTip();
 				toLogin();
 			}
@@ -125,8 +125,6 @@
 
 			<mxml:beanProviders>
 				<core:BeanProvider>
-					<services:ServiceHelper/>
-
 					<service:ApplicationService/>
 
 					<service:UsuarioService/>
@@ -138,6 +136,8 @@
 					<service:LancamentoService/>
 
 					<service:BancoService/>
+
+					<services:ServiceHelper/>
 				</core:BeanProvider>
 			</mxml:beanProviders>
 		</mxml:Swiz>

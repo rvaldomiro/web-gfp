@@ -2,12 +2,13 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
-		  xmlns:custom = "common.components.custom.*">
+		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
+		  xmlns:custom = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
-			import common.components.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.custom.CustomEvent;
+			
+			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			
 			import gfp.event.ContaEvent;
 			import gfp.service.ContaService;
@@ -19,7 +20,7 @@
 			[Inject]
 			public var service:ContaService;
 			
-			[EventHandler(event="AppEvent.TO_CADASTROS")]
+			[EventHandler(event = "AppEvent.TO_CADASTROS")]
 			public function refresh():void
 			{
 				dispatcher.dispatchEvent(new ContaEvent(ContaEvent.LISTAR));
@@ -53,7 +54,7 @@
 		</mx:DataGrid>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarContas"
-										 skinClass = "common.components.serviceFeedback.skins.LoadingWithBGTextSkin"
+										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 										 width = "100%"
 										 height = "100%"/>
 	</s:Group>
