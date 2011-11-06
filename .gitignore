@@ -4,6 +4,7 @@ src/main/webapp/WEB-INF/lib/**
 src/main/webapp/WEB-INF/classes/**
 db/gfp-dev.properties
 db/gfp-test.properties
+db/*.script
 *.log
 *.class
 *.lck
