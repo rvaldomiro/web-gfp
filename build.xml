@@ -12,6 +12,8 @@
 	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 
+	<property name="webapps-dir-test" value="/Applications/apache-tomcat-7.0.11/webapps/${context-root}-test"/>
+	
 	<target name="install" depends="clean_web, copy-common-dependencies-ivy_web">
 		<!--
 		<copy todir="${basedir}/flex_libs" preservelastmodified="true">
@@ -20,20 +22,28 @@
 		-->
 	</target>
 
-	<target name="deploy-test" depends="test">
+	<target name="deploy-test" depends="stop-server, test">
 		<antcall target="_deploy">
 			<param name="context-root" value="${context-root}-test" />
 			<param name="submodules" value="none" />
 			<param name="test" value="test" />
-			<param name="dir" value="/Applications/apache-tomcat-7.0.11/webapps/${context-root}-test" />
+			<param name="dir" value="${webapps-dir-test}" />
 		</antcall>
 
+		<copy file="db/bd-gfp-cfg.properties" todir="${webapps-dir-test}"/>
+		
 		<antcall target="start-server" />
 	</target>
 
 	<target name="start-server">
 		<exec executable="bash">
 			<arg value="${user.home}/Documents/Projetos/Sheels/start-gfp.command" />
+		</exec>
+	</target>
+	
+	<target name="stop-server">
+		<exec executable="bash">
+			<arg value="${user.home}/Documents/Projetos/Sheels/stop-gfp.command" />
 		</exec>
 	</target>
 

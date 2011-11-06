@@ -181,60 +181,62 @@ public class LancamentoService {
 			prm.add("%" + dto.getObservacao() + "%");
 		}
 		
-		Query q = Lancamento.dao.createQuery("from Lancamento where " + StringUtil.join(cdt, " and "));
+		final Query q = Lancamento.dao.createQuery("from Lancamento where " +
+				StringUtil.join(cdt, " and "));
 		
 		for (int i = 1; i <= prm.size(); i++) {
-			q.setParameter("params"+i, prm.get(i - 1));
+			q.setParameter("params" + i, prm.get(i - 1));
 		}
 		
 		return q.list();
-//		return new Lancamento().where(StringUtil.join(cdt, " and "), prm);
+// return new Lancamento().where(StringUtil.join(cdt, " and "), prm);
 	}
 	
 	@RemotingInclude
-	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId) throws Exception {
+	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId)
+			throws Exception {
 		return listarPrevisaoSaldoDiario(usuarioId, AbstractDateTime.today());
 	}
 	
 	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
 			final Date dataInicio) throws Exception {
-//		try {
-			final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
-			final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
-					dataInicio, dataFinal);
-			final CategoriaType[] categorias = new CategoriaType[] {
-					CategoriaType.RECEITA, CategoriaType.DESPESA };
+// try {
+		final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
+		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
+				dataInicio, dataFinal);
+		final CategoriaType[] categorias = new CategoriaType[] {
+				CategoriaType.RECEITA, CategoriaType.DESPESA };
+		
+		for (final CategoriaType categoria : categorias) {
+			final List<Object[]> saldoDiario = Lancamento
+					.listarPrevisaoSaldoDiario(usuarioId, categoria,
+							dataInicio, dataFinal);
 			
-			for (final CategoriaType categoria : categorias) {
-				final List<Object[]> saldoDiario = Lancamento
-						.listarPrevisaoSaldoDiario(usuarioId, categoria,
-								dataInicio, dataFinal);
+			for (final Object[] o : saldoDiario) {
+				final Date dataCompensacao = AbstractDateTime.time(new Date(
+						((Timestamp) o[0]).getTime()), "00:00:00");
+				final Double saldo = (Double) o[1];
+				final SaldoDiarioDto dto = result.get(result
+						.indexOf(new SaldoDiarioDto(dataCompensacao)));
 				
-				for (final Object[] o : saldoDiario) {
-					final Date dataCompensacao = AbstractDateTime.time(
-							new Date(((Timestamp) o[0]).getTime()), "00:00:00");
-					final Double saldo = (Double) o[1];
-					final SaldoDiarioDto dto = result.get(result
-							.indexOf(new SaldoDiarioDto(dataCompensacao)));
-					
-					if (categoria == CategoriaType.RECEITA) {
-						dto.receitas = saldo;
-					} else {
-						dto.despesas = saldo;
-					}
+				if (categoria == CategoriaType.RECEITA) {
+					dto.receitas = saldo;
+				} else {
+					dto.despesas = saldo;
 				}
 			}
-			
-			final List<SaldoDto> saldoAnterior = listarSaldoPorConta(usuarioId,
-					AbstractDateTime.removeDays(dataInicio, 1));
-			
-			return SaldoDiarioDto.calcular(usuarioId,
-					saldoAnterior.get(saldoAnterior.size() - 1).saldo, result);
-//		} catch (final Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		}
+		
+		final List<SaldoDto> saldoAnterior = listarSaldoPorConta(usuarioId,
+				AbstractDateTime.removeDays(dataInicio, 1));
+		
+		return SaldoDiarioDto.calcular(usuarioId,
+				saldoAnterior.get(saldoAnterior.size() - 1).saldo, result);
+// } catch (final Exception e) {
+// e.printStackTrace();
+// return null;
+// }
 	}
 	
 	@RemotingInclude
@@ -303,24 +305,25 @@ public class LancamentoService {
 	@RemotingInclude
 	@HibernateTransaction
 	public void salvarLancamento(final Lancamento lancamento) throws Exception {
-//		final Categoria template = new Categoria(lancamento.getUsuario(), "Transferência", CategoriaType.RECEITA);
-//		template.setEstatistica(false);
-//		template.setInterna(true);
-//		Categoria ct = new Categoria()
-//		Categoria ct = ;
-//				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-//						lancamento.getUsuario(), "Transferência",
-//						CategoriaType.RECEITA.ordinal());
+// final Categoria template = new Categoria(lancamento.getUsuario(),
+// "Transferência", CategoriaType.RECEITA);
+// template.setEstatistica(false);
+// template.setInterna(true);
+// Categoria ct = new Categoria()
+// Categoria ct = ;
+// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
+// lancamento.getUsuario(), "Transferência",
+// CategoriaType.RECEITA.ordinal());
 		
-//		if (Categoria.dao.findFirstByTemplate(template) == null) {
-//			template.save();
-//			ct = new Categoria(lancamento.getUsuario(), "Transferência",
-//					CategoriaType.RECEITA);
-//			ct.setEstatistica(false);
-//			ct.setInterna(true);
-//			ct.save();
-//		}
-//		Categoria.obterTransferencia(lancamento.getUsuario());
+// if (Categoria.dao.findFirstByTemplate(template) == null) {
+// template.save();
+// ct = new Categoria(lancamento.getUsuario(), "Transferência",
+// CategoriaType.RECEITA);
+// ct.setEstatistica(false);
+// ct.setInterna(true);
+// ct.save();
+// }
+// Categoria.obterTransferencia(lancamento.getUsuario());
 		lancamento.save();
 	}
 	

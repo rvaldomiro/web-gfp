@@ -33,6 +33,18 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		return dao.findAllByFields("usuario.id", usuarioId, "ativa", true);
 	}
 	
+	public static Conta obterCarteira(final Usuario usuario) throws Exception {
+		final Conta template = new Conta(usuario, ContaType.CARTEIRA,
+				"Carteira");
+		Conta result = Conta.dao.findFirstByTemplate(template);
+		
+		if (result == null) {
+			result = template.save();
+		}
+		
+		return result;
+	}
+	
 	@Id
 	@GeneratedValue(generator = "generator")
 	@GenericGenerator(name = "generator", strategy = "increment")
@@ -71,6 +83,21 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		this.tipo = ContaType.CONTA_CORRENTE.ordinal();
 	}
 	
+	public Conta(final Usuario usuario, final ContaType tipo) {
+		super();
+		this.usuario = usuario;
+		this.tipo = tipo.ordinal();
+	}
+	
+	public Conta(final Usuario usuario, final ContaType tipo,
+			final String identificacao) {
+		super();
+		this.usuario = usuario;
+		this.tipo = tipo.ordinal();
+		this.identificacao = identificacao;
+		this.ativa = true;
+	}
+	
 	public Conta(final Usuario usuario, final String identificacao) {
 		super();
 		this.usuario = usuario;
@@ -79,34 +106,19 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		this.tipo = ContaType.CARTEIRA.ordinal();
 	}
 	
-	public Conta(Usuario usuario, ContaType tipo) {
-		super();
-		this.usuario=usuario;
-		this.tipo=tipo.ordinal();
+// public void criarPadrao(final Usuario arg0) throws Exception {
+// new Conta(arg0, "Carteira").save();
+// }
+	
+	@Override
+	protected HibernateDao<Conta> getDao() {
+		return dao;
 	}
-
-	public Conta(Usuario usuario, ContaType tipo, String identificacao) {
-		super();
-		this.usuario=usuario;
-		this.tipo=tipo.ordinal();
-		this.identificacao=identificacao;
-		this.ativa=true;
+	
+	@Override
+	protected void setDao(final HibernateDao<Conta> arg0) {
+		dao = arg0;
 	}
-
-	public static Conta obterCarteira(final Usuario usuario) throws Exception {
-		final Conta template = new Conta(usuario, ContaType.CARTEIRA, "Carteira");
-		Conta result = Conta.dao.findFirstByTemplate(template);
-		
-		if (result==null){
-			result=template.save();
-		}
-
-		return result;
-	}
-
-//	public void criarPadrao(final Usuario arg0) throws Exception {
-//		new Conta(arg0, "Carteira").save();
-//	}
 	
 	@Override
 	public void delete() throws Exception {
@@ -134,10 +146,6 @@ public class Conta extends AbstractPersistentClass<Conta> {
 			return false;
 		}
 		return true;
-	}
-	
-	public boolean isAtiva() {
-		return this.ativa;
 	}
 	
 	public Banco getBanco() {
@@ -168,6 +176,10 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		return result;
 	}
 	
+	public boolean isAtiva() {
+		return this.ativa;
+	}
+	
 	public void setAtiva(final boolean ativa) {
 		this.ativa = ativa;
 	}
@@ -190,16 +202,6 @@ public class Conta extends AbstractPersistentClass<Conta> {
 	
 	public void setUsuario(final Usuario usuario) {
 		this.usuario = usuario;
-	}
-	
-	@Override
-	protected HibernateDao<Conta> getDao() {
-		return dao;
-	}
-	
-	@Override
-	protected void setDao(HibernateDao<Conta> arg0) {
-		dao = arg0;
 	}
 	
 }

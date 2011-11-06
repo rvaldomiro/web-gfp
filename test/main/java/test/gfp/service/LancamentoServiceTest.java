@@ -71,11 +71,8 @@ public class LancamentoServiceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		Lancamento.dao.deleteAll();
-		Categoria.dao.deleteAll();
-		Conta.dao.deleteAll();
-		Banco.dao.deleteAll();
 		Usuario.dao.deleteAll();
+		Banco.dao.deleteAll();
 	}
 	
 	@Test
@@ -337,18 +334,20 @@ public class LancamentoServiceTest {
 		assertEquals(1, l.getVinculados().size());
 		assertEquals(corrente, l.getConta());
 		assertEquals(true, l.getCategoria().isTransferencia());
-		assertEquals(Categoria.obterTransferencia(u), l.getVinculados().get(0).getCategoria());
+		assertEquals(Categoria.obterTransferencia(u), l.getVinculados().get(0)
+				.getCategoria());
 		
-//		final Categoria template = new Categoria(u, "Transferência", CategoriaType.RECEITA);
-//		template.setEstatistica(false);
-//		template.setInterna(true);
-//		final Categoria ct = Categoria.dao.findFirstByTemplate(template);
-//		
-	
-//		final Categoria ct = new Categoria()
-//				.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-//						u, "Transferência", CategoriaType.RECEITA.ordinal());
-//		assertNotNull(ct);
+// final Categoria template = new Categoria(u, "Transferência",
+// CategoriaType.RECEITA);
+// template.setEstatistica(false);
+// template.setInterna(true);
+// final Categoria ct = Categoria.dao.findFirstByTemplate(template);
+//
+		
+// final Categoria ct = new Categoria()
+// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
+// u, "Transferência", CategoriaType.RECEITA.ordinal());
+// assertNotNull(ct);
 		
 		Lancamento l2 = l.getVinculados().get(0);
 		assertEquals(carteira, l2.getConta());

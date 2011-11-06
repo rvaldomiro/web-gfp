@@ -42,6 +42,16 @@ public class Banco extends AbstractPersistentClass<Banco> {
 		this.nome = nome;
 	}
 	
+	@Override
+	protected HibernateDao<Banco> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(final HibernateDao<Banco> arg0) {
+		dao = arg0;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -56,16 +66,6 @@ public class Banco extends AbstractPersistentClass<Banco> {
 	
 	public void setNome(final String nome) {
 		this.nome = nome;
-	}
-	
-	@Override
-	protected HibernateDao<Banco> getDao() {
-		return dao;
-	}
-	
-	@Override
-	protected void setDao(HibernateDao<Banco> arg0) {
-		dao = arg0;
 	}
 	
 }

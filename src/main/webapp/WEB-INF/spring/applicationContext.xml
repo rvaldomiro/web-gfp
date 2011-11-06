@@ -18,6 +18,4 @@
 	<context:annotation-config/>
 
 	<context:component-scan base-package = "gfp.service"/>
-
-	<bean class = "gfp.config.GfpHibernateManager"/>
 </beans>

@@ -25,8 +25,41 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	
 	public static HibernateDao<Categoria> dao;
 	
+	public static void criarPadroes(final Usuario usuario) throws Exception {
+		Categoria.obterTransferencia(usuario);
+		new Categoria(usuario, "Salário", CategoriaType.RECEITA).save();
+		new Categoria(usuario, "Supermercado", CategoriaType.DESPESA).save();
+		new Categoria(usuario, "Combustível", CategoriaType.DESPESA).save();
+		new Categoria(usuario, "Energia Elétrica", CategoriaType.DESPESA)
+				.save();
+		new Categoria(usuario, "Telefone", CategoriaType.DESPESA).save();
+		new Categoria(usuario, "Internet", CategoriaType.DESPESA).save();
+		new Categoria(usuario, "Água", CategoriaType.DESPESA).save();
+		new Categoria(usuario, "Saque Caixa Eletrônico", CategoriaType.DESPESA,
+				true).save();
+		
+		Conta.obterCarteira(usuario);
+	}
+	
 	public static List<Categoria> listar(final Long usuarioId) throws Exception {
 		return dao.findAllByField("usuario.id", usuarioId);
+	}
+	
+	public static Categoria obterTransferencia(final Usuario usuario)
+			throws Exception {
+		final Categoria template = new Categoria(usuario, "Transferência",
+				CategoriaType.RECEITA);
+		template.setEstatistica(false);
+		template.setInterna(true);
+		template.setTransferencia(true);
+		
+		Categoria result = Categoria.dao.findFirstByTemplate(template);
+		
+		if (result == null) {
+			result = template.save();
+		}
+		
+		return result;
 	}
 	
 	@Id
@@ -69,41 +102,22 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	}
 	
 	public Categoria(final Usuario usuario, final String descricao,
-			final CategoriaType tipo, boolean transferencia) {
+			final CategoriaType tipo, final boolean transferencia) {
 		super();
 		this.usuario = usuario;
 		this.descricao = descricao;
 		this.tipo = tipo.ordinal();
-		this.transferencia=transferencia;
+		this.transferencia = transferencia;
 	}
 	
-	public static Categoria obterTransferencia(final Usuario usuario) throws Exception {
-		final Categoria template = new Categoria(usuario, "Transferência", CategoriaType.RECEITA);
-		template.setEstatistica(false);
-		template.setInterna(true);
-		template.setTransferencia(true);
-		
-		Categoria result = Categoria.dao.findFirstByTemplate(template);
-		
-		if (result==null){
-			result=template.save();
-		}
-
-		return result;
+	@Override
+	protected HibernateDao<Categoria> getDao() {
+		return dao;
 	}
 	
-	public static void criarPadroes(final Usuario usuario) throws Exception {
-		Categoria.obterTransferencia(usuario);
-		new Categoria(usuario, "Salário", CategoriaType.RECEITA).save();
-		new Categoria(usuario, "Supermercado", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Combustível", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Energia Elétrica", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Telefone", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Internet", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Água", CategoriaType.DESPESA).save();
-		new Categoria(usuario, "Saque Caixa Eletrônico", CategoriaType.DESPESA, true).save();
-	
-		Conta.obterCarteira(usuario);
+	@Override
+	protected void setDao(final HibernateDao<Categoria> arg0) {
+		dao = arg0;
 	}
 	
 	@Override
@@ -116,28 +130,28 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 		return this.descricao;
 	}
 	
-	public boolean isEstatistica() {
-		return this.estatistica;
-	}
-	
 	public Long getId() {
 		return this.id;
-	}
-	
-	public boolean isInterna() {
-		return this.interna;
 	}
 	
 	public Integer getTipo() {
 		return this.tipo;
 	}
 	
-	public boolean isTransferencia() {
-		return this.transferencia;
-	}
-	
 	public Usuario getUsuario() {
 		return this.usuario;
+	}
+	
+	public boolean isEstatistica() {
+		return this.estatistica;
+	}
+	
+	public boolean isInterna() {
+		return this.interna;
+	}
+	
+	public boolean isTransferencia() {
+		return this.transferencia;
 	}
 	
 	public void setDescricao(final String descricao) {
@@ -172,16 +186,6 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	public void validate() throws Exception {
 		super.validate();
 		this.descricao = StringUtil.capitalize(this.descricao);
-	}
-	
-	@Override
-	protected HibernateDao<Categoria> getDao() {
-		return dao;
-	}
-	
-	@Override
-	protected void setDao(HibernateDao<Categoria> arg0) {
-		dao = arg0;
 	}
 	
 }

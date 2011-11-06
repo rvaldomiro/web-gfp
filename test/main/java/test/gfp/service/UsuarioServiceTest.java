@@ -31,8 +31,6 @@ public class UsuarioServiceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		Conta.dao.deleteAll();
-		Categoria.dao.deleteAll();
 		Usuario.dao.deleteAll();
 	}
 	
@@ -41,12 +39,8 @@ public class UsuarioServiceTest {
 		final Usuario u = new Usuario("usuario", "usuario", "usuario");
 		this.controller.salvarUsuario(u);
 		
-		final Conta template=new Conta(u, ContaType.CARTEIRA, "Carteira");
-		
-//		final Conta conta = new Conta().first(
-				final Conta conta = Conta.dao.findFirstByTemplate(template);
-//				"usuario = ?1 and tipo = ?2 and identificacao = ?3", u,
-//				ContaType.CARTEIRA.ordinal(), "Carteira");
+		final Conta template = new Conta(u, ContaType.CARTEIRA, "Carteira");
+		final Conta conta = Conta.dao.findFirstByTemplate(template);
 		assertNotNull(conta);
 		assertEquals(true, conta.isAtiva());
 	}

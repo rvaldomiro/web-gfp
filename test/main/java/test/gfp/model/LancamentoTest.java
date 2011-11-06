@@ -1,15 +1,15 @@
 package test.gfp.model;
 
 import static junit.framework.Assert.assertEquals;
-
-import java.util.List;
-
 import gfp.dto.SaldoCategoriaDto;
 import gfp.model.Categoria;
 import gfp.model.Lancamento;
 import gfp.model.Usuario;
 import gfp.type.CategoriaType;
 import gfp.type.FormaPagamentoType;
+
+import java.util.List;
+
 import logus.commons.datetime.AbstractDateTime;
 
 import org.junit.After;
@@ -23,18 +23,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "../config/applicationContext-gfp.xml" })
 public class LancamentoTest {
 	
-	@After
-	public void tearDown() throws Exception {
-		Lancamento.dao.deleteAll();
-		Categoria.dao.deleteAll();
-		Usuario.dao.deleteAll();
-	}
-	
 	private Usuario usuario;
 	
 	@Before
 	public void setup() throws Exception {
-		this.usuario=new Usuario("nome", "login", "senha").save();
+		this.usuario = new Usuario("nome", "login", "senha").save();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		Usuario.dao.deleteAll();
 	}
 	
 	@Test
@@ -59,8 +57,12 @@ public class LancamentoTest {
 	}
 	
 	@Test
-	public void testListarSaldoCategoriaMensal() throws Exception{
-		final List<SaldoCategoriaDto> listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(this.usuario.getId(), CategoriaType.RECEITA.ordinal(), AbstractDateTime.getToday(), AbstractDateTime.getToday());
+	public void testListarSaldoCategoriaMensal() throws Exception {
+		final List<SaldoCategoriaDto> listaSaldoCategoriaMensal = Lancamento
+				.listarSaldoCategoriaMensal(this.usuario.getId(),
+						CategoriaType.RECEITA.ordinal(),
+						AbstractDateTime.getToday(),
+						AbstractDateTime.getToday());
 		assertEquals(0, listaSaldoCategoriaMensal.size());
 	}
 	

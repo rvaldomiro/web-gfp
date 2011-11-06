@@ -5,12 +5,11 @@ import java.net.URI;
 import logus.commons.persistence.hibernate.AbstractHibernateManager;
 import logus.commons.persistence.hibernate.HibernateDatabase;
 
-
-public class LocalGfpHibernateManager extends AbstractHibernateManager {
+public class GfpHibernateManagerFactory extends AbstractHibernateManager {
 	
 	private static final String ID = "gfp-test";
 	
-	public LocalGfpHibernateManager() throws Exception {
+	public GfpHibernateManagerFactory() throws Exception {
 		super(ID, HibernateDatabase.findConfigurationFile(ID), new URI(
 				"/gfp/model"));
 	}

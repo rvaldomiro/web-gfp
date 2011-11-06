@@ -42,14 +42,16 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	
 	public static HibernateDao<Lancamento> dao;
 	
-	public static void excluir(final Categoria categoria) throws Exception {		
-		final Query q = dao.createQuery("delete from Lancamento where categoria = :categoria");
+	public static void excluir(final Categoria categoria) throws Exception {
+		final Query q = dao
+				.createQuery("delete from Lancamento where categoria = :categoria");
 		q.setEntity("categoria", categoria);
 		q.executeUpdate();
 	}
 	
 	public static void excluir(final Conta conta) throws Exception {
-		final Query q = dao.createQuery("delete from Lancamento where conta = :conta");
+		final Query q = dao
+				.createQuery("delete from Lancamento where conta = :conta");
 		q.setEntity("conta", conta);
 		q.executeUpdate();
 	}
@@ -58,7 +60,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public static List<Lancamento> listarAVencer(final Long usuarioId,
 			final Date previsaoPagamento, final CategoriaType categoria)
 			throws Exception {
-		final Query q = dao.createQuery("from Lancamento where usuario.id = :usuarioId and dataPrevisaoPagamento <= :previsaoPagamento and categoria.tipo = :categoriaTipo and dataPagamento is null");
+		final Query q = dao
+				.createQuery("from Lancamento where usuario.id = :usuarioId and dataPrevisaoPagamento <= :previsaoPagamento and categoria.tipo = :categoriaTipo and dataPagamento is null");
 		q.setLong("usuarioId", usuarioId);
 		q.setDate("previsaoPagamento", previsaoPagamento);
 		q.setInteger("categoriaTipo", categoria.ordinal());
@@ -79,15 +82,16 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
 		c.add(Restrictions.eq("_categoria.estatistica", true));
 		c.add(Restrictions.between("dataCompensacao", dataInicio, dataFinal));
-		c.add(Restrictions.or(Restrictions.isNull("dataPagamento"), Restrictions.neProperty("dataPagamento", "dataCompensacao")));
+		c.add(Restrictions.or(Restrictions.isNull("dataPagamento"),
+				Restrictions.neProperty("dataPagamento", "dataCompensacao")));
 		c.setProjection(p);
 		return c.list();
-//		final List<Object[]> totais = c.list();
-//		return totais;
-//		return (List<Object[]>) new Lancamento()
-//				.allByQuery(
-//						"select dataCompensacao, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 and (dataPagamento is null or dataPagamento <> dataCompensacao) group by dataCompensacao",
-//						usuarioId, categoria.ordinal(), dataInicio, dataFinal);
+// final List<Object[]> totais = c.list();
+// return totais;
+// return (List<Object[]>) new Lancamento()
+// .allByQuery(
+// "select dataCompensacao, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 and (dataPagamento is null or dataPagamento <> dataCompensacao) group by dataCompensacao",
+// usuarioId, categoria.ordinal(), dataInicio, dataFinal);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -109,10 +113,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final List<Object[]> saldoCategoria = c.list();
-//		final List<Object[]> saldoCategoria = (List<Object[]>) new Lancamento()
-//				.allByQuery(
-//						"select categoria.id, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 group by categoria.id",
-//						usuarioId, tipoCategoria, dataInicio, dataFinal);
+// final List<Object[]> saldoCategoria = (List<Object[]>) new Lancamento()
+// .allByQuery(
+// "select categoria.id, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 group by categoria.id",
+// usuarioId, tipoCategoria, dataInicio, dataFinal);
 		
 		for (final Object[] o : saldoCategoria) {
 			result.add(new SaldoCategoriaDto(Categoria.dao
@@ -137,10 +141,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-//		final Double result = (Double) new Lancamento()
-//				.firstByQuery(
-//						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao > ?3",
-//						conta, categoria.ordinal(), dataSaldo);
+// final Double result = (Double) new Lancamento()
+// .firstByQuery(
+// "select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao > ?3",
+// conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	
@@ -157,12 +161,12 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.add(Restrictions.le("dataPagamento", dataSaldo));
 		c.add(Restrictions.le("dataCompensacao", dataSaldo));
 		c.setProjection(p);
-
+		
 		final Double result = (Double) c.uniqueResult();
-//		final Double result = (Double) new Lancamento()
-//				.firstByQuery(
-//						"select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao <= ?3",
-//						conta, categoria.ordinal(), dataSaldo);
+// final Double result = (Double) new Lancamento()
+// .firstByQuery(
+// "select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao <= ?3",
+// conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	
@@ -291,7 +295,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	private void sincronizarVinculado() throws Exception {
 		if (this.contaTransferencia != null) {
 			if (this.vinculados == null || this.vinculados.size() == 0) {
-//				this.categoria=Categoria.obterTransferencia(this.usuario);
+// this.categoria=Categoria.obterTransferencia(this.usuario);
 				
 				final Lancamento l = new Lancamento();
 				BeanUtils.copyProperties(l, this);
@@ -300,17 +304,18 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				l.setOriginal(this);
 				l.setContaTransferencia(null);
 				
-//				final Categoria template = new Categoria(this.usuario, "Transferência", CategoriaType.RECEITA);
-//				template.setEstatistica(false);
-//				Categoria ct = Categoria.dao.findFirstByTemplate(template);
+// final Categoria template = new Categoria(this.usuario, "Transferência",
+// CategoriaType.RECEITA);
+// template.setEstatistica(false);
+// Categoria ct = Categoria.dao.findFirstByTemplate(template);
 				
-//					ct = ;
-//				final Categoria ct = new Categoria()
-//						.first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false",
-//								this.usuario, "Transferência",
-//								CategoriaType.RECEITA.ordinal());
+// ct = ;
+// final Categoria ct = new Categoria()
+// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false",
+// this.usuario, "Transferência",
+// CategoriaType.RECEITA.ordinal());
 				
-//				l.setCategoria(this.categoria);
+// l.setCategoria(this.categoria);
 				l.setCategoria(Categoria.obterTransferencia(this.usuario));
 				l.setFormaPagamento(this.contaTransferencia.getTipo().equals(
 						ContaType.CARTEIRA.ordinal()) ? FormaPagamentoType.DINHEIRO
@@ -344,6 +349,16 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				save();
 			}
 		}
+	}
+	
+	@Override
+	protected HibernateDao<Lancamento> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(final HibernateDao<Lancamento> arg0) {
+		dao = arg0;
 	}
 	
 	public Categoria getCategoria() {
@@ -486,22 +501,12 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public void validate() throws Exception {
 		super.validate();
 		
-		if (this.id==null){
+		if (this.id == null) {
 			this.id = dao.getNextSequence(this, "id").longValue();
 		}
 		
 		corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
-	}
-	
-	@Override
-	protected HibernateDao<Lancamento> getDao() {
-		return dao;
-	}
-	
-	@Override
-	protected void setDao(HibernateDao<Lancamento> arg0) {
-		dao = arg0;
 	}
 }

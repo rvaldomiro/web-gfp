@@ -10,7 +10,6 @@ import javax.servlet.ServletResponse;
 import logus.commons.persistence.ApplicationContext;
 import logus.commons.web.AbstractFilter;
 
-
 public class GfpFilter extends AbstractFilter {
 	
 	@Override

@@ -43,6 +43,13 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 		super();
 	}
 	
+	public Usuario(final String login, final String senha) {
+		super();
+		this.login = login;
+		this.senha = senha;
+// this.ativo = true;
+	}
+	
 	public Usuario(final String nome, final String login, final String senha) {
 		super();
 		this.nome = nome;
@@ -50,24 +57,47 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 		this.senha = senha;
 		this.ativo = true;
 	}
-	public Usuario(final String nome, final String login, final String senha, boolean administrador) {
+	
+	public Usuario(final String nome, final String login, final String senha,
+			final boolean administrador) {
 		super();
 		this.nome = nome;
 		this.login = login;
 		this.senha = senha;
-		this.administrador=administrador;
+		this.administrador = administrador;
 		this.ativo = true;
-	}
-	
-	public Usuario(final String login, final String senha) {
-		super();
-		this.login = login;
-		this.senha = senha;
-//		this.ativo = true;
 	}
 	
 	private void alterarSenha() {
 		this.senha = String.valueOf(this.senha.hashCode());
+	}
+	
+	@Override
+	protected HibernateDao<Usuario> getDao() {
+		return dao;
+	}
+	
+	@Override
+	protected void setDao(final HibernateDao<Usuario> arg0) {
+		dao = arg0;
+	}
+	
+	@Override
+	public void delete() throws Exception {
+		for (final Lancamento o : Lancamento.dao
+				.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		for (final Categoria o : Categoria.dao.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		for (final Conta o : Conta.dao.findAllByField("usuario", this)) {
+			o.delete();
+		}
+		
+		super.delete();
 	}
 	
 	public String getEmail() {
@@ -96,6 +126,18 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 	
 	public boolean isAtivo() {
 		return this.ativo;
+	}
+	
+	@Override
+	public Usuario save() throws Exception {
+		final boolean novo = this.id == null;
+		final Usuario result = super.save();
+		
+		if (novo) {
+			Categoria.criarPadroes(result);
+		}
+		
+		return result;
 	}
 	
 	public void setAdministrador(final boolean administrador) {
@@ -136,48 +178,5 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 			alterarSenha();
 		}
 	}
-
-	
-	
-	@Override
-	public Usuario save() throws Exception {
-		boolean novo=this.id == null;
-		Usuario result = super.save();
-		
-		if (novo){
-			Categoria.criarPadroes(result);
-		}
-		
-		return result;
-	}
-
-	@Override
-	protected HibernateDao<Usuario> getDao() {
-		return dao;
-	}
-	
-	@Override
-	protected void setDao(HibernateDao<Usuario> arg0) {
-		dao = arg0;
-	}
-
-	@Override
-	public void delete() throws Exception {
-		for (final Lancamento o : Lancamento.dao.findAllByField("usuario", this)) {
-			o.delete();
-		}
-		
-		for (final Categoria o : Categoria.dao.findAllByField("usuario", this)) {
-			o.delete();
-		}
-		
-		for (final Conta o : Conta.dao.findAllByField("usuario", this)) {
-			o.delete();
-		}
-		
-		super.delete();
-	}
-	
-	
 	
 }

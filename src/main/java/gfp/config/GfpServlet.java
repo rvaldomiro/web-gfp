@@ -1,4 +1,5 @@
 package gfp.config;
+
 import gfp.model.Banco;
 import gfp.model.Usuario;
 
@@ -32,6 +33,7 @@ public class GfpServlet extends AbstractServlet {
 	public void init(final ServletConfig arg0) throws ServletException {
 		try {
 			LogBuilder.configure(arg0, getCurrentVersion(), getParameters());
+			GfpHibernateManagerFactory.getInstance();
 			setup();
 		} catch (final Exception e) {
 			LogBuilder.error(e);
