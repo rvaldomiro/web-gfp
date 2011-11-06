@@ -2,7 +2,7 @@
 <!DOCTYPE project [
 <!ENTITY common SYSTEM "build.xml">
 ]>
-<project name="gfp" basedir="." default="install" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="gfp" basedir="." default="install">
 	<import file="${basedir}/../resources/lib/git/build.xml" />
 
 	<property name="web" value="web" />
@@ -12,16 +12,40 @@
 	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 
-	<target name="install" depends="clean_web, copy-common-dependencies-ivy_web, copy-locale">
+	<target name="install" depends="clean_web, copy-common-dependencies-ivy_web">
+		<!--
 		<copy todir="${basedir}/flex_libs" preservelastmodified="true">
 			<fileset dir="${repository-dir}/swiz/1.3" />
 		</copy>
+		-->
+	</target>
+
+	<target name="deploy-test" depends="test">
+		<antcall target="_deploy">
+			<param name="context-root" value="${context-root}-test" />
+			<param name="submodules" value="none" />
+			<param name="test" value="test" />
+			<param name="dir" value="/Applications/apache-tomcat-7.0.11/webapps/${context-root}-test" />
+		</antcall>
+
+		<antcall target="start-server" />
+	</target>
+
+	<target name="start-server">
+		<exec executable="bash">
+			<arg value="${user.home}/Documents/Projetos/Sheels/start-gfp.command" />
+		</exec>
 	</target>
 
 
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 
@@ -41,14 +65,6 @@
 	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 
-	<property name="ivy.install.version" value="2.2.0" />
-	<condition property="ivy.home" value="${env.IVY_HOME}">
-		<isset property="env.IVY_HOME" />
-	</condition>
-	<property name="ivy.home" value="${user.home}/.ant" />
-	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
-	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
-	<property name="ivy.lib.dir" value="${web-lib-dir}" />
 
 	<!--
 	<target name="install" depends="clean, copy-dependencies" />
@@ -76,10 +92,10 @@
 		</copy>
 	</target>
 	-->
-	
 
 
-	
+
+
 
 
 	<!--		
