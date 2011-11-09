@@ -3,6 +3,7 @@
 	<name>web-gfp</name>
 	<comment></comment>
 	<projects>
+		<project>resources</project>
 		<project>Servers</project>
 	</projects>
 	<buildSpec>
