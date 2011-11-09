@@ -2,6 +2,7 @@ package gfp.service;
 
 import gfp.model.Usuario;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
+import logus.commons.persistence.hibernate.transaction.TransactionClass;
 
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
@@ -9,7 +10,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RemotingDestination
-public class UsuarioService {
+public class UsuarioService extends TransactionClass<UsuarioService> {
+	
+	public static UsuarioService getInstance() throws Exception {
+		return new UsuarioService().getEnhancerInstance();
+	}
+	
+	protected UsuarioService() {
+		super();
+	}
 	
 	@RemotingInclude
 	public Usuario login(final String login, final String senha)

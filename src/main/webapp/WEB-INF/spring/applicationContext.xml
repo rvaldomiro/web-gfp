@@ -17,5 +17,28 @@
 
 	<context:annotation-config/>
 
-	<context:component-scan base-package = "gfp.service"/>
+	<!-- services -->
+	<bean id = "applicationService"
+		  class = "gfp.service.ApplicationService"
+		  factory-method = "getInstance"/>
+
+	<bean id = "bancoService"
+		  class = "gfp.service.BancoService"
+		  factory-method = "getInstance"/>
+
+	<bean id = "categoriaService"
+		  class = "gfp.service.CategoriaService"
+		  factory-method = "getInstance"/>
+
+	<bean id = "contaService"
+		  class = "gfp.service.ContaService"
+		  factory-method = "getInstance"/>
+
+	<bean id = "lancamentoService"
+		  class = "gfp.service.LancamentoService"
+		  factory-method = "getInstance"/>
+
+	<bean id = "usuarioService"
+		  class = "gfp.service.UsuarioService"
+		  factory-method = "getInstance"/>
 </beans>

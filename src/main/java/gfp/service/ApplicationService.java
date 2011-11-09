@@ -15,6 +15,10 @@ public class ApplicationService extends TransactionClass<ApplicationService> {
 		return new ApplicationService().getEnhancerInstance();
 	}
 	
+	protected ApplicationService() {
+		super();
+	}
+	
 	@RemotingInclude
 	public String obterVersaoAtual() throws Exception {
 		return ApplicationContext.getCurrentVersion();

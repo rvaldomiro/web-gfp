@@ -26,7 +26,7 @@ public class UsuarioServiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.controller = new UsuarioService();
+		this.controller = UsuarioService.getInstance();
 	}
 	
 	@After

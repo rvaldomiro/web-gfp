@@ -19,6 +19,7 @@ import java.util.List;
 
 import logus.commons.datetime.AbstractDateTime;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
+import logus.commons.persistence.hibernate.transaction.TransactionClass;
 import logus.commons.string.StringUtil;
 
 import org.hibernate.Query;
@@ -28,7 +29,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RemotingDestination
-public class LancamentoService {
+public class LancamentoService extends TransactionClass<LancamentoService> {
+	
+	public static LancamentoService getInstance() throws Exception {
+		return new LancamentoService().getEnhancerInstance();
+	}
+	
+	protected LancamentoService() {
+		super();
+	}
 	
 	@RemotingInclude
 	@HibernateTransaction
@@ -189,7 +198,6 @@ public class LancamentoService {
 		}
 		
 		return q.list();
-// return new Lancamento().where(StringUtil.join(cdt, " and "), prm);
 	}
 	
 	@RemotingInclude
@@ -201,7 +209,6 @@ public class LancamentoService {
 	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
 			final Date dataInicio) throws Exception {
-// try {
 		final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 				dataInicio, dataFinal);
@@ -233,10 +240,6 @@ public class LancamentoService {
 		
 		return SaldoDiarioDto.calcular(usuarioId,
 				saldoAnterior.get(saldoAnterior.size() - 1).saldo, result);
-// } catch (final Exception e) {
-// e.printStackTrace();
-// return null;
-// }
 	}
 	
 	@RemotingInclude
@@ -305,25 +308,6 @@ public class LancamentoService {
 	@RemotingInclude
 	@HibernateTransaction
 	public void salvarLancamento(final Lancamento lancamento) throws Exception {
-// final Categoria template = new Categoria(lancamento.getUsuario(),
-// "Transferência", CategoriaType.RECEITA);
-// template.setEstatistica(false);
-// template.setInterna(true);
-// Categoria ct = new Categoria()
-// Categoria ct = ;
-// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-// lancamento.getUsuario(), "Transferência",
-// CategoriaType.RECEITA.ordinal());
-		
-// if (Categoria.dao.findFirstByTemplate(template) == null) {
-// template.save();
-// ct = new Categoria(lancamento.getUsuario(), "Transferência",
-// CategoriaType.RECEITA);
-// ct.setEstatistica(false);
-// ct.setInterna(true);
-// ct.save();
-// }
-// Categoria.obterTransferencia(lancamento.getUsuario());
 		lancamento.save();
 	}
 	

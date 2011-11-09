@@ -11,24 +11,14 @@
 	<fx:Script>
 		<![CDATA[
 			import common.component.validator.RequiredValidator;
-			import common.custom.CustomEvent;
 			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
-			import common.util.DateUtil;
-			import common.util.MessageUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.CategoriaEvent;
-			import gfp.event.TransacaoEvent;
-			import gfp.service.BancoService;
 			import gfp.service.CategoriaService;
-			import gfp.service.LancamentoService;
 			import gfp.type.CategoriaType;
 			
-			import mx.collections.ArrayCollection;
-			import mx.controls.DateField;
-			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.EffectEvent;
-			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.ResultEvent;
 			

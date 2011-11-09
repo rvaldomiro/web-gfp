@@ -295,27 +295,12 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	private void sincronizarVinculado() throws Exception {
 		if (this.contaTransferencia != null) {
 			if (this.vinculados == null || this.vinculados.size() == 0) {
-// this.categoria=Categoria.obterTransferencia(this.usuario);
-				
 				final Lancamento l = new Lancamento();
 				BeanUtils.copyProperties(l, this);
 				l.setId(this.id + 1);
 				l.setConta(this.contaTransferencia);
 				l.setOriginal(this);
 				l.setContaTransferencia(null);
-				
-// final Categoria template = new Categoria(this.usuario, "Transferência",
-// CategoriaType.RECEITA);
-// template.setEstatistica(false);
-// Categoria ct = Categoria.dao.findFirstByTemplate(template);
-				
-// ct = ;
-// final Categoria ct = new Categoria()
-// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false",
-// this.usuario, "Transferência",
-// CategoriaType.RECEITA.ordinal());
-				
-// l.setCategoria(this.categoria);
 				l.setCategoria(Categoria.obterTransferencia(this.usuario));
 				l.setFormaPagamento(this.contaTransferencia.getTipo().equals(
 						ContaType.CARTEIRA.ordinal()) ? FormaPagamentoType.DINHEIRO
@@ -346,7 +331,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		} else {
 			if (this.vinculados != null && this.vinculados.size() > 0) {
 				this.vinculados.remove(0).delete();
-				save();
 			}
 		}
 	}

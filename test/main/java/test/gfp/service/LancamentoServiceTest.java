@@ -66,7 +66,7 @@ public class LancamentoServiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.controller = new LancamentoService();
+		this.controller = LancamentoService.getInstance();
 	}
 	
 	@After
