@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src/main/config"/>
 	<classpathentry excluding="commons/datetime/**|commons/file/**|commons/jdbc/**|commons/log/**|commons/persistence/**|commons/sql/**|commons/util/**|commons/web/**" kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="test/main/java"/>
 	<classpathentry excluding="br/**|logus/commons/modem/**" kind="src" path="java_commons/src"/>

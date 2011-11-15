@@ -54,7 +54,7 @@
 	<servlet>
 		<servlet-name>initServlet</servlet-name>
 
-		<servlet-class>gfp.config.GfpServlet</servlet-class>
+		<servlet-class>GfpServlet</servlet-class>
 
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -65,7 +65,7 @@
 	<filter>
 		<filter-name>initFilter</filter-name>
 
-		<filter-class>gfp.config.GfpFilter</filter-class>
+		<filter-class>GfpFilter</filter-class>
 	</filter>
 
 	<filter-mapping>

@@ -1,4 +1,3 @@
-package gfp.config;
 
 import java.net.URI;
 

@@ -1,4 +1,3 @@
-package gfp.config;
 
 import gfp.model.Banco;
 import gfp.model.Usuario;
