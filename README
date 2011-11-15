@@ -1,0 +1,19 @@
+GFP - Gerente Financeiro Pessoal
+================================
+
+GFP é um sistema construído para administrar receitas e despesas pessoais, possibilitando o acompanhamento e análise por categoria para tomada de decisões.
+
+Está implementado sob as seguintes tecnologias/frameworks:
+
+	-	Java 1.6 (back-end).
+	-	Adobe Flex 4.5 (front-end).
+	-	PostgreSQL (database) opcionalmente pode ser substituído por qualquer outro devido ao uso do framework ORM Hibernate. 
+
+
+Changelog
+=========
+
+01.02.02.00	10/11/11
+
+*	C	Corrigida a mensagem de erro na tela de login.
+*	M	Reestilização da UI.

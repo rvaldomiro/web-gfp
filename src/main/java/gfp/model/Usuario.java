@@ -47,7 +47,6 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 		super();
 		this.login = login;
 		this.senha = senha;
-// this.ativo = true;
 	}
 	
 	public Usuario(final String nome, final String login, final String senha) {

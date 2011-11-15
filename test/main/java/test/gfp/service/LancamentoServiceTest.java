@@ -337,18 +337,6 @@ public class LancamentoServiceTest {
 		assertEquals(Categoria.obterTransferencia(u), l.getVinculados().get(0)
 				.getCategoria());
 		
-// final Categoria template = new Categoria(u, "Transferência",
-// CategoriaType.RECEITA);
-// template.setEstatistica(false);
-// template.setInterna(true);
-// final Categoria ct = Categoria.dao.findFirstByTemplate(template);
-//
-		
-// final Categoria ct = new Categoria()
-// .first("usuario = ?1 and descricao = ?2 and tipo = ?3 and estatistica is false and transferencia is false and interna is true",
-// u, "Transferência", CategoriaType.RECEITA.ordinal());
-// assertNotNull(ct);
-		
 		Lancamento l2 = l.getVinculados().get(0);
 		assertEquals(carteira, l2.getConta());
 		assertEquals(FormaPagamentoType.DINHEIRO.ordinal(), l2

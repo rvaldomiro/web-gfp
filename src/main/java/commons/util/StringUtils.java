@@ -34,7 +34,6 @@ public abstract class StringUtils {
 		final StringBuffer result = new StringBuffer();
 		
 		while (result.length() < arg2 - value.length()) {
-			// Tratamento para números negativos
 			if (result.length() > 0 &&
 					String.valueOf(result.charAt(0)).equals("-")) {
 				result.append("0");

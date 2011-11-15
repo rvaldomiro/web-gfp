@@ -116,7 +116,6 @@ public abstract class AbstractHibernateManager implements HibernateManager {
 				this.configuration.addClass(c);
 			}
 			
-// injectDao((Class<Entity<?>>) c, GenericHibernateDao.class);
 			injectManager((Class<Entity<?>>) c);
 		}
 	}

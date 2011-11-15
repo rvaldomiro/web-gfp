@@ -79,11 +79,7 @@
 																  dispatcher.dispatchEvent(new MessageEvent("Sua conta foi criada com sucesso!"
 																											, parent));
 																  buttonCancelar_clickHandler();
-															  }, function(fe:FaultEvent):void
-															  {
-																  dispatcher.dispatchEvent(new MessageEvent(fe
-																											, parent));
-															  }));
+															  }, faultHandler));
 				}
 			}
 			
@@ -110,16 +106,17 @@
 														  {
 															  dispatcher.dispatchEvent(new AppEvent(AppEvent
 																									.TO_HOME));
-														  }, function(fe:FaultEvent):void
-														  {
-															  dispatcher.dispatchEvent(new MessageEvent(fe
-																										, parent));
-														  }));
+														  }, faultHandler));
 			}
 			
 			private function creationCompleteHandler():void
 			{
 				dispatchEvent(new AppEvent(AppEvent.OBTER_VERSAO_ATUAL, null, autoLogin));
+			}
+			
+			private function faultHandler(fe:FaultEvent):void
+			{
+				dispatcher.dispatchEvent(new MessageEvent(fe, this, true));
 			}
 			
 			private function validate():Boolean

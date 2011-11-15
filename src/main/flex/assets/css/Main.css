@@ -6,34 +6,20 @@
 
 @font-face {
 	src: url("../fonts/VAGRounded Lt Normal.ttf");
-	fontFamily: VAGRounded;
+	fontFamily: Default;
 	fontWeight: normal;
 	embedAsCff: true;	
 }
 
 @font-face {
-	src: url("../fonts/VAG Rounded BT.ttf");
-	fontFamily: VAGRoundedBold;
-	fontWeight: bold;
-	embedAsCff: true;	
-}
-
-@font-face {
-	src: url("../fonts/VAG Round.ttf");
-	fontFamily: VAGRound;
-	fontWeight: normal;
-	embedAsCff: true;	
-}
-
-@font-face {
-	src: url("../fonts/Comfortaa Bold.ttf");
+	src: url("../fonts/Sanskrit Helvetica.ttf");
 	fontFamily: Title;
 	fontWeight: normal;
 	embedAsCff: true;
 }
 
 s|Application {
-	fontFamily: "VAGRounded";
+	fontFamily: "Default";
 	fontSize: 12;
 }
 

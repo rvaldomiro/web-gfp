@@ -12,25 +12,24 @@ package gfp.service
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
-	public class UsuarioService extends AbstractService 
+	public class UsuarioService extends AbstractService
 	{
 		
 		public function get idUsuarioLogado():Number
 		{
 			return usuarioLogado.id as Number;
-		
 		}
 		
 		[Bindable]
 		public var selecionado:Usuario;
 		
+		[Bindable]
+		public var usuarioLogado:Usuario;
+		
 		private function get service():RemoteObject
 		{
 			return RemoteUtil.createRemoteObject("usuarioService") as RemoteObject;
 		}
-		
-		[Bindable]
-		public var usuarioLogado:Usuario;
 		
 		[EventHandler(event = "UsuarioEvent.LOGIN", properties = "event")]
 		public function login(event:ICustomEvent):void
@@ -41,7 +40,7 @@ package gfp.service
 			{
 				usuarioLogado = re.result as Usuario;
 				event.result(re);
-			});
+			}, event.fault);
 		}
 		
 		[EventHandler(event = "UsuarioEvent.SALVAR", properties = "event")]
@@ -50,7 +49,7 @@ package gfp.service
 			executeService(service.salvarUsuario(selecionado), function(re:ResultEvent):void
 			{
 				event.result(re);
-			});
+			}, event.fault);
 		}
 	}
 }

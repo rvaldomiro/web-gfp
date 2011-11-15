@@ -86,12 +86,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				Restrictions.neProperty("dataPagamento", "dataCompensacao")));
 		c.setProjection(p);
 		return c.list();
-// final List<Object[]> totais = c.list();
-// return totais;
-// return (List<Object[]>) new Lancamento()
-// .allByQuery(
-// "select dataCompensacao, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 and (dataPagamento is null or dataPagamento <> dataCompensacao) group by dataCompensacao",
-// usuarioId, categoria.ordinal(), dataInicio, dataFinal);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -113,10 +107,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final List<Object[]> saldoCategoria = c.list();
-// final List<Object[]> saldoCategoria = (List<Object[]>) new Lancamento()
-// .allByQuery(
-// "select categoria.id, sum(valorOriginal) from Lancamento where usuario.id = ?1 and categoria.tipo = ?2 and categoria.estatistica = true and dataCompensacao between ?3 and ?4 group by categoria.id",
-// usuarioId, tipoCategoria, dataInicio, dataFinal);
 		
 		for (final Object[] o : saldoCategoria) {
 			result.add(new SaldoCategoriaDto(Categoria.dao
@@ -141,10 +131,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-// final Double result = (Double) new Lancamento()
-// .firstByQuery(
-// "select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao > ?3",
-// conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	
@@ -163,10 +149,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-// final Double result = (Double) new Lancamento()
-// .firstByQuery(
-// "select sum(valorPago) from Lancamento where conta = ?1 and categoria.tipo = ?2 and dataPagamento <= ?3 and dataCompensacao <= ?3",
-// conta, categoria.ordinal(), dataSaldo);
 		return result != null ? result : 0.0;
 	}
 	

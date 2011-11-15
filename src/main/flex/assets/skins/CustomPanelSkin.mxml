@@ -42,7 +42,7 @@
 			
 			private var shake:Boolean;
 			
-			[EventHandler(event = "MessageEvent_Show", properties = "event")]
+			[EventHandler(event = "MessageEvent_SHOW", properties = "event")]
 			public function showMessage(event:MessageEvent):void
 			{
 				labelRodape.text = event.message;

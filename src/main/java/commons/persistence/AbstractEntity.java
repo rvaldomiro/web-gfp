@@ -288,7 +288,6 @@ public abstract class AbstractEntity<T> implements Entity<T> {
 	
 	@Override
 	public void validate() throws Exception {
-		// Implement on decendent class if necessary
 	}
 	
 	@Override

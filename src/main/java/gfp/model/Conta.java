@@ -106,10 +106,6 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		this.tipo = ContaType.CARTEIRA.ordinal();
 	}
 	
-// public void criarPadrao(final Usuario arg0) throws Exception {
-// new Conta(arg0, "Carteira").save();
-// }
-	
 	@Override
 	protected HibernateDao<Conta> getDao() {
 		return dao;
