@@ -45,8 +45,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
 		
-		final Date dataInicio = dto.getDataInicio();
-		final Date dataFinal = dto.getDataFinal();
+		final Date dataInicio = AbstractDateTime.parseBRST(dto.getDataInicio());
+		final Date dataFinal = AbstractDateTime.parseBRST(dto.getDataFinal());
 		Date dataVencimento = dataInicio;
 		
 		if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL.ordinal()) {
@@ -54,7 +54,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 					AbstractDateTime.month(dataVencimento),
 					AbstractDateTime.year(dataVencimento));
 			
-			if (dataVencimento.compareTo(dataInicio) <= 0) {
+			if (dataVencimento.compareTo(dataInicio) < 0) {
 				dataVencimento = AbstractDateTime.addMonth(dataVencimento, 1);
 			}
 		} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
@@ -166,8 +166,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
-		prm.add(dto.getDataInicio());
-		prm.add(dto.getDataFinal());
+		prm.add(AbstractDateTime.parseBRST(dto.getDataInicio()));
+		prm.add(AbstractDateTime.parseBRST(dto.getDataFinal()));
 		
 		if (dto.getSituacao() == LancamentoSituacaoType.EM_ABERTO.ordinal()) {
 			cdt.add("dataPagamento is null");
@@ -208,7 +208,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	
 	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
-			final Date dataInicio) throws Exception {
+			Date dataInicio) throws Exception {
+		dataInicio = AbstractDateTime.parseBRST(dataInicio);
 		final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 				dataInicio, dataFinal);
@@ -268,7 +269,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	
 	@RemotingInclude
 	public List<SaldoDto> listarSaldoPorConta(final Long usuarioId,
-			final Date dataSaldo) throws Exception {
+			Date dataSaldo) throws Exception {
+		dataSaldo = AbstractDateTime.parseBRST(dataSaldo);
 		final List<SaldoDto> result = new ArrayList<SaldoDto>();
 		final List<Conta> contas = Conta.listarAtivas(usuarioId);
 		

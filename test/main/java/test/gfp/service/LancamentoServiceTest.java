@@ -89,62 +89,71 @@ public class LancamentoServiceTest {
 		final AgendamentoDto dto = new AgendamentoDto();
 		dto.setLancamento(lancamento);
 		dto.setFrequencia(FrequenciaAgendamentoType.MENSAL.ordinal());
-		dto.setDia(10);
-		dto.setDataInicio(AbstractDateTime.date(7, 3, 2011));
-		dto.setDataFinal(AbstractDateTime.date(31, 12, 2011));
+		dto.setDia(25);
+		dto.setDataInicio(AbstractDateTime.date(25, 1, 2012));
+		dto.setDataFinal(AbstractDateTime.date(25, 12, 2012));
+		dto.setAnteciparFinaisSemana(true);
 		
-		final Date[] vencimentos = { AbstractDateTime.date(10, 3, 2011),
-				AbstractDateTime.date(10, 4, 2011),
-				AbstractDateTime.date(10, 5, 2011),
-				AbstractDateTime.date(10, 6, 2011),
-				AbstractDateTime.date(10, 7, 2011),
-				AbstractDateTime.date(10, 8, 2011),
-				AbstractDateTime.date(10, 9, 2011),
-				AbstractDateTime.date(10, 10, 2011),
-				AbstractDateTime.date(10, 11, 2011),
-				AbstractDateTime.date(10, 12, 2011) };
+		final Date[] vencimentos = { AbstractDateTime.date(25, 1, 2012),
+				AbstractDateTime.date(25, 2, 2012),
+				AbstractDateTime.date(25, 3, 2012),
+				AbstractDateTime.date(25, 4, 2012),
+				AbstractDateTime.date(25, 5, 2012),
+				AbstractDateTime.date(25, 6, 2012),
+				AbstractDateTime.date(25, 7, 2012),
+				AbstractDateTime.date(25, 8, 2012),
+				AbstractDateTime.date(25, 9, 2012),
+				AbstractDateTime.date(25, 10, 2012),
+				AbstractDateTime.date(25, 11, 2012),
+				AbstractDateTime.date(25, 12, 2012) };
 		
 		dto.setAnteciparFinaisSemana(true);
 		final Date[] previsoesAntecipadas = {
-				AbstractDateTime.date(10, 3, 2011),
-				AbstractDateTime.date(8, 4, 2011),
-				AbstractDateTime.date(10, 5, 2011),
-				AbstractDateTime.date(10, 6, 2011),
-				AbstractDateTime.date(8, 7, 2011),
-				AbstractDateTime.date(10, 8, 2011),
-				AbstractDateTime.date(9, 9, 2011),
-				AbstractDateTime.date(10, 10, 2011),
-				AbstractDateTime.date(10, 11, 2011),
-				AbstractDateTime.date(9, 12, 2011) };
+				AbstractDateTime.date(25, 1, 2012),
+				AbstractDateTime.date(24, 2, 2012),
+				AbstractDateTime.date(23, 3, 2012),
+				AbstractDateTime.date(25, 4, 2012),
+				AbstractDateTime.date(25, 5, 2012),
+				AbstractDateTime.date(25, 6, 2012),
+				AbstractDateTime.date(25, 7, 2012),
+				AbstractDateTime.date(24, 8, 2012),
+				AbstractDateTime.date(25, 9, 2012),
+				AbstractDateTime.date(25, 10, 2012),
+				AbstractDateTime.date(23, 11, 2012),
+				AbstractDateTime.date(25, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentos, previsoesAntecipadas);
 		
 		dto.setAnteciparFinaisSemana(false);
-		final Date[] previsoesAtrasadas = { AbstractDateTime.date(10, 3, 2011),
-				AbstractDateTime.date(11, 4, 2011),
-				AbstractDateTime.date(10, 5, 2011),
-				AbstractDateTime.date(10, 6, 2011),
-				AbstractDateTime.date(11, 7, 2011),
-				AbstractDateTime.date(10, 8, 2011),
-				AbstractDateTime.date(12, 9, 2011),
-				AbstractDateTime.date(10, 10, 2011),
-				AbstractDateTime.date(10, 11, 2011),
-				AbstractDateTime.date(12, 12, 2011) };
+		final Date[] previsoesAtrasadas = { AbstractDateTime.date(25, 1, 2012),
+				AbstractDateTime.date(27, 2, 2012),
+				AbstractDateTime.date(26, 3, 2012),
+				AbstractDateTime.date(25, 4, 2012),
+				AbstractDateTime.date(25, 5, 2012),
+				AbstractDateTime.date(25, 6, 2012),
+				AbstractDateTime.date(25, 7, 2012),
+				AbstractDateTime.date(27, 8, 2012),
+				AbstractDateTime.date(25, 9, 2012),
+				AbstractDateTime.date(25, 10, 2012),
+				AbstractDateTime.date(26, 11, 2012),
+				AbstractDateTime.date(25, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentos, previsoesAtrasadas);
 		
 		dto.setFrequencia(FrequenciaAgendamentoType.DIA_UTIL_MES.ordinal());
 		dto.setDia(5);
 		final Date[] vencimentosDiasUteis = {
-				AbstractDateTime.date(7, 4, 2011),
-				AbstractDateTime.date(6, 5, 2011),
-				AbstractDateTime.date(7, 6, 2011),
-				AbstractDateTime.date(7, 7, 2011),
-				AbstractDateTime.date(5, 8, 2011),
-				AbstractDateTime.date(7, 9, 2011),
-				AbstractDateTime.date(7, 10, 2011),
-				AbstractDateTime.date(7, 11, 2011),
-				AbstractDateTime.date(7, 12, 2011) };
+				AbstractDateTime.date(7, 2, 2012),
+				AbstractDateTime.date(7, 3, 2012),
+				AbstractDateTime.date(6, 4, 2012),
+				AbstractDateTime.date(7, 5, 2012),
+				AbstractDateTime.date(7, 6, 2012),
+				AbstractDateTime.date(6, 7, 2012),
+				AbstractDateTime.date(7, 8, 2012),
+				AbstractDateTime.date(7, 9, 2012),
+				AbstractDateTime.date(5, 10, 2012),
+				AbstractDateTime.date(7, 11, 2012),
+				AbstractDateTime.date(7, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentosDiasUteis, vencimentosDiasUteis);
 	}

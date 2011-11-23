@@ -13,6 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.03.00.00
+
+*	M	Nova tela de logine cadastro de usuários.
+
 01.02.00.00	15/11/11
 
 *	C	Corrigida a mensagem de erro na tela de login.

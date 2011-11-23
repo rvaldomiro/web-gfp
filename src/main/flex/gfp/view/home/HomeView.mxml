@@ -86,7 +86,6 @@
 								 label = "Nova Transação"
 								 click = "buttonNovaTransacao_clickHandler()"
 								 width = "100%"
-								 height = "10%"
 								 styleName = "styleButtonAdd"/>
 		</s:VGroup>
 

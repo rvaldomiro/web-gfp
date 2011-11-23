@@ -99,8 +99,7 @@
 				 fontSize = "14"
 				 color = "#014C6B"/>
 
-		<s:Label id = "labelTotal"
-				 fontSize = "12"/>
+		<s:Label id = "labelTotal"/>
 	</s:VGroup>
 
 	<s:Group width = "100%"

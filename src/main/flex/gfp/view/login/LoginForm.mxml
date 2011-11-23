@@ -29,6 +29,8 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import spark.filters.BlurFilter;
+			
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
 			
@@ -174,56 +176,68 @@
 
 		<s:Transition toState = "Login"
 					  fromState = "*">
-			<s:Parallel target = "{formLogin}">
+			<s:Parallel target = "{groupLogin}">
 				<s:Fade alphaFrom = "0"
 						alphaTo = "1"/>
 			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
 
-	<s:VGroup id = "formLogin"
+	<s:HGroup id = "groupLogin"
 			  width = "100%"
+			  gap = "20"
 			  includeIn = "Login">
-		<s:Label text = "Por favor, informe suas credenciais de acesso e clique em 'Entrar'"
-				 height = "40"
-				 verticalAlign = "middle"
-				 color = "#B33333"/>
+		<s:VGroup id = "formLogin"
+				  width = "100%"
+				  gap = "10">
+			<s:Label text = "Por favor, informe suas credenciais de acesso e clique em 'Entrar'"
+					 height = "40"
+					 verticalAlign = "middle"
+					 color = "#B33333"/>
 
-		<s:Label text = "Usuário:"/>
+			<s:TextInput id = "textUsuario"
+						 prompt = "Usuário"
+						 fontSize = "20"
+						 width = "100%"/>
 
-		<s:TextInput id = "textUsuario"
-					 width = "100%"/>
+			<s:TextInput id = "textSenha"
+						 prompt = "Senha"
+						 fontSize = "20"
+						 width = "100%"
+						 displayAsPassword = "true"
+						 enter = "buttonEntrar_clickHandler()"/>
 
-		<s:Label text = "Senha:"/>
+			<s:HGroup width = "100%"
+					  horizontalAlign = "right">
+				<custom:CustomButton id = "buttonEntrar"
+									 label = "Entrar"
+									 click = "buttonEntrar_clickHandler()"
+									 styleName = "styleButtonGreen"/>
+			</s:HGroup>
+		</s:VGroup>
 
-		<s:TextInput id = "textSenha"
-					 width = "100%"
-					 displayAsPassword = "true"
-					 enter = "buttonEntrar_clickHandler()"/>
+		<mx:VRule height = "100%"/>
 
-		<s:HGroup width = "100%"
-				  horizontalAlign = "right">
-			<custom:CustomButton id = "buttonEntrar"
-								 label = "Entrar"
-								 click = "buttonEntrar_clickHandler()"
-								 styleName = "styleButtonGreen"/>
-		</s:HGroup>
+		<s:VGroup>
+			<s:Label text = "Ainda não é usuário?"
+					 height = "40"
+					 verticalAlign = "middle"
+					 color = "#B33333"/>
 
-		<mx:HRule width = "100%"/>
+			<s:TextArea text = "Você pode utilizar os recursos do GFP para controlar suas receitas e despesas de forma segura e totalmente de graça. Tá esperando o que?"
+						color = "#2074A3"
+						width = "100%"
+						height = "80"
+						borderVisible = "false"
+						editable = "false"
+						textJustify = "distribute"/>
 
-		<s:Label text = "Ainda não é usuário?"
-				 width = "100%"
-				 textAlign = "center"
-				 color = "#B33333"/>
-
-		<s:HGroup width = "100%"
-				  horizontalAlign = "center">
 			<custom:CustomButton id = "buttonCriarConta"
 								 label = "Crie sua conta agora mesmo!"
 								 click = "buttonCriarConta_clickHandler(event)"
-								 styleName = "styleButtonCriarConta"/>
-		</s:HGroup>
-	</s:VGroup>
+								 styleName = "styleButtonAdd"/>
+		</s:VGroup>
+	</s:HGroup>
 
 	<serviceFeedback:ServiceFeedback watchForCall = "login"
 									 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
@@ -232,32 +246,45 @@
 									 includeIn = "Login"/>
 
 	<s:VGroup id = "formCadastro"
-			  width = "{formLogin.width}"
+			  width = "{groupLogin.width}"
+			  height = "{groupLogin.height}"
 			  includeIn = "Cadastro">
-		<s:Label text = "Usuário:"/>
+		<s:HGroup width = "100%">
+			<s:VGroup width = "100%">
+				<s:Label text = "Usuário:"/>
 
-		<s:TextInput id = "textCadastroUsuario"
-					 text = "@{service.selecionado.login}"
-					 width = "100%"/>
+				<s:TextInput id = "textCadastroUsuario"
+							 text = "@{service.selecionado.login}"
+							 width = "100%"/>
+			</s:VGroup>
 
-		<s:Label text = "Senha:"/>
+			<s:VGroup width = "100%">
+				<s:Label text = "Nome Completo:"/>
 
-		<s:TextInput id = "textCadastroSenha"
-					 text = "@{service.selecionado.senha}"
-					 width = "100%"
-					 displayAsPassword = "true"/>
+				<s:TextInput id = "textCadastroNome"
+							 text = "@{service.selecionado.nome}"
+							 width = "100%"/>
+			</s:VGroup>
+		</s:HGroup>
 
-		<s:Label text = "Confirmação:"/>
+		<s:HGroup width = "100%">
+			<s:VGroup width = "100%">
+				<s:Label text = "Senha:"/>
 
-		<s:TextInput id = "textCadastroConfirmacao"
-					 width = "100%"
-					 displayAsPassword = "true"/>
+				<s:TextInput id = "textCadastroSenha"
+							 text = "@{service.selecionado.senha}"
+							 width = "100%"
+							 displayAsPassword = "true"/>
+			</s:VGroup>
 
-		<s:Label text = "Nome Completo:"/>
+			<s:VGroup width = "100%">
+				<s:Label text = "Confirmação:"/>
 
-		<s:TextInput id = "textCadastroNome"
-					 text = "@{service.selecionado.nome}"
-					 width = "100%"/>
+				<s:TextInput id = "textCadastroConfirmacao"
+							 width = "100%"
+							 displayAsPassword = "true"/>
+			</s:VGroup>
+		</s:HGroup>
 
 		<s:Label text = "E-Mail:"/>
 

@@ -1,4 +1,3 @@
-
 import java.net.URI;
 
 import logus.commons.persistence.hibernate.AbstractHibernateManager;

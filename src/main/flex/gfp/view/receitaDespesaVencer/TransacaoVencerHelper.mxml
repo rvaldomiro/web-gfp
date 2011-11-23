@@ -20,8 +20,7 @@
 						 fontSize = "14"
 						 color = "#014C6B"/>
 
-				<s:Label text = "Próximos 15 dias"
-						 fontSize = "12"/>
+				<s:Label text = "Próximos 15 dias"/>
 			</s:VGroup>
 		</s:HGroup>
 

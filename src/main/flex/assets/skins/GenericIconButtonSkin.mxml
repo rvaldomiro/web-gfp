@@ -3,7 +3,7 @@
 			 xmlns:s = "library://ns.adobe.com/flex/spark"
 			 xmlns:fb = "http://ns.adobe.com/flashbuilder/2009"
 			 currentStateChange = "stateChangeHandler(event)"
-			 minHeight = "45">
+			 height = "30">
 	<fx:Metadata>
 		<![CDATA[ 
 		[HostComponent("spark.components.Button")]
@@ -241,8 +241,8 @@
 			right = "1"
 			top = "1"
 			bottom = "1"
-			radiusX = "4"
-			radiusY = "4">
+			radiusX = "5"
+			radiusY = "5">
 		<s:filters>
 			<s:DropShadowFilter id = "dsfBg"
 								alpha = "0.5"
@@ -313,7 +313,8 @@
 				 lineBreak = "toFit"
 				 right = "10"
 				 width = "100%"
-				 color = "#e0e0e0">
+				 color = "#e0e0e0"
+				 color.over = "#ffffff">
 		</s:Label>
 	</s:Group>
 

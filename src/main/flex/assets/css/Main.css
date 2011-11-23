@@ -12,7 +12,7 @@
 }
 
 @font-face {
-	src: url("../fonts/Sanskrit Helvetica.ttf");
+	src: url("../fonts/VAG Round.ttf");
 	fontFamily: Title;
 	fontWeight: normal;
 	embedAsCff: true;
@@ -60,6 +60,8 @@ mx|DataGrid {
 s|TextInput, s|NumericStepper {
 	borderColor: #BDC0CB; 
 	color: #2074A3;
+	focusColor: #2074A3;
+	focusThickness: 1;
 }
 
 s|DropDownList, s|ComboBox {
@@ -103,49 +105,29 @@ mx|global
 	textInputClass: ClassReference("mx.controls.MXFTETextInput"); 
 }
 
-.styleButtonCriarConta {
-	iconClass: ClassReference("assets.images.Add");
-	chromeColor: #800000;
-}
-
-.styleButtonCriarConta:over {
-	chromeColor: #a02000;
-}
-
 .styleButtonAdd {
 	iconClass: ClassReference("assets.images.Add");
-	chromeColor: #305000;
-}
-
-.styleButtonAdd:over {
-	chromeColor: #406000;
+	chromeColor: #3775ED;
 }
 
 .styleButtonGreen {
 	iconClass: ClassReference("assets.images.Check");
-	chromeColor: #305000;
+	chromeColor: #81B11A;
 }
 
-.styleButtonGreen:over {
-	chromeColor: #406000;
+.styleButtonOrange {
+	iconClass: ClassReference("assets.images.Cross");
+	chromeColor: #E4781C;
 }
 
 .styleButtonRed {
 	iconClass: ClassReference("assets.images.Cross");
-	chromeColor: #800000;
-}
-
-.styleButtonRed:over {
-	chromeColor: #a02000;
+	chromeColor: #E33D2E;
 }
 
 .styleButtonBlack {
 	iconClass: ClassReference("assets.images.Magnifier");
 	chromeColor: #505050;
-}
-
-.styleButtonBlack:over {
-	chromeColor: #F9BD00;
 }
 
 s|Button  {
