@@ -44,7 +44,7 @@
 							"Vencendo hoje";
 						labelPrevisaoPagamento.setStyle("color", 0xff0000);
 					}
-					else if (DateUtil.compare(o.dataPagamento, o.dataVencimento) <=
+					else if (DateUtil.compareDate(o.dataPagamento, o.dataVencimento) <=
 						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
@@ -52,17 +52,18 @@
 					}
 					else
 					{
-						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compare(o
-																						.dataPagamento
-																						, o
-																						.dataVencimento) +
+						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compareDate(o
+																							.dataPagamento
+																							, o
+																							.dataVencimento) +
 							" dias de atraso";
 						labelPrevisaoPagamento.setStyle("color", 0xd59600);
 					}
 				}
 				else
 				{
-					if (o.dataPagamento && DateUtil.compare(o.dataPagamento, o.dataVencimento) <=
+					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, o
+																.dataVencimento) <=
 						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
