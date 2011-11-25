@@ -29,6 +29,7 @@
 			import gfp.event.TransacaoEvent;
 			import gfp.model.Categoria;
 			import gfp.model.Conta;
+			import gfp.model.Lancamento;
 			import gfp.service.CategoriaService;
 			import gfp.service.ContaService;
 			import gfp.service.LancamentoService;
@@ -210,15 +211,23 @@
 																	, function(re:ResultEvent):void
 																	{
 																		changed = true;
+																		var agendamentos:ArrayCollection
+																			= re
+																			.result
+																			as ArrayCollection;
 																		currentState = "Principal";
 																		
-																		var _dto:LancamentoDto =
-																			new LancamentoDto();
+																		var _dto:LancamentoDto
+																			= new LancamentoDto();
 																		_dto.tipoPeriodo = 1;
-																		_dto.dataInicio = dto
-																			.dataInicio;
-																		_dto.dataFinal = dto
-																			.dataFinal;
+																		_dto.dataInicio = (agendamentos[0]
+																			as Lancamento)
+																			.dataPrevisaoPagamento;
+																		_dto.dataFinal = (agendamentos[agendamentos
+																			.length
+																			- 1]
+																			as Lancamento)
+																			.dataPrevisaoPagamento;
 																		_dto.categoria = dto
 																			.lancamento
 																			.categoria
