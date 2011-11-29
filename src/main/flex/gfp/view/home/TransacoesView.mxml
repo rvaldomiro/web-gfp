@@ -208,8 +208,7 @@
 		<s:VGroup>
 			<custom:CustomButton label = "Buscar"
 								 click = "pesquisar()"
-								 height = "100%"
-								 styleName = "styleButtonBlack"/>
+								 styleName = "styleButtonFind"/>
 		</s:VGroup>
 	</s:HGroup>
 

@@ -197,12 +197,12 @@
 
 			<s:TextInput id = "textUsuario"
 						 prompt = "Usuário"
-						 fontSize = "20"
+						 fontSize = "18"
 						 width = "100%"/>
 
 			<s:TextInput id = "textSenha"
 						 prompt = "Senha"
-						 fontSize = "20"
+						 fontSize = "18"
 						 width = "100%"
 						 displayAsPassword = "true"
 						 enter = "buttonEntrar_clickHandler()"/>
@@ -212,7 +212,7 @@
 				<custom:CustomButton id = "buttonEntrar"
 									 label = "Entrar"
 									 click = "buttonEntrar_clickHandler()"
-									 styleName = "styleButtonGreen"/>
+									 styleName = "styleButtonCheck"/>
 			</s:HGroup>
 		</s:VGroup>
 
@@ -227,7 +227,7 @@
 			<s:TextArea text = "Você pode utilizar os recursos do GFP para controlar suas receitas e despesas de forma segura e totalmente de graça. Tá esperando o que?"
 						color = "#2074A3"
 						width = "100%"
-						height = "80"
+						height = "76"
 						borderVisible = "false"
 						editable = "false"
 						textJustify = "distribute"/>
@@ -297,12 +297,12 @@
 			<custom:CustomButton id = "buttonCancelar"
 								 label = "Cancelar"
 								 click = "buttonCancelar_clickHandler(event)"
-								 styleName = "styleButtonRed"/>
+								 styleName = "styleButtonCancel"/>
 
 			<custom:CustomButton id = "buttonConfirmar"
 								 label = "Criar Conta"
 								 click = "buttonConfirmar_clickHandler(event)"
-								 styleName = "styleButtonGreen"/>
+								 styleName = "styleButtonCheck"/>
 		</s:HGroup>
 	</s:VGroup>
 

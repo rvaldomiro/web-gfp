@@ -43,7 +43,7 @@
 			{
 				super.childrenCreated();
 				var scale:Object = hostComponent.getStyle("iconScale");
-				scale != null ? baseIconScale = Number(scale) : baseIconScale = Number(1);
+				scale != null ? baseIconScale = Number(.9) : baseIconScale = Number(1);
 			}
 			
 			protected function createFXGComponent(klass:Class):Group
@@ -248,8 +248,8 @@
 								alpha = "0.5"
 								blurX = "0"
 								blurY = "0"
-								distance = "1"
-								strength = "1"
+								distance = "0"
+								strength = "0"
 								strength.down = "0"/>
 		</s:filters>
 
@@ -288,10 +288,10 @@
 
 	<s:Line blendMode = "overlay"
 			verticalCenter = "0"
-			height = "90%"
-			left = "43">
+			height = "80%"
+			left = "40">
 		<s:stroke>
-			<s:SolidColorStroke color = "#3d3d3d"
+			<s:SolidColorStroke color = "#e0e0e0"
 								weight = ".25"/>
 		</s:stroke>
 	</s:Line>
@@ -326,8 +326,8 @@
 			<s:DropShadowFilter id = "dsfSymbol"
 								blurX = "0"
 								blurY = "0"
-								distance = "1"
-								strength = "1"
+								distance = "0"
+								strength = "0"
 								strength.down = "0"/>
 		</s:filters>
 	</s:Group>

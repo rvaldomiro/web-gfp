@@ -186,8 +186,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		}
 		
 		if (dto.getObservacao() != null && dto.getObservacao().length() > 0) {
-			cdt.add("observacao like :params" + (prm.size() + 1));
-			prm.add("%" + dto.getObservacao() + "%");
+			cdt.add("upper(observacao) like :params" + (prm.size() + 1));
+			prm.add("%" + dto.getObservacao().toUpperCase() + "%");
 		}
 		
 		final Query q = Lancamento.dao.createQuery("from Lancamento where " +

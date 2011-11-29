@@ -129,11 +129,11 @@
 				  horizontalAlign = "center">
 			<component:CustomButton label = "Cancelar"
 									click = "cancelar()"
-									styleName = "styleButtonRed"/>
+									styleName = "styleButtonCancel"/>
 
 			<component:CustomButton label = "Salvar"
 									click = "salvar()"
-									styleName = "styleButtonGreen"/>
+									styleName = "styleButtonCheck"/>
 		</s:HGroup>
 	</s:VGroup>
 

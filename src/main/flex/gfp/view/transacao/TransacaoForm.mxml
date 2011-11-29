@@ -29,6 +29,7 @@
 			import gfp.event.TransacaoEvent;
 			import gfp.model.Categoria;
 			import gfp.model.Conta;
+			import gfp.model.Lancamento;
 			import gfp.service.CategoriaService;
 			import gfp.service.ContaService;
 			import gfp.service.LancamentoService;
@@ -210,15 +211,23 @@
 																	, function(re:ResultEvent):void
 																	{
 																		changed = true;
+																		var agendamentos:ArrayCollection
+																			= re
+																			.result
+																			as ArrayCollection;
 																		currentState = "Principal";
 																		
-																		var _dto:LancamentoDto =
-																			new LancamentoDto();
+																		var _dto:LancamentoDto
+																			= new LancamentoDto();
 																		_dto.tipoPeriodo = 1;
-																		_dto.dataInicio = dto
-																			.dataInicio;
-																		_dto.dataFinal = dto
-																			.dataFinal;
+																		_dto.dataInicio = (agendamentos[0]
+																			as Lancamento)
+																			.dataPrevisaoPagamento;
+																		_dto.dataFinal = (agendamentos[agendamentos
+																			.length
+																			- 1]
+																			as Lancamento)
+																			.dataPrevisaoPagamento;
 																		_dto.categoria = dto
 																			.lancamento
 																			.categoria
@@ -487,7 +496,7 @@
 			<component:CustomButton id = "buttonEfetivar"
 									label = "Efetivar"
 									click = "efetivarTransacao()"
-									styleName = "styleButtonGreen"
+									styleName = "styleButtonCheck"
 									visible.Agendamento = "false"
 									includeInLayout.Agendamento = "false"
 									showEffect = "{mx.effects.Fade}"/>
@@ -503,13 +512,13 @@
 
 			<component:CustomButton label = "Cancelar"
 									click = "cancelar()"
-									styleName = "styleButtonRed"
+									styleName = "styleButtonCancel"
 									moveEffect = "{mx.effects.Move}"/>
 
 			<component:CustomButton label.Principal = "Salvar"
 									label.Agendamento = "Gerar"
 									click = "salvar()"
-									styleName = "styleButtonGreen"
+									styleName = "styleButtonCheck"
 									moveEffect = "{mx.effects.Move}"/>
 		</s:HGroup>
 	</s:VGroup>

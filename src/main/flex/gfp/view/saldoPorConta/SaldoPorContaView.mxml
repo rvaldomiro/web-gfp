@@ -50,7 +50,8 @@
 					 height = "100%"
 					 showHeaders = "false"
 					 selectable = "false"
-					 alternatingItemColors = "[#F6F9F6, #F6F9F6]">
+					 alternatingItemColors = "[#eef4fb, #eef4fb]"
+					 borderVisible = "false">
 			<mx:columns>
 				<mx:DataGridColumn itemRenderer = "gfp.view.saldoPorConta.SaldoPorContaRenderer"
 								   width = "500"/>

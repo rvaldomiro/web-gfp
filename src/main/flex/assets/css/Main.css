@@ -107,27 +107,22 @@ mx|global
 
 .styleButtonAdd {
 	iconClass: ClassReference("assets.images.Add");
-	chromeColor: #3775ED;
+	chromeColor: #3573A9;
 }
 
-.styleButtonGreen {
+.styleButtonCheck {
 	iconClass: ClassReference("assets.images.Check");
-	chromeColor: #81B11A;
+	chromeColor: #518919;
 }
 
-.styleButtonOrange {
+.styleButtonCancel {
 	iconClass: ClassReference("assets.images.Cross");
-	chromeColor: #E4781C;
+	chromeColor: #BB382D;
 }
 
-.styleButtonRed {
-	iconClass: ClassReference("assets.images.Cross");
-	chromeColor: #E33D2E;
-}
-
-.styleButtonBlack {
+.styleButtonFind {
 	iconClass: ClassReference("assets.images.Magnifier");
-	chromeColor: #505050;
+	chromeColor: #3573A9;
 }
 
 s|Button  {
