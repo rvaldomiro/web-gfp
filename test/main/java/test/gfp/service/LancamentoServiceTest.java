@@ -142,7 +142,11 @@ public class LancamentoServiceTest {
 		
 		dto.setFrequencia(FrequenciaAgendamentoType.DIA_UTIL_MES.ordinal());
 		dto.setDia(5);
+		dto.setDataInicio(AbstractDateTime.date(6, 1, 2012));
+		dto.setDataFinal(AbstractDateTime.date(31, 12, 2012));
+		dto.setAnteciparFinaisSemana(false);
 		final Date[] vencimentosDiasUteis = {
+				AbstractDateTime.date(6, 1, 2012),
 				AbstractDateTime.date(7, 2, 2012),
 				AbstractDateTime.date(7, 3, 2012),
 				AbstractDateTime.date(6, 4, 2012),
