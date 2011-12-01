@@ -62,7 +62,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			dataVencimento = AbstractDateTime.usefulDayOfMonth(dataVencimento,
 					dto.getDia());
 			
-			if (dataVencimento.compareTo(dataInicio) <= 0) {
+			if (dataVencimento.compareTo(dataInicio) < 0) {
 				dataVencimento = AbstractDateTime.usefulDayOfMonth(
 						AbstractDateTime.addMonth(dataVencimento, 1),
 						dto.getDia());

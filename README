@@ -13,7 +13,11 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
-01.03.00.00
+01.03.01.00	01/12/11
+
+*	C	Corrigido o agendamento de lançamentos para dias úteis no mês.
+
+01.03.00.00	29/11/11
 
 *	M	Nova tela de logine cadastro de usuários.
 
