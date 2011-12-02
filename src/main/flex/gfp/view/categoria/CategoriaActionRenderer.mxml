@@ -48,24 +48,37 @@
 		]]>
 	</fx:Script>
 
+	<fx:Declarations>
+		<s:GlowFilter id = "filterGlow"
+					  color = "#000000"
+					  alpha = "1"
+					  quality = "1"/>
+	</fx:Declarations>
+
 	<s:HGroup horizontalAlign = "right"
 			  width = "100%"
 			  paddingRight = "3"
-			  gap = "0">
-		<s:Image source = "{ImageUtil.INFO}"
+			  gap = "3">
+		<s:Image id = "imageEditar"
+				 source = "{ImageUtil.INFO}"
 				 click = "alterar()"
 				 alpha = ".7"
 				 toolTip = "Editar categoria"
 				 buttonMode = "true"
 				 useHandCursor = "true"
-				 visible = "{!data.interna}"/>
+				 visible = "{!data.interna}"
+				 mouseOver = "{imageEditar.filters = [filterGlow]}"
+				 mouseOut = "{imageEditar.filters = []}"/>
 
-		<s:Image source = "{ImageUtil.CANCEL}"
+		<s:Image id = "imageExcluir"
+				 source = "{ImageUtil.CANCEL}"
 				 click = "excluir()"
 				 alpha = ".7"
 				 toolTip = "Excluir esta categoria"
 				 buttonMode = "true"
 				 useHandCursor = "true"
-				 visible = "{!data.interna}"/>
+				 visible = "{!data.interna}"
+				 mouseOver = "{imageExcluir.filters = [filterGlow]}"
+				 mouseOut = "{imageExcluir.filters = []}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

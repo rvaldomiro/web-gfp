@@ -66,32 +66,49 @@
 		]]>
 	</fx:Script>
 
+	<fx:Declarations>
+		<s:GlowFilter id = "filterGlow"
+					  color = "#000000"
+					  alpha = "1"
+					  quality = "1"/>
+	</fx:Declarations>
+
 	<s:HGroup horizontalAlign = "right"
+			  verticalAlign = "top"
 			  width = "100%"
 			  paddingRight = "3"
-			  gap = "0">
-		<s:Image source = "{ImageUtil.CHECK}"
+			  gap = "3">
+		<s:Image id = "imageEfetivar"
+				 source = "{ImageUtil.CHECK}"
 				 click = "pagarAgora()"
 				 alpha = ".7"
 				 toolTip = "Efetivar agora"
 				 buttonMode = "true"
 				 useHandCursor = "true"
-				 visible = "{!data.dataPagamento &amp;&amp; data.original == null}"/>
+				 visible = "{!data.dataPagamento &amp;&amp; data.original == null}"
+				 mouseOver = "{imageEfetivar.filters = [filterGlow]}"
+				 mouseOut = "{imageEfetivar.filters = []}"/>
 
-		<s:Image source = "{ImageUtil.INFO}"
+		<s:Image id = "imageEditar"
+				 source = "{ImageUtil.INFO}"
 				 click = "alterar()"
 				 alpha = ".7"
 				 toolTip = "Editar transação"
 				 buttonMode = "true"
 				 useHandCursor = "true"
-				 visible = "{data.original == null}"/>
+				 visible = "{data.original == null}"
+				 mouseOver = "{imageEditar.filters = [filterGlow]}"
+				 mouseOut = "{imageEditar.filters = []}"/>
 
-		<s:Image source = "{ImageUtil.CANCEL}"
+		<s:Image id = "imageExcluir"
+				 source = "{ImageUtil.CANCEL}"
 				 click = "excluir()"
 				 alpha = ".7"
 				 toolTip = "Excluir esta transação"
 				 buttonMode = "true"
 				 useHandCursor = "true"
-				 visible = "{data.original == null}"/>
+				 visible = "{data.original == null}"
+				 mouseOver = "{imageExcluir.filters = [filterGlow]}"
+				 mouseOut = "{imageExcluir.filters = []}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

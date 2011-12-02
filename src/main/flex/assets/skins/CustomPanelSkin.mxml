@@ -72,7 +72,7 @@
 			height = "100%"
 			stroke = "{borderStroke}">
 		<s:fill>
-			<s:SolidColor color = "#ffffff"/>
+			<s:SolidColor color = "#f5f5f5"/>
 		</s:fill>
 	</s:Rect>
 
@@ -120,7 +120,7 @@
 		<s:Label id = "titleDisplay"
 				 fontFamily = "Title"
 				 fontSize = "20"
-				 color = "#2074A3"
+				 color = "#4267B7"
 				 height = "100%"
 				 verticalAlign = "middle">
 			<s:filters>
