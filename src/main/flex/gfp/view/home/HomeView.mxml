@@ -20,8 +20,7 @@
 			
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_ULTIMO_ANO")]
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_DIA")]
-			public function navigatorTransacoes_showHandler(event:ICustomEvent =
-															null):void
+			public function navigatorTransacoes_showHandler(event:ICustomEvent = null):void
 			{
 				if (stackHome.selectedChild != navigatorTransacoes)
 				{
@@ -35,8 +34,8 @@
 					dto.dataFinal = DateUtil.today;
 				}
 				
-				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES, event ?
-													  event.object : null));
+				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES, event
+													  ? event.object : null));
 			}
 			
 			private function buttonNovaTransacao_clickHandler():void
@@ -67,13 +66,6 @@
 				xTo = "{width}"
 				yTo = "{height}"/>
 	</fx:Declarations>
-
-	<custom:CustomButtonBar dataProvider = "{stackHome}"
-							width = "100%"
-							height = "30"
-							fontSize = "14"
-							requireSelection = "true"
-							skinClass = "assets.skins.CustomButtonBarSkin"/>
 
 	<s:HGroup width = "100%"
 			  height = "100%">

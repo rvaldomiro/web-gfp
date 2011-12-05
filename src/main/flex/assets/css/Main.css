@@ -3,6 +3,7 @@
 @namespace mx "library://ns.adobe.com/flex/mx";
 @namespace ah "common.spark.component.tooltip.*";
 @namespace chartClasses "mx.charts.chartClasses.*";
+@namespace main "gfp.view.main.*";
 
 @font-face {
 	src: url("../fonts/VAGRounded Lt Normal.ttf");
@@ -26,6 +27,16 @@ s|Application {
 mx|CursorManager
 {
 	busy-cursor: Embed("/assets/skins/UndefinedPersonalSkinLoad.swf");
+}
+
+main|CustomButtonBar
+{
+	skinClass: ClassReference("assets.skins.CustomButtonBarTopSkin");
+}
+
+main|CustomButtonBar, main|CustomButtonBarButton {
+	font-size: 13;
+	font-weight: normal;
 }
 
 s|Label, s|ButtonBar, s|RadioButton {	
@@ -70,19 +81,21 @@ s|DropDownList, s|ComboBox {
 }
 
 ah|NiceToolTip {
-	color: #FFFFFF;
-	chromeColor: #555555;	
+	color: #2074A3;
+	chromeColor: #efe4b0;	
 	fontSize: 12;
 	fontFamily: Default;
-	maxWidth: 100;
+	fontWeight: normal;
+	maxWidth: 100;	
 }
 
 ah|NiceToolTip.errorTip {
 	color: #f8f8f8;
 	chromeColor: #e02010;
-	fontSize: 11;
+	fontSize: 12;
+	fontFamily: Default;
 	fontWeight: normal;
-	maxWidth: 100;
+	maxWidth: 100;	
 }
 
 mx|HRule {
