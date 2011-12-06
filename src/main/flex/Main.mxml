@@ -14,7 +14,8 @@
 			   xmlns:mxml = "org.swizframework.core.mxml.*"
 			   xmlns:core = "org.swizframework.core.*"
 			   xmlns:logging = "org.swizframework.utils.logging.*"
-			   xmlns:services = "org.swizframework.utils.services.*">
+			   xmlns:services = "org.swizframework.utils.services.*"
+			   xmlns:main = "gfp.view.main.*">
 	<fx:Script>
 		<![CDATA[
 			import assets.images.ImageUtil;
@@ -181,21 +182,27 @@
 
 				<mx:Spacer width = "100%"/>
 
-				<s:HGroup id = "groupStatusUsuario"
-						  verticalAlign = "middle"
-						  visible = "{stackMain.selectedChild != navigatorLogin}">
-					<s:Label text = "{usuarioService.usuarioLogado.nome}"
-							 color = "#FFFFFF"/>
+				<s:VGroup height = "100%"
+						  verticalAlign = "bottom"
+						  horizontalAlign = "right">
+					<s:HGroup id = "groupStatusUsuario"
+							  verticalAlign = "middle"
+							  visible = "{stackMain.selectedChild != navigatorLogin}">
+						<s:Label text = "{usuarioService.usuarioLogado.nome}"
+								 color = "#FFFFFF"/>
 
-					<s:Image id = "imageSair"
-							 source = "{ImageUtil.CLOSE}"
-							 click = "logoff()"
-							 buttonMode = "true"
-							 useHandCursor = "true"
-							 toolTip = "Encerrar esta sessão."
-							 mouseOver = "{imageSair.filters = [filterGlow]}"
-							 mouseOut = "{imageSair.filters = []}"/>
-				</s:HGroup>
+						<s:Image id = "imageSair"
+								 source = "{ImageUtil.CLOSE}"
+								 click = "logoff()"
+								 buttonMode = "true"
+								 useHandCursor = "true"
+								 toolTip = "Encerrar esta sessão."
+								 mouseOver = "{imageSair.filters = [filterGlow]}"
+								 mouseOut = "{imageSair.filters = []}"/>
+					</s:HGroup>
+
+					<main:CustomButtonBar dataProvider = "{homeView.stackHome}"/>
+				</s:VGroup>
 			</s:HGroup>
 		</s:BorderContainer>
 

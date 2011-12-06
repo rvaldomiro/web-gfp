@@ -25,6 +25,8 @@
 			  horizontalAlign = "center">
 		<s:CheckBox selected = "{(data as Lancamento).selected}"
 					change = "changeHandler(event)"
-					skinClass = "spark.skins.spark.CheckBoxSkin"/>
+					skinClass = "spark.skins.spark.CheckBoxSkin"
+					useHandCursor = "true"
+					buttonMode = "true"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

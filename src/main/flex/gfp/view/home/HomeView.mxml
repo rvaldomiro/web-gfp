@@ -15,8 +15,16 @@
 			import gfp.event.AppEvent;
 			import gfp.event.TransacaoEvent;
 			
+			import mx.events.IndexChangedEvent;
+			
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
+			
+			[Bindable]
+			private var newIndex:int = 0;
+			
+			[Bindable]
+			private var oldIndex:int = 0;
 			
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_ULTIMO_ANO")]
 			[EventHandler(event = "AppEvent.TO_TRANSACOES_DIA")]
@@ -48,6 +56,17 @@
 			{
 				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_CADASTROS));
 			}
+			
+			private function stackHome_changeHandler(event:IndexChangedEvent):void
+			{
+				oldIndex = event.oldIndex;
+				newIndex = event.newIndex;
+			}
+			
+			private function stackHome_childIndexChangeHandler(event:IndexChangedEvent):void
+			{
+//				oldIndex = event.oldIndex;
+			}
 		]]>
 	</fx:Script>
 
@@ -66,14 +85,31 @@
 				startDelay = "100"
 				xTo = "{width}"
 				yTo = "{height}"/>
-	</fx:Declarations>
 
-	<custom:CustomButtonBar dataProvider = "{stackHome}"
-							width = "100%"
-							height = "30"
-							fontSize = "14"
-							requireSelection = "true"
-							skinClass = "assets.skins.CustomButtonBarSkin"/>
+		<s:Move id = "showVisaoGeralEffect"
+				xFrom = "{-stackHome.width}"
+				xTo = "0"/>
+
+		<s:Move id = "hideVisaoGeralEffect"
+				xFrom = "0"
+				xTo = "{-stackHome.width}"/>
+
+		<s:Move id = "showTransacoesEffect"
+				xFrom = "{stackHome.width * (oldIndex == 0 ? 1 : -1)}"
+				xTo = "0"/>
+
+		<s:Move id = "hideTransacoesEffect"
+				xFrom = "0"
+				xTo = "{stackHome.width * (newIndex == 0 ? 1 : -1)}"/>
+
+		<s:Move id = "showCadastrosEffect"
+				xFrom = "{stackHome.width}"
+				xTo = "0"/>
+
+		<s:Move id = "hideCadastrosEffect"
+				xFrom = "0"
+				xTo = "{stackHome.width}"/>
+	</fx:Declarations>
 
 	<s:HGroup width = "100%"
 			  height = "100%">
@@ -91,13 +127,15 @@
 
 		<mx:ViewStack id = "stackHome"
 					  width = "80%"
-					  height = "100%">
+					  height = "100%"
+					  change = "stackHome_changeHandler(event)"
+					  childIndexChange = "stackHome_childIndexChangeHandler(event)">
 			<s:NavigatorContent id = "navigatorDashboard"
 								label = "Visão Geral"
 								width = "100%"
 								height = "100%"
-								showEffect = "{showStackEffect}"
-								hideEffect = "{hideStackEffect}">
+								showEffect = "{showVisaoGeralEffect}"
+								hideEffect = "{hideVisaoGeralEffect}">
 				<home:DashboardView id = "dashboardView"
 									width = "100%"
 									height = "100%"/>
@@ -107,8 +145,8 @@
 								label = "Transações"
 								width = "100%"
 								height = "100%"
-								showEffect = "{showStackEffect}"
-								hideEffect = "{hideStackEffect}"
+								showEffect = "{showTransacoesEffect}"
+								hideEffect = "{hideTransacoesEffect}"
 								show = "navigatorTransacoes_showHandler()">
 				<home:TransacoesView id = "transacoesView"
 									 width = "100%"
@@ -119,8 +157,8 @@
 								label = "Cadastros"
 								width = "100%"
 								height = "100%"
-								showEffect = "{showStackEffect}"
-								hideEffect = "{hideStackEffect}"
+								showEffect = "{showCadastrosEffect}"
+								hideEffect = "{hideCadastrosEffect}"
 								show = "navigatorCadastros_showHandler()">
 				<home:CadastrosView id = "cadastrosView"
 									width = "100%"

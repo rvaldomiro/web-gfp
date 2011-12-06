@@ -36,7 +36,9 @@
 
 		<s:Label text = "{NumberUtil.formatNumber(o.valorPago, 2)}"
 				 textAlign = "right"
-				 width = "70"/>
+				 fontSize = "14"
+				 width = "70"
+				 visible = "{o.valorPago != 0}"/>
 
 		<s:Label text = "{o.observacao}"/>
 	</s:HGroup>

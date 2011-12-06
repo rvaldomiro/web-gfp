@@ -10,15 +10,15 @@
 	</fx:Script>
 
 	<s:BorderContainer width = "100%"
-					   height = "22"
-					   backgroundColor = "#FFFFFF"
-					   borderVisible = "false"
-					   cornerRadius = "10">
+					   height = "25"
+					   backgroundColor = "#F9F9F9"
+					   borderVisible = "false">
 		<s:HGroup width = "100%"
 				  paddingLeft = "5"
 				  paddingRight = "5"
 				  paddingTop = "5"
-				  paddingBottom = "5">
+				  paddingBottom = "5"
+				  verticalAlign = "middle">
 			<s:Label text = "{data.conta}"
 					 fontSize = "10"
 					 width = "100%"/>

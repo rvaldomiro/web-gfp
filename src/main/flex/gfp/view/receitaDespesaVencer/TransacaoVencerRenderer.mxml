@@ -39,13 +39,13 @@
 				{
 					if (!o.dataPagamento)
 					{
-						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à " +
-							compareHoje + " dia" + (compareHoje == 1 ? "" : "s")) :
-							"Vencendo hoje";
+						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à "
+							+ compareHoje + " dia" + (compareHoje == 1 ? "" : "s"))
+							: "Vencendo hoje";
 						labelPrevisaoPagamento.setStyle("color", 0xff0000);
 					}
-					else if (DateUtil.compareDate(o.dataPagamento, o.dataVencimento) <=
-						0)
+					else if (DateUtil.compareDate(o.dataPagamento, o.dataVencimento)
+						<= 0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
@@ -55,16 +55,16 @@
 						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compareDate(o
 																							.dataPagamento
 																							, o
-																							.dataVencimento) +
-							" dias de atraso";
+																							.dataVencimento)
+							+ " dias de atraso";
 						labelPrevisaoPagamento.setStyle("color", 0xd59600);
 					}
 				}
 				else
 				{
 					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, o
-																.dataVencimento) <=
-						0)
+																.dataVencimento)
+						<= 0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
@@ -144,6 +144,7 @@
 
 		<s:Label text = "{NumberUtil.formatNumber(o.valorOriginal, 2)}"
 				 textAlign = "right"
+				 fontSize = "14"
 				 width = "70"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

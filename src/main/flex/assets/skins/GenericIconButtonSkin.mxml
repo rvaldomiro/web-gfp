@@ -68,8 +68,8 @@
 					el.verticalCenter = -1;
 					el.width = el.height = 0;
 					
-					if (currentState == "up" || (currentState == "over" && oldState !=
-						"down"))
+					if (currentState == "up" || (currentState == "over" && oldState
+						!= "down"))
 					{
 						el.scaleX = el.scaleY = baseIconScale;
 					}
@@ -131,8 +131,8 @@
 				}
 				var color:uint = hostComponent.getStyle('iconColor');
 				
-				if (currentSymbol == null || currentSymbol != null && currentIconClass !=
-					iconClass)
+				if (currentSymbol == null || currentSymbol != null && currentIconClass
+					!= iconClass)
 				{
 					var el:Group = getLibraryDefinitionInstance(iconClass, event
 																.oldState, event
@@ -182,7 +182,7 @@
 					  autoReverse = "true">
 			<s:Parallel>
 				<s:AnimateColor targets = "{[ge1, ge2, ge3, ge4]}"
-								duration = "250"/>
+								duration = "150"/>
 
 				<s:Scale duration = "150"
 						 target = "{currentSymbol}"
@@ -198,7 +198,7 @@
 					  autoReverse = "true">
 			<s:Parallel>
 				<s:AnimateColor targets = "{[ge1, ge2, ge3, ge4]}"
-								duration = "750"/>
+								duration = "150"/>
 
 				<s:Scale duration = "150"
 						 target = "{currentSymbol}"
@@ -241,8 +241,8 @@
 			right = "1"
 			top = "1"
 			bottom = "1"
-			radiusX = "5"
-			radiusY = "5">
+			radiusX = "3"
+			radiusY = "3">
 		<s:filters>
 			<s:DropShadowFilter id = "dsfBg"
 								alpha = "0.5"
@@ -256,29 +256,29 @@
 		<s:fill>
 			<s:LinearGradient rotation = "90">
 				<s:GradientEntry id = "ge1"
-								 color = "#c0c0c0"
-								 color.overStates = "#ffffff"
-								 ratio = "0"/>
+								 color = "#b0b0b0"
+								 color.overStates = "#c0c0c0"
+								 ratio = ".1"/>
 
 				<s:GradientEntry id = "ge2"
 								 color = "#939393"
 								 color.overStates = "#e3e3e3"
-								 ratio = "0.5"/>
+								 ratio = ".4"/>
 
 				<s:GradientEntry id = "ge3"
 								 color = "#7e7e7e"
 								 color.overStates = "#cecece"
-								 ratio = "0.5"/>
+								 ratio = ".6"/>
 
 				<s:GradientEntry id = "ge4"
 								 color = "#6a6a6a"
 								 color.overStates = "#bbbbbb"
-								 ratio = "1"/>
+								 ratio = ".9"/>
 			</s:LinearGradient>
 		</s:fill>
 
 		<s:stroke>
-			<s:SolidColorStroke color = "#ffffff"
+			<s:SolidColorStroke color = "#cccccc"
 								caps = "none"
 								weight = "1"
 								joints = "miter"
@@ -286,12 +286,11 @@
 		</s:stroke>
 	</s:Rect>
 
-	<s:Line blendMode = "overlay"
-			verticalCenter = "0"
+	<s:Line verticalCenter = "0"
 			height = "80%"
 			left = "40">
 		<s:stroke>
-			<s:SolidColorStroke color = "#e0e0e0"
+			<s:SolidColorStroke color = "#c8c8c8"
 								weight = ".25"/>
 		</s:stroke>
 	</s:Line>
@@ -301,7 +300,7 @@
 			 left = "50"
 			 width = "100%">
 		<s:filters>
-			<s:DropShadowFilter alpha = "0.5"
+			<s:DropShadowFilter alpha = "0.3"
 								blurX = "0"
 								blurY = "0"
 								distance = "1"/>
@@ -315,6 +314,12 @@
 				 width = "100%"
 				 color = "#e0e0e0"
 				 color.over = "#ffffff">
+			<s:filters>
+				<s:DropShadowFilter alpha = "0.3"
+									blurX = "0"
+									blurY = "0"
+									distance = "1"/>
+			</s:filters>
 		</s:Label>
 	</s:Group>
 
@@ -324,11 +329,10 @@
 			 height = "45">
 		<s:filters>
 			<s:DropShadowFilter id = "dsfSymbol"
+								alpha = "0.3"
 								blurX = "0"
 								blurY = "0"
-								distance = "0"
-								strength = "0"
-								strength.down = "0"/>
+								distance = "1"/>
 		</s:filters>
 	</s:Group>
 </s:SparkSkin>

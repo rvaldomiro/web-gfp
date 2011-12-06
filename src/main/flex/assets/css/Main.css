@@ -3,6 +3,7 @@
 @namespace mx "library://ns.adobe.com/flex/mx";
 @namespace ah "common.spark.component.tooltip.*";
 @namespace chartClasses "mx.charts.chartClasses.*";
+@namespace main "gfp.view.main.*";
 
 @font-face {
 	src: url("../fonts/VAGRounded Lt Normal.ttf");
@@ -19,7 +20,7 @@
 }
 
 s|Application {
-	fontFamily: "Default";
+	fontFamily: Default;
 	fontSize: 12;
 }
 
@@ -28,13 +29,23 @@ mx|CursorManager
 	busy-cursor: Embed("/assets/skins/UndefinedPersonalSkinLoad.swf");
 }
 
+main|CustomButtonBar
+{
+	skinClass: ClassReference("assets.skins.CustomButtonBarTopSkin");
+}
+
+main|CustomButtonBar, main|CustomButtonBarButton {
+	font-size: 13;
+	font-weight: normal;
+}
+
 s|Label, s|ButtonBar, s|RadioButton {	
 	color: #2074A3;
 	fontWeight: normal;
 }
 
 chartClasses|DataTip {
-	fontFamily: VAGRounded;
+	fontFamily: Default;
 	color: #2876A4;
 	fontSize: 11;
 	background-color: #FFF4D3;	
@@ -62,6 +73,7 @@ s|TextInput, s|NumericStepper {
 	color: #2074A3;
 	focusColor: #2074A3;
 	focusThickness: 1;
+	pr: normal;
 }
 
 s|DropDownList, s|ComboBox {
@@ -69,20 +81,21 @@ s|DropDownList, s|ComboBox {
 }
 
 ah|NiceToolTip {
-	color: #FFFFFF;
-	chromeColor: #555555;	
+	color: #2074A3;
+	chromeColor: #efe4b0;	
 	fontSize: 12;
-	fontFamily: "VAGRounded";
-	maxWidth: 100;
+	fontFamily: Default;
+	fontWeight: normal;
+	maxWidth: 100;	
 }
 
 ah|NiceToolTip.errorTip {
 	color: #f8f8f8;
 	chromeColor: #e02010;
-	fontSize: 11;
-	fontStyle: italic;
+	fontSize: 12;
+	fontFamily: Default;
 	fontWeight: normal;
-	maxWidth: 100;
+	maxWidth: 100;	
 }
 
 mx|HRule {
@@ -107,22 +120,22 @@ mx|global
 
 .styleButtonAdd {
 	iconClass: ClassReference("assets.images.Add");
-	chromeColor: #3573A9;
-}
-
-.styleButtonCheck {
-	iconClass: ClassReference("assets.images.Check");
-	chromeColor: #518919;
-}
-
-.styleButtonCancel {
-	iconClass: ClassReference("assets.images.Cross");
-	chromeColor: #BB382D;
+	chromeColor: #4267B7;
 }
 
 .styleButtonFind {
 	iconClass: ClassReference("assets.images.Magnifier");
-	chromeColor: #3573A9;
+	chromeColor: #4267B7;
+}
+
+.styleButtonCheck {
+	iconClass: ClassReference("assets.images.Check");
+	chromeColor: #77AA56;
+}
+
+.styleButtonCancel {
+	iconClass: ClassReference("assets.images.Cross");
+	chromeColor: #882E2D;
 }
 
 s|Button  {
