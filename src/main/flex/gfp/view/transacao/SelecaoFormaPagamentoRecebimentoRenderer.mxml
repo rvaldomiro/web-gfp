@@ -4,7 +4,9 @@
 			 itemRenderer = "gfp.view.transacao.FormaPagamentoRenderer"
 			 rowCount = "1"
 			 direction = "horizontal"
-			 columnWidth = "120">
+			 columnWidth = "120"
+			 useHandCursor = "true"
+			 buttonMode = "true">
 	<mx:Script>
 		<![CDATA[
 			import gfp.model.Conta;

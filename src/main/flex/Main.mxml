@@ -32,6 +32,7 @@
 			import gfp.view.conta.ContaForm;
 			import gfp.view.transacao.TransacaoForm;
 			
+			import mx.effects.Fade;
 			import mx.events.EffectEvent;
 			import mx.events.FlexEvent;
 			
@@ -143,12 +144,12 @@
 			</mxml:beanProviders>
 		</mxml:Swiz>
 
-		<s:Fade id = "showLoginFormEffect"
-				target = "{navigatorLogin}"
-				duration = "1000"
-				alphaFrom = "0"
-				alphaTo = "1"
-				effectEnd = "showLoginFormEffect_effectEndHandler(event)"/>
+		<mx:Fade id = "showLoginFormEffect"
+				 target = "{navigatorLogin}"
+				 duration = "1000"
+				 alphaFrom = "0"
+				 alphaTo = "1"
+				 effectEnd = "showLoginFormEffect_effectEndHandler(event)"/>
 
 		<s:GlowFilter id = "filterGlow"
 					  color = "#ffffff"
@@ -184,10 +185,11 @@
 
 				<s:VGroup height = "100%"
 						  verticalAlign = "bottom"
-						  horizontalAlign = "right">
+						  horizontalAlign = "right"
+						  visible = "{stackMain.selectedChild != navigatorLogin}"
+						  showEffect = "{Fade}">
 					<s:HGroup id = "groupStatusUsuario"
-							  verticalAlign = "middle"
-							  visible = "{stackMain.selectedChild != navigatorLogin}">
+							  verticalAlign = "middle">
 						<s:Label text = "{usuarioService.usuarioLogado.nome}"
 								 color = "#FFFFFF"/>
 

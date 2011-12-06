@@ -5,7 +5,8 @@
 		  xmlns:receitaDespesaVencer = "gfp.view.receitaDespesaVencer.*"
 		  xmlns:despesaVencer = "gfp.view.despesaVencer.*"
 		  xmlns:graficos = "gfp.view.graficos.*"
-		  xmlns:custom = "common.spark.component.*">
+		  xmlns:custom = "common.spark.component.*"
+		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
 			import common.util.DateUtil;
@@ -15,6 +16,8 @@
 			
 			import mx.collections.ArrayCollection;
 			
+			import spark.effects.Move;
+			import spark.effects.Resize;
 			import spark.events.IndexChangeEvent;
 			
 			[Dispatcher]
@@ -77,6 +80,13 @@
 					mesAno_changeHandler();
 				}
 			}
+			
+			private function imageZoomDown_clickHandler(event:MouseEvent):void
+			{
+				groupGraficos.percentHeight = 100;
+				groupTransacoesVencer.height = groupTransacoesVencer.height == 0
+					? 300 : 0;
+			}
 		]]>
 	</fx:Script>
 
@@ -89,75 +99,86 @@
 	<s:transitions>
 		<s:Transition toState = "*">
 			<s:Parallel target = "{groupGraficos}">
-				<s:Rotate3D angleXFrom = "180"
+				<s:Rotate3D angleXFrom = "270"
 							angleXTo = "360"
 							autoCenterTransform = "true"
 							autoCenterProjection = "true"/>
 
-				<s:Fade alphaFrom = "0"
-						alphaTo = "1"/>
+				<mx:Fade alphaFrom = "0"
+						 alphaTo = "1"/>
 			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
 
-	<s:HGroup width = "100%"
-			  horizontalAlign = "center">
-		<custom:CustomButtonBar id = "barTrocaGrafico"
-								dataProvider = "{listaGraficos}"
-								requireSelection = "true"
-								height = "25"
-								change = "barTrocaGrafico_changeHandler(event)"
-								skinClass = "assets.skins.CustomButtonBarSkin"/>
-	</s:HGroup>
+	<custom:CustomButtonBar id = "barTrocaGrafico"
+							dataProvider = "{listaGraficos}"
+							requireSelection = "true"
+							height = "25"
+							change = "barTrocaGrafico_changeHandler(event)"
+							skinClass = "assets.skins.CustomButtonBarSkin"/>
 
-	<s:HGroup id = "groupGraficos"
+	<s:VGroup id = "groupGraficos"
 			  width = "100%"
-			  height = "50%">
+			  height = "100%">
 		<s:VGroup width = "100%"
-				  height = "100%"
 				  includeIn = "stateBalanco">
-			<s:HGroup width = "100%"
-					  verticalAlign = "middle">
-				<custom:CustomButtonBar id = "barMeses"
-										dataProvider = "{meses}"
-										selectedIndex = "{mesAtual}"
-										width = "100%"
-										height = "25"
-										requireSelection = "true"
-										change = "mesAno_changeHandler()"
-										skinClass = "assets.skins.CustomButtonBarSkin"/>
+			<s:VGroup id = "graficoBalancoMensal"
+					  width = "100%"
+					  height = "100%">
+				<s:HGroup width = "100%"
+						  verticalAlign = "middle">
+					<custom:CustomButtonBar id = "barMeses"
+											dataProvider = "{meses}"
+											selectedIndex = "{mesAtual}"
+											width = "100%"
+											height = "25"
+											requireSelection = "true"
+											change = "mesAno_changeHandler()"
+											skinClass = "assets.skins.CustomButtonBarSkin"/>
 
-				<s:NumericStepper id = "stepperAno"
-								  value = "{anoAtual}"
-								  minimum = "1000"
-								  maximum = "9999"
-								  width = "60"
-								  change = "mesAno_changeHandler()"/>
-			</s:HGroup>
+					<s:NumericStepper id = "stepperAno"
+									  value = "{anoAtual}"
+									  minimum = "1000"
+									  maximum = "9999"
+									  width = "60"
+									  change = "mesAno_changeHandler()"/>
+				</s:HGroup>
 
-			<s:HGroup width = "100%"
-					  height = "100%"
-					  verticalAlign = "middle">
-				<graficos:GraficoReceitaMensalView id = "graficoReceitaMensalView"
-												   width = "50%"
-												   height = "100%"/>
+				<s:HGroup width = "100%"
+						  height = "100%"
+						  verticalAlign = "middle">
+					<graficos:GraficoReceitaMensalView id = "graficoReceitaMensalView"
+													   width = "50%"
+													   height = "100%"/>
 
-				<receitaDespesaVencer:ResultadoBalancoView width = "120"
-														   height = "50"/>
+					<receitaDespesaVencer:ResultadoBalancoView width = "120"
+															   height = "50"/>
 
-				<graficos:GraficoDespesaMensalView width = "50%"
-												   height = "100%"/>
-			</s:HGroup>
+					<graficos:GraficoDespesaMensalView width = "50%"
+													   height = "100%"/>
+				</s:HGroup>
+			</s:VGroup>
 		</s:VGroup>
 
 		<graficos:GraficoPrevisaoSaldoDiarioView id = "graficoPrevisaoSaldoDiarioView"
 												 width = "100%"
 												 height = "100%"
 												 includeIn = "statePrevisaoSaldo"/>
+	</s:VGroup>
+
+	<s:HGroup id = "groupDivisao"
+			  width = "100%"
+			  verticalAlign = "middle">
+		<s:Button id = "imageZoomDown"
+				  label = "Down"
+				  click = "imageZoomDown_clickHandler(event)"/>
+
+		<mx:HRule width = "100%"/>
 	</s:HGroup>
 
-	<s:HGroup width = "100%"
-			  height = "50%">
+	<s:HGroup id = "groupTransacoesVencer"
+			  width = "100%"
+			  height = "300">
 		<receitaDespesaVencer:ReceitaVencerView width = "50%"
 												height = "100%"/>
 

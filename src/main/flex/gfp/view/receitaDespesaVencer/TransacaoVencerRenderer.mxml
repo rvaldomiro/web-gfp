@@ -107,7 +107,7 @@
 
 	<s:HGroup width = "100%"
 			  paddingLeft = "2"
-			  paddingRight = "2"
+			  paddingRight = "5"
 			  paddingTop = "2"
 			  paddingBottom = "2">
 		<s:VGroup width = "70"
@@ -142,9 +142,12 @@
 			</s:HGroup>
 		</s:VGroup>
 
-		<s:Label text = "{NumberUtil.formatNumber(o.valorOriginal, 2)}"
-				 textAlign = "right"
-				 fontSize = "14"
-				 width = "70"/>
+		<s:VGroup height = "100%"
+				  verticalAlign = "middle">
+			<s:Label text = "{NumberUtil.formatNumber(o.valorOriginal, 2)}"
+					 textAlign = "right"
+					 fontSize = "14"
+					 width = "70"/>
+		</s:VGroup>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>
