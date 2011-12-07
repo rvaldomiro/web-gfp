@@ -8,8 +8,10 @@
 			  paddingRight = "3"
 			  paddingTop = "3"
 			  paddingBottom = "3">
-		<s:Label text = "{data + (!data.ativa ? ' (Inativa)' : '')}"
-				 width = "100%"/>
+		<s:Label id = "labelConta"
+				 text = "{data}"
+				 width = "100%"
+				 lineThrough = "{!data.ativa}"/>
 
 		<s:Label text = "{data.identificacao}"
 				 width = "100%"

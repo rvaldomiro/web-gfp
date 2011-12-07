@@ -9,15 +9,18 @@
 		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
+			import assets.images.ImageUtil;
+			
 			import common.util.DateUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.service.LancamentoService;
 			
 			import mx.collections.ArrayCollection;
+			import mx.effects.Move;
+			import mx.effects.Resize;
+			import mx.events.EffectEvent;
 			
-			import spark.effects.Move;
-			import spark.effects.Resize;
 			import spark.events.IndexChangeEvent;
 			
 			[Dispatcher]
@@ -81,14 +84,36 @@
 				}
 			}
 			
-			private function imageZoomDown_clickHandler(event:MouseEvent):void
+			private function groupTransacoesVencerResizeEffect_effectEndHandler(event:EffectEvent):void
 			{
-				groupGraficos.percentHeight = 100;
+				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_IN
+					: ImageUtil.ZOOM_OUT;
+				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Expandir" : "Comprimir")
+					+ " Gráficos";
+			}
+			
+			private function imageZoom_clickHandler(event:MouseEvent):void
+			{
 				groupTransacoesVencer.height = groupTransacoesVencer.height == 0
 					? 300 : 0;
 			}
 		]]>
 	</fx:Script>
+
+	<fx:Declarations>
+		<s:Parallel id = "groupTransacoesVencerResizeEffect"
+					targets = "{[groupGraficos, groupDivisao, groupTransacoesVencer]}"
+					effectEnd = "groupTransacoesVencerResizeEffect_effectEndHandler(event)">
+			<mx:Resize/>
+
+			<mx:Move/>
+		</s:Parallel>
+
+		<s:GlowFilter id = "filterGlow"
+					  color = "#000000"
+					  alpha = "1"
+					  quality = "1"/>
+	</fx:Declarations>
 
 	<s:states>
 		<s:State name = "stateBalanco"/>
@@ -121,6 +146,7 @@
 			  width = "100%"
 			  height = "100%">
 		<s:VGroup width = "100%"
+				  height = "100%"
 				  includeIn = "stateBalanco">
 			<s:VGroup id = "graficoBalancoMensal"
 					  width = "100%"
@@ -168,17 +194,32 @@
 
 	<s:HGroup id = "groupDivisao"
 			  width = "100%"
-			  verticalAlign = "middle">
-		<s:Button id = "imageZoomDown"
-				  label = "Down"
-				  click = "imageZoomDown_clickHandler(event)"/>
+			  verticalAlign = "middle"
+			  gap = "3">
+		<s:Image id = "imageZoom"
+				 source = "{ImageUtil.ZOOM_IN}"
+				 click = "imageZoom_clickHandler(event)"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 mouseOver = "{imageZoom.filters = [filterGlow]}"
+				 mouseOut = "{imageZoom.filters = []}"/>
+
+		<s:Label id = "labelZoom"
+				 text = "Expandir Gráficos"
+				 fontSize = "10"
+				 click = "imageZoom_clickHandler(event)"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 mouseOver = "{imageZoom.filters = [filterGlow]}"
+				 mouseOut = "{imageZoom.filters = []}"/>
 
 		<mx:HRule width = "100%"/>
 	</s:HGroup>
 
 	<s:HGroup id = "groupTransacoesVencer"
 			  width = "100%"
-			  height = "300">
+			  height = "300"
+			  resizeEffect = "{groupTransacoesVencerResizeEffect}">
 		<receitaDespesaVencer:ReceitaVencerView width = "50%"
 												height = "100%"/>
 
