@@ -90,6 +90,7 @@
 					: ImageUtil.ZOOM_OUT;
 				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Expandir" : "Comprimir")
 					+ " Gráficos";
+				groupTransacoesVencer.visible = groupTransacoesVencer.height > 0;
 			}
 			
 			private function imageZoom_clickHandler(event:MouseEvent):void
@@ -194,6 +195,7 @@
 
 	<s:HGroup id = "groupDivisao"
 			  width = "100%"
+			  height = "50"
 			  verticalAlign = "middle"
 			  gap = "3">
 		<s:Image id = "imageZoom"
@@ -219,6 +221,7 @@
 	<s:HGroup id = "groupTransacoesVencer"
 			  width = "100%"
 			  height = "300"
+			  showEffect = "{Fade}"
 			  resizeEffect = "{groupTransacoesVencerResizeEffect}">
 		<receitaDespesaVencer:ReceitaVencerView width = "50%"
 												height = "100%"/>
