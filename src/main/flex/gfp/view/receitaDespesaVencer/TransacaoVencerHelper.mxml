@@ -6,6 +6,30 @@
 	<fx:Script>
 		<![CDATA[
 			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
+			import common.util.NumberUtil;
+			
+			import gfp.model.Lancamento;
+			
+			import mx.collections.ArrayCollection;
+			
+			public function set dataProvider(dataProvider:ArrayCollection):void
+			{
+				gridLancamentos.dataProvider = dataProvider;
+				labelTotal.text = "Próximos 15 dias: " + NumberUtil.formatMoney(calcularTotal());
+			}
+			
+			private function calcularTotal():Number
+			{
+				var result:Number = 0;
+				
+				for each (var lancamento:Lancamento in gridLancamentos.dataProvider
+					as ArrayCollection)
+				{
+					result += lancamento.valorOriginal;
+				}
+				
+				return result;
+			}
 		]]>
 	</fx:Script>
 
@@ -20,7 +44,7 @@
 						 fontSize = "14"
 						 color = "#014C6B"/>
 
-				<s:Label text = "Próximos 15 dias"/>
+				<s:Label id = "labelTotal"/>
 			</s:VGroup>
 		</s:HGroup>
 
@@ -40,7 +64,7 @@
 									   width = "440"/>
 
 					<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoActionRenderer"
-									   width = "70"/>
+									   width = "80"/>
 				</mx:columns>
 			</mx:DataGrid>
 

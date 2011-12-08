@@ -74,8 +74,9 @@
 	</fx:Declarations>
 
 	<s:HGroup horizontalAlign = "right"
-			  verticalAlign = "top"
+			  verticalAlign = "middle"
 			  width = "100%"
+			  height = "100%"
 			  paddingRight = "3"
 			  gap = "3">
 		<s:Image id = "imageEfetivar"

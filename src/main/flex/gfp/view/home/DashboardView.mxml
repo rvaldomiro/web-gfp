@@ -5,15 +5,21 @@
 		  xmlns:receitaDespesaVencer = "gfp.view.receitaDespesaVencer.*"
 		  xmlns:despesaVencer = "gfp.view.despesaVencer.*"
 		  xmlns:graficos = "gfp.view.graficos.*"
-		  xmlns:custom = "common.spark.component.*">
+		  xmlns:custom = "common.spark.component.*"
+		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
+			import assets.images.ImageUtil;
+			
 			import common.util.DateUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.service.LancamentoService;
 			
 			import mx.collections.ArrayCollection;
+			import mx.effects.Move;
+			import mx.effects.Resize;
+			import mx.events.EffectEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -77,8 +83,38 @@
 					mesAno_changeHandler();
 				}
 			}
+			
+			private function groupTransacoesVencerResizeEffect_effectEndHandler(event:EffectEvent):void
+			{
+				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_IN
+					: ImageUtil.ZOOM_OUT;
+				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Expandir" : "Comprimir")
+					+ " Gráficos";
+				groupTransacoesVencer.visible = groupTransacoesVencer.height > 0;
+			}
+			
+			private function imageZoom_clickHandler(event:MouseEvent):void
+			{
+				groupTransacoesVencer.height = groupTransacoesVencer.height == 0
+					? 300 : 0;
+			}
 		]]>
 	</fx:Script>
+
+	<fx:Declarations>
+		<s:Parallel id = "groupTransacoesVencerResizeEffect"
+					targets = "{[groupGraficos, groupDivisao, groupTransacoesVencer]}"
+					effectEnd = "groupTransacoesVencerResizeEffect_effectEndHandler(event)">
+			<mx:Resize/>
+
+			<mx:Move/>
+		</s:Parallel>
+
+		<s:GlowFilter id = "filterGlow"
+					  color = "#000000"
+					  alpha = "1"
+					  quality = "1"/>
+	</fx:Declarations>
 
 	<s:states>
 		<s:State name = "stateBalanco"/>
@@ -89,75 +125,104 @@
 	<s:transitions>
 		<s:Transition toState = "*">
 			<s:Parallel target = "{groupGraficos}">
-				<s:Rotate3D angleXFrom = "180"
+				<s:Rotate3D angleXFrom = "270"
 							angleXTo = "360"
 							autoCenterTransform = "true"
 							autoCenterProjection = "true"/>
 
-				<s:Fade alphaFrom = "0"
-						alphaTo = "1"/>
+				<mx:Fade alphaFrom = "0"
+						 alphaTo = "1"/>
 			</s:Parallel>
 		</s:Transition>
 	</s:transitions>
 
-	<s:HGroup width = "100%"
-			  horizontalAlign = "center">
-		<custom:CustomButtonBar id = "barTrocaGrafico"
-								dataProvider = "{listaGraficos}"
-								requireSelection = "true"
-								height = "25"
-								change = "barTrocaGrafico_changeHandler(event)"
-								skinClass = "assets.skins.CustomButtonBarSkin"/>
-	</s:HGroup>
+	<custom:CustomButtonBar id = "barTrocaGrafico"
+							dataProvider = "{listaGraficos}"
+							requireSelection = "true"
+							height = "25"
+							change = "barTrocaGrafico_changeHandler(event)"
+							skinClass = "assets.skins.CustomButtonBarSkin"/>
 
-	<s:HGroup id = "groupGraficos"
+	<s:VGroup id = "groupGraficos"
 			  width = "100%"
-			  height = "50%">
+			  height = "100%">
 		<s:VGroup width = "100%"
 				  height = "100%"
 				  includeIn = "stateBalanco">
-			<s:HGroup width = "100%"
-					  verticalAlign = "middle">
-				<custom:CustomButtonBar id = "barMeses"
-										dataProvider = "{meses}"
-										selectedIndex = "{mesAtual}"
-										width = "100%"
-										height = "25"
-										requireSelection = "true"
-										change = "mesAno_changeHandler()"
-										skinClass = "assets.skins.CustomButtonBarSkin"/>
+			<s:VGroup id = "graficoBalancoMensal"
+					  width = "100%"
+					  height = "100%">
+				<s:HGroup width = "100%"
+						  verticalAlign = "middle">
+					<custom:CustomButtonBar id = "barMeses"
+											dataProvider = "{meses}"
+											selectedIndex = "{mesAtual}"
+											width = "100%"
+											height = "25"
+											requireSelection = "true"
+											change = "mesAno_changeHandler()"
+											skinClass = "assets.skins.CustomButtonBarSkin"/>
 
-				<s:NumericStepper id = "stepperAno"
-								  value = "{anoAtual}"
-								  minimum = "1000"
-								  maximum = "9999"
-								  width = "60"
-								  change = "mesAno_changeHandler()"/>
-			</s:HGroup>
+					<s:NumericStepper id = "stepperAno"
+									  value = "{anoAtual}"
+									  minimum = "1000"
+									  maximum = "9999"
+									  width = "60"
+									  change = "mesAno_changeHandler()"/>
+				</s:HGroup>
 
-			<s:HGroup width = "100%"
-					  height = "100%"
-					  verticalAlign = "middle">
-				<graficos:GraficoReceitaMensalView id = "graficoReceitaMensalView"
-												   width = "50%"
-												   height = "100%"/>
+				<s:HGroup width = "100%"
+						  height = "100%"
+						  verticalAlign = "middle">
+					<graficos:GraficoReceitaMensalView id = "graficoReceitaMensalView"
+													   width = "50%"
+													   height = "100%"/>
 
-				<receitaDespesaVencer:ResultadoBalancoView width = "120"
-														   height = "50"/>
+					<receitaDespesaVencer:ResultadoBalancoView width = "120"
+															   height = "50"/>
 
-				<graficos:GraficoDespesaMensalView width = "50%"
-												   height = "100%"/>
-			</s:HGroup>
+					<graficos:GraficoDespesaMensalView width = "50%"
+													   height = "100%"/>
+				</s:HGroup>
+			</s:VGroup>
 		</s:VGroup>
 
 		<graficos:GraficoPrevisaoSaldoDiarioView id = "graficoPrevisaoSaldoDiarioView"
 												 width = "100%"
 												 height = "100%"
 												 includeIn = "statePrevisaoSaldo"/>
+	</s:VGroup>
+
+	<s:HGroup id = "groupDivisao"
+			  width = "100%"
+			  height = "50"
+			  verticalAlign = "middle"
+			  gap = "3">
+		<s:Image id = "imageZoom"
+				 source = "{ImageUtil.ZOOM_IN}"
+				 click = "imageZoom_clickHandler(event)"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 mouseOver = "{imageZoom.filters = [filterGlow]}"
+				 mouseOut = "{imageZoom.filters = []}"/>
+
+		<s:Label id = "labelZoom"
+				 text = "Expandir Gráficos"
+				 fontSize = "10"
+				 click = "imageZoom_clickHandler(event)"
+				 buttonMode = "true"
+				 useHandCursor = "true"
+				 mouseOver = "{imageZoom.filters = [filterGlow]}"
+				 mouseOut = "{imageZoom.filters = []}"/>
+
+		<mx:HRule width = "100%"/>
 	</s:HGroup>
 
-	<s:HGroup width = "100%"
-			  height = "50%">
+	<s:HGroup id = "groupTransacoesVencer"
+			  width = "100%"
+			  height = "300"
+			  showEffect = "{Fade}"
+			  resizeEffect = "{groupTransacoesVencerResizeEffect}">
 		<receitaDespesaVencer:ReceitaVencerView width = "50%"
 												height = "100%"/>
 
