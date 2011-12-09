@@ -31,8 +31,14 @@
 				_lancamento = lancamento;
 				_dataProvider = new ArrayCollection();
 				
-				for each (var conta:Conta in contaService.list)
+				for each (var conta:Conta in contaService.listaCompleta)
 				{
+					if ((!_lancamento.id && !conta.ativa) || (_lancamento.id && !conta
+						.ativa && _lancamento.conta.id != conta.id))
+					{
+						continue;
+					}
+					
 					if (conta.tipo == ContaType.CARTEIRA)
 					{
 						var dinheiro:Object = new Object();
@@ -70,10 +76,24 @@
 			private function setSelectedIndex():void
 			{
 				selectedIndex = -1;
+				var i:int;
 				
-				for (var i:int = 0; i < _dataProvider.length; i++)
+				for (i = 0; i < _dataProvider.length; i++)
 				{
-					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento)
+					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento &&
+						_lancamento.conta && _dataProvider[i].conta.id == _lancamento
+						.conta.id)
+					{
+						selectedIndex = i;
+						changeHandler();
+						return;
+					}
+				}
+				
+				for (i = 0; i < _dataProvider.length; i++)
+				{
+					if (_dataProvider[i].formaPagamento == FormaPagamentoType.DINHEIRO ||
+						_dataProvider[i].formaPagamento == FormaPagamentoType.CARTAO)
 					{
 						selectedIndex = i;
 						changeHandler();

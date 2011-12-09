@@ -86,8 +86,8 @@ package gfp.service
 		public function listarDespesaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
-															  , (event.object as Date)
-															  .month + 1, (event
+															  , (event.object as
+															  Date).month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.DESPESA)
 						   , function(re:ResultEvent):void
@@ -125,8 +125,8 @@ package gfp.service
 		public function listarReceitaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
-															  , (event.object as Date)
-															  .month + 1, (event
+															  , (event.object as
+															  Date).month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.RECEITA)
 						   , function(re:ResultEvent):void
@@ -165,8 +165,8 @@ package gfp.service
 		[EventHandler(event = "TransacaoEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
-			selecionado = event.object ? ObjectUtil.copy(event.object) as Lancamento
-				: LancamentoFactory.criar();
+			selecionado = event.object ? ObjectUtil.copy(event.object) as Lancamento :
+				LancamentoFactory.criar();
 			selecionado.usuario ||= usuarioService.usuarioLogado;
 		}
 		
@@ -181,7 +181,7 @@ package gfp.service
 		
 		private function listaSaldoAtualFilter(o:Object):Boolean
 		{
-			return o.saldo > 0 || o.situacao == "Saldo Atual";
+			return Number(o.saldo) > 0.0 || o.situacao == "Saldo Atual";
 		}
 	}
 }

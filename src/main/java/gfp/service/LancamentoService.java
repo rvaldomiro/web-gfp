@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import logus.commons.datetime.AbstractDateTime;
+import logus.commons.number.Number;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
 import logus.commons.persistence.hibernate.transaction.TransactionClass;
 import logus.commons.string.StringUtil;
@@ -283,12 +284,13 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 					conta, CategoriaType.DESPESA, dataSaldo);
 			final double saldoBloqueado = Lancamento.obterSaldoBloqueado(conta,
 					CategoriaType.RECEITA, dataSaldo);
-			final double saldoDisponivel = receitaConciliada -
-					despesaConciliada;
-			final double saldoTotalConta = receitaConciliada + saldoBloqueado -
-					despesaConciliada;
+			final double saldoDisponivel = Number.round(receitaConciliada -
+					despesaConciliada, 2);
+			final double saldoTotalConta = Number.round(receitaConciliada +
+					saldoBloqueado - despesaConciliada, 2);
 			
 			saldoAtual += saldoDisponivel;
+			saldoAtual = Number.round(saldoAtual, 2);
 			
 			result.add(new SaldoDto(conta, SaldoDto.SALDO_DISPONIVEL,
 					saldoDisponivel));

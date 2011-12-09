@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import logus.commons.datetime.AbstractDateTime;
+import logus.commons.number.Number;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
 
@@ -131,7 +132,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-		return result != null ? result : 0.0;
+		return result != null ? Number.round(result, 2) : 0.0;
 	}
 	
 	public static double obterSaldoDisponivel(final Conta conta,
@@ -149,7 +150,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-		return result != null ? result : 0.0;
+		return result != null ? Number.round(result, 2) : 0.0;
 	}
 	
 	@Id
