@@ -6,8 +6,9 @@
 	<import file="${basedir}/../resources/lib/git/build.xml" />
 
 	<property name="web" value="web" />
-
 	<property name="context-root" value="gfp" />
+	<property name="shell-name" value="web-gfp" />
+
 	<property name="FLEX_SDK" value="4.5.1" />
 	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
@@ -45,7 +46,7 @@
 
 		<antcall target="start-server" />
 	</target>
-	
+
 	<target name="test">
 		<junit haltonfailure="true" haltonerror="true">
 			<classpath refid="test.class.path" />
@@ -53,7 +54,7 @@
 			<formatter type="brief" usefile="false" />
 			<test name="AllTests" />
 		</junit>
-	</target>	
+	</target>
 
 	<target name="release">
 		<antcall target="git-release">
