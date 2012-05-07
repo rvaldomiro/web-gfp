@@ -32,6 +32,10 @@ import org.springframework.stereotype.Service;
 @RemotingDestination
 public class LancamentoService extends TransactionClass<LancamentoService> {
 	
+	public static final int MODO_PREVISAO_DIARIA = 1;
+	
+	public static final int MODO_PREVISAO_MENSAL = 2;
+	
 	public static LancamentoService getInstance() throws Exception {
 		return new LancamentoService().getEnhancerInstance();
 	}
@@ -202,24 +206,26 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	}
 	
 	@RemotingInclude
-	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId)
-			throws Exception {
-		return listarPrevisaoSaldoDiario(usuarioId, AbstractDateTime.today());
-	}
-	
-	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
-			Date dataInicio) throws Exception {
-		dataInicio = AbstractDateTime.parseBRST(dataInicio);
-		final Date dataFinal = AbstractDateTime.addDay(dataInicio, 30);
+			Date dataInicio, final int modo) throws Exception {
+		final boolean modoDiario = modo == MODO_PREVISAO_DIARIA;
+		
+		dataInicio = modoDiario ? AbstractDateTime.parseBRST(dataInicio)
+				: AbstractDateTime.getFirstDayOfMonth(AbstractDateTime
+						.parseBRST(dataInicio));
+		final Date dataFinal = modoDiario ? AbstractDateTime.addDay(dataInicio,
+				30) : AbstractDateTime.getLastDayOfMonth(AbstractDateTime
+				.addYear(dataInicio, 1));
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
-				dataInicio, dataFinal);
+				dataInicio, dataFinal, modo);
 		final CategoriaType[] categorias = new CategoriaType[] {
 				CategoriaType.RECEITA, CategoriaType.DESPESA };
 		
 		for (final CategoriaType categoria : categorias) {
-			final List<Object[]> saldoDiario = Lancamento
+			final List<Object[]> saldoDiario = modoDiario ? Lancamento
 					.listarPrevisaoSaldoDiario(usuarioId, categoria,
+							dataInicio, dataFinal) : Lancamento
+					.listarPrevisaoSaldoMensal(usuarioId, categoria,
 							dataInicio, dataFinal);
 			
 			for (final Object[] o : saldoDiario) {
@@ -240,8 +246,17 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		final List<SaldoDto> saldoAnterior = listarSaldoPorConta(usuarioId,
 				AbstractDateTime.removeDays(dataInicio, 1));
 		
-		return SaldoDiarioDto.calcular(usuarioId,
-				saldoAnterior.get(saldoAnterior.size() - 1).saldo, result);
+		return SaldoDiarioDto
+				.calcular(usuarioId,
+						saldoAnterior.get(saldoAnterior.size() - 1).saldo,
+						result, modo);
+	}
+	
+	@RemotingInclude
+	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
+			final int modo) throws Exception {
+		return listarPrevisaoSaldoDiario(usuarioId, AbstractDateTime.today(),
+				modo);
 	}
 	
 	@RemotingInclude

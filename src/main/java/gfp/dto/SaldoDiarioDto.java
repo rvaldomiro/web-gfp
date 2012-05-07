@@ -1,6 +1,7 @@
 package gfp.dto;
 
 import gfp.model.Lancamento;
+import gfp.service.LancamentoService;
 import gfp.type.CategoriaType;
 
 import java.util.ArrayList;
@@ -17,12 +18,15 @@ import org.hibernate.criterion.Restrictions;
 public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 	
 	public static List<SaldoDiarioDto> calcular(final Long usuarioId,
-			final double saldoAnterior, final List<SaldoDiarioDto> result)
-			throws Exception {
+			final double saldoAnterior, final List<SaldoDiarioDto> result,
+			final int modo) throws Exception {
 		double saldoInicialDia = saldoAnterior;
 		boolean hoje = true;
 		
 		for (final SaldoDiarioDto o : result) {
+			final Date dataCompensacaoFinal = modo == 1 ? o.dataCompensacao
+					: AbstractDateTime.getLastDayOfMonth(o.dataCompensacao);
+			
 			if (hoje) {
 				saldoInicialDia = saldoAnterior;
 				
@@ -32,7 +36,9 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				ProjectionList p = Projections.projectionList();
 				p.add(Projections.sum("valorOriginal"));
 				c.add(Restrictions.eq("usuario.id", usuarioId));
-				c.add(Restrictions.eq("dataCompensacao", o.dataCompensacao));
+				c.add(Restrictions.between("dataCompensacao",
+						o.dataCompensacao, AbstractDateTime.setTime(
+								dataCompensacaoFinal, "23:59:59")));
 				c.add(Restrictions.eq("_categoria.tipo",
 						CategoriaType.RECEITA.ordinal()));
 				c.add(Restrictions.eq("_categoria.estatistica", true));
@@ -48,7 +54,9 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				p = Projections.projectionList();
 				p.add(Projections.sum("valorOriginal"));
 				c.add(Restrictions.eq("usuario.id", usuarioId));
-				c.add(Restrictions.eq("dataCompensacao", o.dataCompensacao));
+				c.add(Restrictions.between("dataCompensacao",
+						o.dataCompensacao, AbstractDateTime.setTime(
+								dataCompensacaoFinal, "23:59:59")));
 				c.add(Restrictions.eq("_categoria.tipo",
 						CategoriaType.DESPESA.ordinal()));
 				c.add(Restrictions.eq("_categoria.estatistica", true));
@@ -71,11 +79,11 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 	}
 	
 	public static List<SaldoDiarioDto> getInstance(final Date dataInicio,
-			final Date dataFinal) {
+			final Date dataFinal, final int modo) {
 		final List<SaldoDiarioDto> result = new ArrayList<SaldoDiarioDto>();
 		
-		for (Date data = dataInicio; !data.after(dataFinal); data = AbstractDateTime
-				.addDay(data, 1)) {
+		for (Date data = dataInicio; !data.after(dataFinal); data = modo == LancamentoService.MODO_PREVISAO_DIARIA ? AbstractDateTime
+				.addDay(data, 1) : AbstractDateTime.addMonth(data, 1)) {
 			result.add(new SaldoDiarioDto(data));
 		}
 		

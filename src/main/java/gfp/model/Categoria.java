@@ -2,6 +2,7 @@ package gfp.model;
 
 import gfp.type.CategoriaType;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.datetime.AbstractDateTime;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
 import logus.commons.string.StringUtil;
@@ -118,6 +120,27 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	@Override
 	protected void setDao(final HibernateDao<Categoria> arg0) {
 		dao = arg0;
+	}
+	
+	public double calcularMedia(final Date referencia, final int meses) {
+		final int[] datePart = AbstractDateTime.getDatePart(referencia);
+		Date dataInicio = AbstractDateTime.removeMonth(
+				AbstractDateTime.setDate(1, datePart[1], datePart[2]), meses);
+		double totalPeriodo = 0.0;
+		int mesesPeriodo = 0;
+		
+		for (int i = 1; i <= meses; i++) {
+			final double total = Lancamento.obterTotal(this, dataInicio);
+			
+			if (total > 0) {
+				totalPeriodo += total;
+				mesesPeriodo++;
+			}
+			
+			dataInicio = AbstractDateTime.addMonth(dataInicio, 1);
+		}
+		
+		return totalPeriodo / mesesPeriodo;
 	}
 	
 	@Override

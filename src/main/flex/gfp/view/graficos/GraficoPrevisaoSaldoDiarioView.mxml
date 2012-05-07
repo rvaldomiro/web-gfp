@@ -3,6 +3,7 @@
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
 		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
+		  xmlns:custom = "common.spark.component.*"
 		  width = "100%"
 		  height = "100%"
 		  horizontalAlign = "center">
@@ -10,7 +11,6 @@
 		<![CDATA[
 			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
-			
 			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.util.DateUtil;
 			import common.util.NumberUtil;
@@ -23,7 +23,10 @@
 			import mx.charts.HitData;
 			import mx.charts.chartClasses.IAxis;
 			import mx.charts.events.ChartItemEvent;
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			
+			import spark.events.IndexChangeEvent;
 			
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
@@ -32,18 +35,31 @@
 			[Bindable]
 			public var service:LancamentoService;
 			
+			[Bindable]
+			private var listaModos:ArrayCollection = new ArrayCollection([{label: "Diário"}
+																		  , {label: "Mensal"}]);
+			
 			[EventHandler(event = "AppEvent.ATUALIZAR_DASHBOARD")]
 			public function atualizar(event:ICustomEvent = null):void
 			{
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO
-															, null));
+															, barTrocaModo.selectedIndex +
+															1));
+			}
+			
+			private function barTrocaModo_changeHandler(event:IndexChangeEvent):void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO
+															, event.newIndex + 1));
 			}
 			
 			private function dataTipFunction(e:HitData):String
 			{
 				var s:String;
 				
-				s = DateUtil.formatSimple((e.item).dataCompensacao);
+				s = barTrocaModo.selectedIndex == 0 ? DateUtil.formatSimple((e.item)
+																			.dataCompensacao) :
+					DateUtil.formatSimpleMonth((e.item).dataCompensacao);
 				s += "\n Inicial: " + NumberUtil.formatNumber((e.item).saldoInicial
 															  , 2);
 				s += "\n Receitas: " + NumberUtil.formatNumber((e.item).receitas
@@ -58,7 +74,8 @@
 			private function displayData(item:Object, prevValue:Object, axis:CategoryAxis
 										 , categoryItem:Object):String
 			{
-				return (item as Date).date.toString();
+				return barTrocaModo.selectedIndex == 0 ? (item as Date).date.toString() :
+					DateUtil.formatSimpleMonth(item as Date);
 			}
 			
 			private function itemClickHandler(event:ChartItemEvent):void
@@ -66,7 +83,11 @@
 				var dto:LancamentoDto = new LancamentoDto();
 				dto.tipoPeriodo = 3;
 				dto.dataInicio = event.hitData.item.dataCompensacao;
-				dto.dataFinal = event.hitData.item.dataCompensacao;
+				dto.dataFinal = barTrocaModo.selectedIndex == 0 ? event.hitData.item
+					.dataCompensacao : DateUtil.lastDayOfMonth(event.hitData.item
+															   .dataCompensacao.month
+															   , event.hitData.item
+															   .dataCompensacao.fullYear);
 				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES_DIA
 													  , dto));
 			}
@@ -87,6 +108,13 @@
 						duration = "1000"
 						direction = "down"/>
 	</fx:Declarations>
+
+	<custom:CustomButtonBar id = "barTrocaModo"
+							dataProvider = "{listaModos}"
+							requireSelection = "true"
+							height = "25"
+							change = "barTrocaModo_changeHandler(event)"
+							skinClass = "assets.skins.CustomButtonBarSkin"/>
 
 	<s:Group width = "100%"
 			 height = "100%">

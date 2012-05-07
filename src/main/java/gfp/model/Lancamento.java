@@ -6,10 +6,13 @@ import gfp.type.ContaType;
 import gfp.type.FormaPagamentoType;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -89,6 +92,35 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		return c.list();
 	}
 	
+	public static List<Object[]> listarPrevisaoSaldoMensal(
+			final Long usuarioId, final CategoriaType categoria,
+			final Date dataInicio, final Date dataFinal) throws Exception {
+		final List<Object[]> saldoDiario = listarPrevisaoSaldoDiario(usuarioId,
+				categoria, dataInicio, dataFinal);
+		final List<Object[]> result = new ArrayList<Object[]>();
+		final Map<Date, Double> m = new HashMap<Date, Double>();
+		
+		for (final Object[] o : saldoDiario) {
+			Date d = (Date) o[0];
+			final Double v1 = (Double) o[1];
+			
+			if (AbstractDateTime.getDayOfMonth(d) == 1) {
+				m.put(d, v1);
+			} else {
+				d = AbstractDateTime.getFirstDayOfMonth(d);
+				final Double v = m.get(d);
+				m.put(d, v != null ? v + v1 : v1);
+			}
+		}
+		
+		for (final Date d : m.keySet()) {
+			final Object o[] = { new Timestamp(d.getTime()), m.get(d) };
+			result.add(o);
+		}
+		
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static List<SaldoCategoriaDto> listarSaldoCategoriaMensal(
 			final Long usuarioId, final Integer tipoCategoria,
@@ -110,7 +142,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		final List<Object[]> saldoCategoria = c.list();
 		
 		for (final Object[] o : saldoCategoria) {
-			result.add(new SaldoCategoriaDto(Categoria.dao
+			result.add(new SaldoCategoriaDto(dataInicio, Categoria.dao
 					.find((Serializable) o[0]), (Double) o[1]));
 		}
 		
@@ -151,6 +183,23 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		
 		final Double result = (Double) c.uniqueResult();
 		return result != null ? Number.round(result, 2) : 0.0;
+	}
+	
+	public static double obterTotal(final Categoria categoria,
+			final Date referencia) {
+		final Criteria c = dao.createCriteria();
+		
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.sum("valorOriginal"));
+		c.add(Restrictions.eq("categoria", categoria));
+		c.add(Restrictions.between("dataCompensacao",
+				AbstractDateTime.getFirstDayOfMonth(referencia),
+				AbstractDateTime.getLastDayOfMonth(referencia)));
+		c.setProjection(p);
+		
+		final Object result = c.uniqueResult();
+		return result != null ? new Double(result.toString()).doubleValue()
+				: 0.0;
 	}
 	
 	@Id

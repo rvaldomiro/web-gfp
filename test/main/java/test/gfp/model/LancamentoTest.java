@@ -58,12 +58,43 @@ public class LancamentoTest {
 	
 	@Test
 	public void testListarSaldoCategoriaMensal() throws Exception {
-		final List<SaldoCategoriaDto> listaSaldoCategoriaMensal = Lancamento
-				.listarSaldoCategoriaMensal(this.usuario.getId(),
-						CategoriaType.RECEITA.ordinal(),
-						AbstractDateTime.today(),
-						AbstractDateTime.today());
+		List<SaldoCategoriaDto> listaSaldoCategoriaMensal;
+		
+		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(
+				this.usuario.getId(), CategoriaType.DESPESA.ordinal(),
+				AbstractDateTime.date(1, 1, 2012),
+				AbstractDateTime.date(31, 3, 2012));
 		assertEquals(0, listaSaldoCategoriaMensal.size());
+		
+		final Categoria db = new Categoria(this.usuario, "descricao",
+				CategoriaType.DESPESA).save();
+		
+		Lancamento l;
+		
+		l = new Lancamento(this.usuario, db, 100.0, FormaPagamentoType.DINHEIRO);
+		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 1, 2012));
+		l = l.save();
+		
+		l = new Lancamento(this.usuario, db, 200.0, FormaPagamentoType.DINHEIRO);
+		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 2, 2012));
+		l = l.save();
+		
+		l = new Lancamento(this.usuario, db, 300.0, FormaPagamentoType.DINHEIRO);
+		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 3, 2012));
+		l = l.save();
+		
+		l = new Lancamento(this.usuario, db, 50.0, FormaPagamentoType.DINHEIRO);
+		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 4, 2012));
+		l = l.save();
+		
+		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(
+				this.usuario.getId(), CategoriaType.DESPESA.ordinal(),
+				AbstractDateTime.date(1, 4, 2012),
+				AbstractDateTime.date(30, 4, 2012));
+		assertEquals(1, listaSaldoCategoriaMensal.size());
+		assertEquals(db, listaSaldoCategoriaMensal.get(0).categoria);
+		assertEquals(50.0, listaSaldoCategoriaMensal.get(0).valor);
+		assertEquals(200.0, listaSaldoCategoriaMensal.get(0).previsao);
 	}
 	
 }

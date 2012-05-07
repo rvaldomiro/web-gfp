@@ -37,7 +37,7 @@
 			
 			[Bindable]
 			private var listaGraficos:ArrayCollection = new ArrayCollection([{label: "Balanço Mensal"}
-																			 , {label: "Previsão de Saldo Diário"}]);
+																			 , {label: "Previsão de Saldo"}]);
 			
 			private function get mesAtual():int
 			{
@@ -86,17 +86,17 @@
 			
 			private function groupTransacoesVencerResizeEffect_effectEndHandler(event:EffectEvent):void
 			{
-				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_IN
-					: ImageUtil.ZOOM_OUT;
-				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Expandir" : "Comprimir")
-					+ " Gráficos";
+				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_IN :
+					ImageUtil.ZOOM_OUT;
+				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Expandir" :
+					"Comprimir") + " Gráficos";
 				groupTransacoesVencer.visible = groupTransacoesVencer.height > 0;
 			}
 			
 			private function imageZoom_clickHandler(event:MouseEvent):void
 			{
-				groupTransacoesVencer.height = groupTransacoesVencer.height == 0
-					? 300 : 0;
+				groupTransacoesVencer.height = groupTransacoesVencer.height == 0 ?
+					300 : 0;
 			}
 		]]>
 	</fx:Script>

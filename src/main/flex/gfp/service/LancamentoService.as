@@ -114,7 +114,8 @@ package gfp.service
 		[EventHandler(event = "TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO", properties = "event")]
 		public function listarPrevisaoSaldoDiario(event:ICustomEvent):void
 		{
-			executeService(service.listarPrevisaoSaldoDiario(usuarioService.idUsuarioLogado)
+			executeService(service.listarPrevisaoSaldoDiario(usuarioService.idUsuarioLogado
+															 , event.object as Number)
 						   , function(re:ResultEvent):void
 						   {
 							   listaPrevisaoSaldoDiario = re.result as ArrayCollection;

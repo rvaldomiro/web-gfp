@@ -230,7 +230,8 @@ public class LancamentoServiceTest {
 		new Lancamento(u, cd, 2.0, FormaPagamentoType.DINHEIRO).save();
 		
 		List<SaldoDiarioDto> result = this.controller
-				.listarPrevisaoSaldoDiario(u.getId());
+				.listarPrevisaoSaldoDiario(u.getId(),
+						LancamentoService.MODO_PREVISAO_DIARIA);
 		assertEquals(31, result.size());
 		
 		SaldoDiarioDto dto = result.get(0);
@@ -268,7 +269,8 @@ public class LancamentoServiceTest {
 		l.save();
 		
 		result = this.controller.listarPrevisaoSaldoDiario(u.getId(),
-				AbstractDateTime.date(26, 10, 2010));
+				AbstractDateTime.date(26, 10, 2010),
+				LancamentoService.MODO_PREVISAO_DIARIA);
 		
 		dto = result.get(0);
 		assertEquals(AbstractDateTime.date(26, 10, 2010), dto.dataCompensacao);
@@ -301,7 +303,8 @@ public class LancamentoServiceTest {
 		l.setDataPrevisaoPagamento(l.getDataVencimento());
 		l.save();
 		
-		result = this.controller.listarPrevisaoSaldoDiario(u.getId());
+		result = this.controller.listarPrevisaoSaldoDiario(u.getId(),
+				LancamentoService.MODO_PREVISAO_DIARIA);
 		
 		dto = result.get(0);
 		assertEquals(0.0, dto.saldoInicial);

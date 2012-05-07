@@ -67,12 +67,19 @@
 			
 			private function dataTipFunction(e:HitData):String
 			{
-				var p:Number = (e.item).valor / total * 100;
-				return (e.item).categoria + "\n Total: " + NumberUtil.formatNumber((e
-																				   .item)
-																				   .valor
-																				   , 2) +
-					" - " + NumberUtil.formatNumber(p, 1) + "%";
+				var pValor:Number = (e.item).valor / total * 100;
+				var pPrevisto:Number = (e.item).valor / (e.item).previsao * 100;
+				return (e.item).categoria + "\n Valor Total: " + NumberUtil.formatNumber((e
+																						 .item)
+																						 .valor
+																						 , 2) +
+					(!isNaN((e.item).previsao) ? "\n Valor Previsto: " + NumberUtil
+					.formatNumber((e.item).previsao, 2) : "") + "\n " + NumberUtil
+					.formatNumber(pValor, 1) + "% das " + descricao + (!isNaN((e
+																			  .item)
+																			  .previsao) ?
+					("\n " + NumberUtil.formatNumber(pPrevisto, 1) + "% do Previsto") :
+					"");
 			}
 			
 			private function itemClickHandler(event:ChartItemEvent):void
@@ -105,6 +112,7 @@
 	<s:Group width = "100%"
 			 height = "100%">
 		<mx:BarChart id = "grafico"
+					 type = "stacked"
 					 showDataTips = "true"
 					 dataTipFunction = "{dataTipFunction}"
 					 itemClick = "itemClickHandler(event)"
@@ -115,12 +123,17 @@
 			</mx:verticalAxis>
 
 			<mx:series>
+				<mx:BarSeries xField = "previsao"
+							  showDataEffect = "{interpolateIn}"
+							  fontSize = "8"
+							  fill = "{descricao == 'Receitas' ? StyleColumnChart.greenLinearGradient : StyleColumnChart.redLinearGradient}"
+							  alpha = ".2"/>
+
 				<mx:BarSeries yField = "categoria"
 							  xField = "valor"
 							  showDataEffect = "{interpolateIn}"
 							  fontSize = "8"
-							  fill = "{descricao == 'Receitas' ? StyleColumnChart.greenLinearGradient : StyleColumnChart.redLinearGradient}">
-				</mx:BarSeries>
+							  fill = "{descricao == 'Receitas' ? StyleColumnChart.greenLinearGradient : StyleColumnChart.redLinearGradient}"/>
 			</mx:series>
 		</mx:BarChart>
 	</s:Group>
