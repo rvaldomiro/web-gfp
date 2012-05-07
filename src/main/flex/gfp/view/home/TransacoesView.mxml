@@ -69,13 +69,14 @@
 					if ((!selecionado || lancamento.selected) && !lancamento.categoria
 						.interna && !lancamento.categoria.transferencia)
 					{
-						var valorConsiderado:Number = lancamento.dataPagamento && lancamento
-							.valorPago > 0 ? lancamento.valorPago : lancamento.valorOriginal;
+						var valorConsiderado:Number = lancamento.dataPagamento &&
+							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento
+							.valorOriginal;
 						
 						quantidade++;
 						valor += valorConsiderado;
-						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA
-							? valorConsiderado : valorConsiderado * -1;
+						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA ?
+							valorConsiderado : valorConsiderado * -1;
 						media = valor / quantidade;
 					}
 				}
@@ -162,11 +163,11 @@
 								dataProvider = "{dto.tiposPeriodo}"
 								selectedIndex = "@{dto.tipoPeriodo}"/>
 
-				<component:CustomDateField selectedDate = "@{dto.dataInicio}"
-										   editable = "true"/>
+				<custom:CustomDateField selectedDate = "@{dto.dataInicio}"
+										editable = "true"/>
 
-				<component:CustomDateField selectedDate = "@{dto.dataFinal}"
-										   editable = "true"/>
+				<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
+										editable = "true"/>
 
 				<s:DropDownList dataProvider = "{dto.situacoes}"
 								selectedIndex = "@{dto.situacao}"/>

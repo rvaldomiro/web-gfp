@@ -357,12 +357,12 @@
 			<s:VGroup>
 				<s:Label text = "Vencimento:"/>
 
-				<component1:CustomDateField id = "dateVencimento"
-											selectedDate = "@{service.selecionado.dataVencimento}"
-											change = "dateVencimento_changeHandler(event)"
-											editable = "false"
-											enabled.Agendamento = "false"
-											tabFocusEnabled = "false"/>
+				<component:CustomDateField id = "dateVencimento"
+										   selectedDate = "@{service.selecionado.dataVencimento}"
+										   change = "dateVencimento_changeHandler(event)"
+										   editable = "false"
+										   enabled.Agendamento = "false"
+										   tabFocusEnabled = "false"/>
 			</s:VGroup>
 
 			<s:VGroup>
@@ -424,19 +424,19 @@
 				<s:VGroup>
 					<s:Label text = "Previsão Pagto:"/>
 
-					<component1:CustomDateField id = "datePrevisaoPagamento"
-												selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
-												editable = "false"
-												tabFocusEnabled = "false"/>
+					<component:CustomDateField id = "datePrevisaoPagamento"
+											   selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
+											   editable = "false"
+											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
 				<s:VGroup>
 					<s:Label text = "Pagamento:"/>
 
-					<component1:CustomDateField selectedDate = "@{service.selecionado.dataPagamento}"
-												editable = "false"
-												disabledRanges = "{[{rangeStart: DateUtil.add(new Date(), 1)}]}"
-												tabFocusEnabled = "false"/>
+					<component:CustomDateField selectedDate = "@{service.selecionado.dataPagamento}"
+											   editable = "false"
+											   disabledRanges = "{[{rangeStart: DateUtil.add(new Date(), 1)}]}"
+											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
 				<s:VGroup>
@@ -471,9 +471,9 @@
 				<s:VGroup>
 					<s:Label text = "Até:"/>
 
-					<component1:CustomDateField selectedDate = "@{dto.dataFinal}"
-												selectableRange = "{{rangeStart:dto.dataInicio}}"
-												tabFocusEnabled = "false"/>
+					<component:CustomDateField selectedDate = "@{dto.dataFinal}"
+											   selectableRange = "{{rangeStart:dto.dataInicio}}"
+											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
 				<s:VGroup height = "100%"

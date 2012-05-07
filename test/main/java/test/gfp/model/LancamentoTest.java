@@ -61,8 +61,8 @@ public class LancamentoTest {
 		final List<SaldoCategoriaDto> listaSaldoCategoriaMensal = Lancamento
 				.listarSaldoCategoriaMensal(this.usuario.getId(),
 						CategoriaType.RECEITA.ordinal(),
-						AbstractDateTime.getToday(),
-						AbstractDateTime.getToday());
+						AbstractDateTime.today(),
+						AbstractDateTime.today());
 		assertEquals(0, listaSaldoCategoriaMensal.size());
 	}
 	
