@@ -45,6 +45,15 @@
 
 		<antcall target="start-server" />
 	</target>
+	
+	<target name="test">
+		<junit haltonfailure="true" haltonerror="true">
+			<classpath refid="test.class.path" />
+			<classpath refid="build.class.path" />
+			<formatter type="brief" usefile="false" />
+			<test name="AllTests" />
+		</junit>
+	</target>	
 
 	<target name="release">
 		<antcall target="git-release">
@@ -173,15 +182,6 @@
 			<fileset dir="${repository-dir}/jdbc/postgresql" />
 			<fileset dir="${repository-dir}/junit/4.0.0" />
 		</copy>
-	</target>
-
-	<target name="test">
-		<junit haltonfailure="true" haltonerror="true">
-			<classpath refid="test.class.path" />
-			<classpath refid="build.class.path" />
-			<formatter type="brief" usefile="false" />
-			<test name="AllTests" />
-		</junit>
 	</target>
 
 	<target name="deploy" depends="install, test, compile">
