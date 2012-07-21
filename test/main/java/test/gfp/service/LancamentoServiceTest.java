@@ -232,7 +232,7 @@ public class LancamentoServiceTest {
 		List<SaldoDiarioDto> result = this.controller
 				.listarPrevisaoSaldoDiario(u.getId(),
 						LancamentoService.MODO_PREVISAO_DIARIA);
-		assertEquals(31, result.size());
+		assertEquals(46, result.size());
 		
 		SaldoDiarioDto dto = result.get(0);
 		assertEquals(AbstractDateTime.today(), dto.dataCompensacao);

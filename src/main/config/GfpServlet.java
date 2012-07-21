@@ -1,4 +1,5 @@
 import gfp.model.Banco;
+import gfp.model.Lancamento;
 import gfp.model.Usuario;
 
 import javax.servlet.ServletConfig;
@@ -15,7 +16,6 @@ public class GfpServlet extends AbstractServlet {
 		}
 		
 		if (Banco.listar().size() == 0) {
-			new Banco("Real").save();
 			new Banco("Itaú").save();
 			new Banco("Bradesco").save();
 			new Banco("C.E.F.").save();
@@ -23,7 +23,11 @@ public class GfpServlet extends AbstractServlet {
 			new Banco("HSBC").save();
 			new Banco("Safra").save();
 			new Banco("Santander").save();
-			new Banco("Unibanco").save();
+		}
+		
+		for (final Lancamento lancamento : Lancamento.dao.findAllByField(
+				"dataPagamento", null)) {
+			lancamento.save();
 		}
 	}
 	

@@ -72,19 +72,19 @@ public class LancamentoTest {
 		Lancamento l;
 		
 		l = new Lancamento(this.usuario, db, 100.0, FormaPagamentoType.DINHEIRO);
-		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 1, 2012));
+		l.setDataVencimento(AbstractDateTime.date(1, 1, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 200.0, FormaPagamentoType.DINHEIRO);
-		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 2, 2012));
+		l.setDataVencimento(AbstractDateTime.date(1, 2, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 300.0, FormaPagamentoType.DINHEIRO);
-		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 3, 2012));
+		l.setDataVencimento(AbstractDateTime.date(1, 3, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 50.0, FormaPagamentoType.DINHEIRO);
-		l.setDataPrevisaoPagamento(AbstractDateTime.date(1, 4, 2012));
+		l.setDataVencimento(AbstractDateTime.date(1, 4, 2012));
 		l = l.save();
 		
 		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(

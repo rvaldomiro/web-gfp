@@ -214,7 +214,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 				: AbstractDateTime.getFirstDayOfMonth(AbstractDateTime
 						.parseBRST(dataInicio));
 		final Date dataFinal = modoDiario ? AbstractDateTime.addDay(dataInicio,
-				30) : AbstractDateTime.getLastDayOfMonth(AbstractDateTime
+				45) : AbstractDateTime.getLastDayOfMonth(AbstractDateTime
 				.addYear(dataInicio, 1));
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 				dataInicio, dataFinal, modo);

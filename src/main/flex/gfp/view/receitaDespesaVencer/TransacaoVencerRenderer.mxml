@@ -33,19 +33,20 @@
 			
 			private function dataChangeHandler(event:FlexEvent):void
 			{
-				var compareHoje:int = DateUtil.compareToday(o.dataVencimento) * -1;
+				var compareHoje:int = DateUtil.compareToday(o.dataPrevisaoPagamento) *
+					-1;
 				
 				if (compareHoje >= 0)
 				{
 					if (!o.dataPagamento)
 					{
-						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à "
-							+ compareHoje + " dia" + (compareHoje == 1 ? "" : "s"))
-							: "Vencendo hoje";
+						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à " +
+							compareHoje + " dia" + (compareHoje == 1 ? "" : "s")) :
+							"Vencendo hoje";
 						labelPrevisaoPagamento.setStyle("color", 0xff0000);
 					}
-					else if (DateUtil.compareDate(o.dataPagamento, o.dataVencimento)
-						<= 0)
+					else if (DateUtil.compareDate(o.dataPagamento, o.dataPrevisaoPagamento) <=
+						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
@@ -55,25 +56,25 @@
 						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compareDate(o
 																							.dataPagamento
 																							, o
-																							.dataVencimento)
-							+ " dias de atraso";
+																							.dataPrevisaoPagamento) +
+							" dias de atraso";
 						labelPrevisaoPagamento.setStyle("color", 0xd59600);
 					}
 				}
 				else
 				{
 					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, o
-																.dataVencimento)
-						<= 0)
+																.dataPrevisaoPagamento) <=
+						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
 					}
 					else
 					{
-						labelPrevisaoPagamento.toolTip = "Vencendo em " + DateUtil
-							.compareToday(o.dataVencimento) + " dia" + (DateUtil
-							.compareToday(o.dataVencimento) == 1 ? "" : "s");
+						labelPrevisaoPagamento.toolTip = "Previsão em " + DateUtil
+							.compareToday(o.dataPrevisaoPagamento) + " dia" + (DateUtil
+							.compareToday(o.dataPrevisaoPagamento) == 1 ? "" : "s");
 						labelPrevisaoPagamento.setStyle("color", 0x828282);
 					}
 				}

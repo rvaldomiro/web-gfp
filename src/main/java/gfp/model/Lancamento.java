@@ -136,7 +136,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.add(Restrictions.eq("usuario.id", usuarioId));
 		c.add(Restrictions.eq("_categoria.tipo", tipoCategoria));
 		c.add(Restrictions.eq("_categoria.estatistica", true));
-		c.add(Restrictions.between("dataCompensacao", dataInicio, dataFinal));
+		c.add(Restrictions.between("dataVencimento", dataInicio, dataFinal));
 		c.setProjection(p);
 		
 		final List<Object[]> saldoCategoria = c.list();
@@ -192,7 +192,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		final ProjectionList p = Projections.projectionList();
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("categoria", categoria));
-		c.add(Restrictions.between("dataCompensacao",
+		c.add(Restrictions.between("dataVencimento",
 				AbstractDateTime.getFirstDayOfMonth(referencia),
 				AbstractDateTime.getLastDayOfMonth(referencia)));
 		c.setProjection(p);
@@ -293,7 +293,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		Date previsaoPagamento = this.dataPagamento != null ? this.dataPagamento
 				: this.dataPrevisaoPagamento;
 		
-		if (this.formaPagamento == FormaPagamentoType.CHEQUE.ordinal()) {
+		if (this.formaPagamento == FormaPagamentoType.CHEQUE.ordinal() &&
+				this.categoria.getTipo() == CategoriaType.RECEITA.ordinal()) {
 			final int prazoCompensacao = this.valorOriginal < 300 ? 3 : 2;
 			int dias = 1;
 			
