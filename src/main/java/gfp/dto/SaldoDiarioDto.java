@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.ProjectionList;
@@ -25,7 +25,7 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 		
 		for (final SaldoDiarioDto o : result) {
 			final Date dataCompensacaoFinal = modo == 1 ? o.dataCompensacao
-					: AbstractDateTime.getLastDayOfMonth(o.dataCompensacao);
+					: DateUtil.lastDayOfMonth(o.dataCompensacao);
 			
 			if (hoje) {
 				saldoInicialDia = saldoAnterior;
@@ -37,8 +37,8 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				p.add(Projections.sum("valorOriginal"));
 				c.add(Restrictions.eq("usuario.id", usuarioId));
 				c.add(Restrictions.between("dataCompensacao",
-						o.dataCompensacao, AbstractDateTime.setTime(
-								dataCompensacaoFinal, "23:59:59")));
+						o.dataCompensacao,
+						DateUtil.time(dataCompensacaoFinal, "23:59:59")));
 				c.add(Restrictions.eq("_categoria.tipo",
 						CategoriaType.RECEITA.ordinal()));
 				c.add(Restrictions.eq("_categoria.estatistica", true));
@@ -55,8 +55,8 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				p.add(Projections.sum("valorOriginal"));
 				c.add(Restrictions.eq("usuario.id", usuarioId));
 				c.add(Restrictions.between("dataCompensacao",
-						o.dataCompensacao, AbstractDateTime.setTime(
-								dataCompensacaoFinal, "23:59:59")));
+						o.dataCompensacao,
+						DateUtil.time(dataCompensacaoFinal, "23:59:59")));
 				c.add(Restrictions.eq("_categoria.tipo",
 						CategoriaType.DESPESA.ordinal()));
 				c.add(Restrictions.eq("_categoria.estatistica", true));
@@ -82,8 +82,8 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 			final Date dataFinal, final int modo) {
 		final List<SaldoDiarioDto> result = new ArrayList<SaldoDiarioDto>();
 		
-		for (Date data = dataInicio; !data.after(dataFinal); data = modo == LancamentoService.MODO_PREVISAO_DIARIA ? AbstractDateTime
-				.addDay(data, 1) : AbstractDateTime.addMonth(data, 1)) {
+		for (Date data = dataInicio; !data.after(dataFinal); data = modo == LancamentoService.MODO_PREVISAO_DIARIA ? DateUtil
+				.add(data, 1) : DateUtil.addMonth(data, 1)) {
 			result.add(new SaldoDiarioDto(data));
 		}
 		

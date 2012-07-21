@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 import logus.commons.number.Number;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
 import logus.commons.persistence.hibernate.transaction.TransactionClass;
@@ -50,27 +50,26 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
 		
-		final Date dataInicio = AbstractDateTime.parseBRST(dto.getDataInicio());
-		final Date dataFinal = AbstractDateTime.parseBRST(dto.getDataFinal());
+		final Date dataInicio = DateUtil.parseBRST(dto.getDataInicio());
+		final Date dataFinal = DateUtil.parseBRST(dto.getDataFinal());
 		Date dataVencimento = dataInicio;
 		
 		if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL.ordinal()) {
-			dataVencimento = AbstractDateTime.date(dto.getDia(),
-					AbstractDateTime.month(dataVencimento),
-					AbstractDateTime.year(dataVencimento));
+			dataVencimento = DateUtil.date(dto.getDia(),
+					DateUtil.month(dataVencimento),
+					DateUtil.year(dataVencimento));
 			
 			if (dataVencimento.compareTo(dataInicio) < 0) {
-				dataVencimento = AbstractDateTime.addMonth(dataVencimento, 1);
+				dataVencimento = DateUtil.addMonth(dataVencimento, 1);
 			}
 		} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
 				.ordinal()) {
-			dataVencimento = AbstractDateTime.usefulDayOfMonth(dataVencimento,
+			dataVencimento = DateUtil.usefulDayOfMonth(dataVencimento,
 					dto.getDia());
 			
 			if (dataVencimento.compareTo(dataInicio) < 0) {
-				dataVencimento = AbstractDateTime.usefulDayOfMonth(
-						AbstractDateTime.addMonth(dataVencimento, 1),
-						dto.getDia());
+				dataVencimento = DateUtil.usefulDayOfMonth(
+						DateUtil.addMonth(dataVencimento, 1), dto.getDia());
 			}
 		}
 		
@@ -79,23 +78,19 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		while (dataVencimento.compareTo(dataFinal) <= 0) {
 			Date dataPrevisaoPagamento = dataVencimento;
 			
-			final int diaDaSemana = AbstractDateTime.dayOfWeek(dataVencimento);
+			final int diaDaSemana = DateUtil.dayOfWeek(dataVencimento);
 			
-			if (diaDaSemana == AbstractDateTime.DOMINGO) {
+			if (diaDaSemana == DateUtil.DOMINGO) {
 				if (dto.isAnteciparFinaisSemana()) {
-					dataPrevisaoPagamento = AbstractDateTime.removeDays(
-							dataVencimento, 2);
+					dataPrevisaoPagamento = DateUtil.remove(dataVencimento, 2);
 				} else {
-					dataPrevisaoPagamento = AbstractDateTime.addDay(
-							dataVencimento, 1);
+					dataPrevisaoPagamento = DateUtil.add(dataVencimento, 1);
 				}
-			} else if (diaDaSemana == AbstractDateTime.SABADO) {
+			} else if (diaDaSemana == DateUtil.SABADO) {
 				if (dto.isAnteciparFinaisSemana()) {
-					dataPrevisaoPagamento = AbstractDateTime.removeDays(
-							dataVencimento, 1);
+					dataPrevisaoPagamento = DateUtil.remove(dataVencimento, 1);
 				} else {
-					dataPrevisaoPagamento = AbstractDateTime.addDay(
-							dataVencimento, 2);
+					dataPrevisaoPagamento = DateUtil.add(dataVencimento, 2);
 				}
 			}
 			
@@ -116,12 +111,11 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			
 			if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL
 					.ordinal()) {
-				dataVencimento = AbstractDateTime.addMonth(dataVencimento, 1);
+				dataVencimento = DateUtil.addMonth(dataVencimento, 1);
 			} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
 					.ordinal()) {
-				dataVencimento = AbstractDateTime.usefulDayOfMonth(
-						AbstractDateTime.addMonth(dataVencimento, 1),
-						dto.getDia());
+				dataVencimento = DateUtil.usefulDayOfMonth(
+						DateUtil.addMonth(dataVencimento, 1), dto.getDia());
 			}
 			
 			parcela++;
@@ -144,8 +138,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	@RemotingInclude
 	public List<Lancamento> listarDespesasVencer(final Long usuarioId)
 			throws Exception {
-		return Lancamento.listarAVencer(usuarioId,
-				AbstractDateTime.daysAhead(15), CategoriaType.DESPESA);
+		return Lancamento.listarAVencer(usuarioId, DateUtil.daysAhead(15),
+				CategoriaType.DESPESA);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -171,8 +165,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
-		prm.add(AbstractDateTime.parseBRST(dto.getDataInicio()));
-		prm.add(AbstractDateTime.parseBRST(dto.getDataFinal()));
+		prm.add(DateUtil.parseBRST(dto.getDataInicio()));
+		prm.add(DateUtil.parseBRST(dto.getDataFinal()));
 		
 		if (dto.getSituacao() == LancamentoSituacaoType.EM_ABERTO.ordinal()) {
 			cdt.add("dataPagamento is null");
@@ -210,12 +204,10 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			Date dataInicio, final int modo) throws Exception {
 		final boolean modoDiario = modo == MODO_PREVISAO_DIARIA;
 		
-		dataInicio = modoDiario ? AbstractDateTime.parseBRST(dataInicio)
-				: AbstractDateTime.getFirstDayOfMonth(AbstractDateTime
-						.parseBRST(dataInicio));
-		final Date dataFinal = modoDiario ? AbstractDateTime.addDay(dataInicio,
-				45) : AbstractDateTime.getLastDayOfMonth(AbstractDateTime
-				.addYear(dataInicio, 1));
+		dataInicio = modoDiario ? DateUtil.parseBRST(dataInicio) : DateUtil
+				.firstDayOfMonth(DateUtil.parseBRST(dataInicio));
+		final Date dataFinal = modoDiario ? DateUtil.add(dataInicio, 45)
+				: DateUtil.lastDayOfMonth(DateUtil.addYear(dataInicio, 1));
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 				dataInicio, dataFinal, modo);
 		final CategoriaType[] categorias = new CategoriaType[] {
@@ -229,7 +221,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 							dataInicio, dataFinal);
 			
 			for (final Object[] o : saldoDiario) {
-				final Date dataCompensacao = AbstractDateTime.time(new Date(
+				final Date dataCompensacao = DateUtil.time(new Date(
 						((Timestamp) o[0]).getTime()), "00:00:00");
 				final Double saldo = (Double) o[1];
 				final SaldoDiarioDto dto = result.get(result
@@ -244,7 +236,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		}
 		
 		final List<SaldoDto> saldoAnterior = listarSaldoPorConta(usuarioId,
-				AbstractDateTime.removeDays(dataInicio, 1));
+				DateUtil.remove(dataInicio, 1));
 		
 		return SaldoDiarioDto
 				.calcular(usuarioId,
@@ -255,23 +247,22 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	@RemotingInclude
 	public List<SaldoDiarioDto> listarPrevisaoSaldoDiario(final Long usuarioId,
 			final int modo) throws Exception {
-		return listarPrevisaoSaldoDiario(usuarioId, AbstractDateTime.today(),
-				modo);
+		return listarPrevisaoSaldoDiario(usuarioId, DateUtil.today(), modo);
 	}
 	
 	@RemotingInclude
 	public List<Lancamento> listarReceitasVencer(final Long usuarioId)
 			throws Exception {
-		return Lancamento.listarAVencer(usuarioId,
-				AbstractDateTime.daysAhead(15), CategoriaType.RECEITA);
+		return Lancamento.listarAVencer(usuarioId, DateUtil.daysAhead(15),
+				CategoriaType.RECEITA);
 	}
 	
 	@RemotingInclude
 	public List<SaldoCategoriaDto> listarSaldoCategoriaMensal(
 			final Long usuarioId, final Integer mes, final Integer ano,
 			final Integer tipoCategoria) throws Exception {
-		final Date dataInicio = AbstractDateTime.firstDayOfMonth(mes, ano);
-		final Date dataFinal = AbstractDateTime.lastDayOfMonth(mes, ano);
+		final Date dataInicio = DateUtil.firstDayOfMonth(mes, ano);
+		final Date dataFinal = DateUtil.lastDayOfMonth(mes, ano);
 		
 		return Lancamento.listarSaldoCategoriaMensal(usuarioId, tipoCategoria,
 				dataInicio, dataFinal);
@@ -280,13 +271,13 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	@RemotingInclude
 	public List<SaldoDto> listarSaldoPorConta(final Long usuarioId)
 			throws Exception {
-		return listarSaldoPorConta(usuarioId, AbstractDateTime.today());
+		return listarSaldoPorConta(usuarioId, DateUtil.today());
 	}
 	
 	@RemotingInclude
 	public List<SaldoDto> listarSaldoPorConta(final Long usuarioId,
 			Date dataSaldo) throws Exception {
-		dataSaldo = AbstractDateTime.parseBRST(dataSaldo);
+		dataSaldo = DateUtil.parseBRST(dataSaldo);
 		final List<SaldoDto> result = new ArrayList<SaldoDto>();
 		final List<Conta> contas = Conta.listarAtivas(usuarioId);
 		

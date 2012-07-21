@@ -27,7 +27,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 import logus.commons.number.Number;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
@@ -104,10 +104,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			Date d = (Date) o[0];
 			final Double v1 = (Double) o[1];
 			
-			if (AbstractDateTime.getDayOfMonth(d) == 1) {
+			if (DateUtil.getDayOfMonth(d) == 1) {
 				m.put(d, v1);
 			} else {
-				d = AbstractDateTime.getFirstDayOfMonth(d);
+				d = DateUtil.firstDayOfMonth(d);
 				final Double v = m.get(d);
 				m.put(d, v != null ? v + v1 : v1);
 			}
@@ -193,8 +193,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("categoria", categoria));
 		c.add(Restrictions.between("dataVencimento",
-				AbstractDateTime.getFirstDayOfMonth(referencia),
-				AbstractDateTime.getLastDayOfMonth(referencia)));
+				DateUtil.firstDayOfMonth(referencia),
+				DateUtil.lastDayOfMonth(referencia)));
 		c.setProjection(p);
 		
 		final Object result = c.uniqueResult();
@@ -282,8 +282,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		this.categoria = categoria;
 		this.valorOriginal = valorOriginal;
 		this.valorPago = 0.0;
-		this.dataVencimento = AbstractDateTime.today();
-		this.dataPrevisaoPagamento = AbstractDateTime.today();
+		this.dataVencimento = DateUtil.today();
+		this.dataPrevisaoPagamento = DateUtil.today();
 		this.formaPagamento = formaPagamento.ordinal();
 		this.parcelaNumero = 1;
 		this.parcelaQuantidade = 1;
@@ -299,16 +299,15 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			int dias = 1;
 			
 			while (dias <= prazoCompensacao) {
-				previsaoPagamento = AbstractDateTime.addDay(previsaoPagamento,
-						1);
+				previsaoPagamento = DateUtil.add(previsaoPagamento, 1);
 				
-				if (AbstractDateTime.dayOfWeek(previsaoPagamento) != Calendar.SATURDAY &&
-						AbstractDateTime.dayOfWeek(previsaoPagamento) != Calendar.SUNDAY) {
+				if (DateUtil.dayOfWeek(previsaoPagamento) != Calendar.SATURDAY &&
+						DateUtil.dayOfWeek(previsaoPagamento) != Calendar.SUNDAY) {
 					dias++;
 				}
 				
 				if (dias == prazoCompensacao &&
-						AbstractDateTime.dayOfWeek(previsaoPagamento) == Calendar.SATURDAY) {
+						DateUtil.dayOfWeek(previsaoPagamento) == Calendar.SATURDAY) {
 					break;
 				}
 			}
@@ -318,11 +317,11 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	private void corrigirHorarioDeVerao() {
-		this.dataVencimento = AbstractDateTime.parseBRST(this.dataVencimento);
-		this.dataPrevisaoPagamento = AbstractDateTime
+		this.dataVencimento = DateUtil.parseBRST(this.dataVencimento);
+		this.dataPrevisaoPagamento = DateUtil
 				.parseBRST(this.dataPrevisaoPagamento);
-		this.dataPagamento = AbstractDateTime.parseBRST(this.dataPagamento);
-		this.dataCompensacao = AbstractDateTime.parseBRST(this.dataCompensacao);
+		this.dataPagamento = DateUtil.parseBRST(this.dataPagamento);
+		this.dataCompensacao = DateUtil.parseBRST(this.dataCompensacao);
 	}
 	
 	private void sincronizarVinculado() throws Exception {

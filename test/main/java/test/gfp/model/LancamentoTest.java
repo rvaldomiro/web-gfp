@@ -10,7 +10,7 @@ import gfp.type.FormaPagamentoType;
 
 import java.util.List;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -43,17 +43,16 @@ public class LancamentoTest {
 		Lancamento l;
 		
 		l = new Lancamento(this.usuario, cr, 300.0, FormaPagamentoType.CHEQUE);
-		l.setDataPagamento(AbstractDateTime.date(5, 11, 2010));
+		l.setDataPagamento(DateUtil.date(5, 11, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l = l.save();
-		assertEquals(AbstractDateTime.date(9, 11, 2010), l.getDataCompensacao());
+		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
 		
 		l = new Lancamento(this.usuario, cr, 300.0, FormaPagamentoType.CHEQUE);
-		l.setDataPagamento(AbstractDateTime.time(
-				AbstractDateTime.date(4, 11, 2010), "23:00:00"));
+		l.setDataPagamento(DateUtil.time(DateUtil.date(4, 11, 2010), "23:00:00"));
 		l.setValorPago(l.getValorOriginal());
 		l = l.save();
-		assertEquals(AbstractDateTime.date(9, 11, 2010), l.getDataCompensacao());
+		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
 	}
 	
 	@Test
@@ -62,8 +61,7 @@ public class LancamentoTest {
 		
 		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(
 				this.usuario.getId(), CategoriaType.DESPESA.ordinal(),
-				AbstractDateTime.date(1, 1, 2012),
-				AbstractDateTime.date(31, 3, 2012));
+				DateUtil.date(1, 1, 2012), DateUtil.date(31, 3, 2012));
 		assertEquals(0, listaSaldoCategoriaMensal.size());
 		
 		final Categoria db = new Categoria(this.usuario, "descricao",
@@ -72,25 +70,24 @@ public class LancamentoTest {
 		Lancamento l;
 		
 		l = new Lancamento(this.usuario, db, 100.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(AbstractDateTime.date(1, 1, 2012));
+		l.setDataVencimento(DateUtil.date(1, 1, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 200.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(AbstractDateTime.date(1, 2, 2012));
+		l.setDataVencimento(DateUtil.date(1, 2, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 300.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(AbstractDateTime.date(1, 3, 2012));
+		l.setDataVencimento(DateUtil.date(1, 3, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 50.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(AbstractDateTime.date(1, 4, 2012));
+		l.setDataVencimento(DateUtil.date(1, 4, 2012));
 		l = l.save();
 		
 		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(
 				this.usuario.getId(), CategoriaType.DESPESA.ordinal(),
-				AbstractDateTime.date(1, 4, 2012),
-				AbstractDateTime.date(30, 4, 2012));
+				DateUtil.date(1, 4, 2012), DateUtil.date(30, 4, 2012));
 		assertEquals(1, listaSaldoCategoriaMensal.size());
 		assertEquals(db, listaSaldoCategoriaMensal.get(0).categoria);
 		assertEquals(50.0, listaSaldoCategoriaMensal.get(0).valor);

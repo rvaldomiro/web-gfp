@@ -41,14 +41,14 @@ public class UsuarioService extends TransactionClass<UsuarioService> {
 	@HibernateTransaction
 	public void salvarUsuario(final Usuario usuario) throws Exception {
 		if (usuario.getId() == null) {
-			if (Usuario.dao.findByField("login", usuario.getLogin()) != null) {
+			if (Usuario.dao.findByFields("login", usuario.getLogin()) != null) {
 				throw new Exception(
 						"Nome de usuário não disponível para cadastro!");
 			}
 			
 			if (usuario.getEmail() != null &&
 					!usuario.getEmail().isEmpty() &&
-					Usuario.dao.findByField("email", usuario.getEmail()) != null) {
+					Usuario.dao.findByFields("email", usuario.getEmail()) != null) {
 				throw new Exception("E-Mail já está em uso!");
 			}
 			

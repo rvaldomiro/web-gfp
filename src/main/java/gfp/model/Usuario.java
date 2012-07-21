@@ -83,16 +83,15 @@ public class Usuario extends AbstractPersistentClass<Usuario> {
 	
 	@Override
 	public void delete() throws Exception {
-		for (final Lancamento o : Lancamento.dao
-				.findAllByField("usuario", this)) {
+		for (final Lancamento o : Lancamento.dao.allByFields("usuario", this)) {
 			o.delete();
 		}
 		
-		for (final Categoria o : Categoria.dao.findAllByField("usuario", this)) {
+		for (final Categoria o : Categoria.dao.allByFields("usuario", this)) {
 			o.delete();
 		}
 		
-		for (final Conta o : Conta.dao.findAllByField("usuario", this)) {
+		for (final Conta o : Conta.dao.allByFields("usuario", this)) {
 			o.delete();
 		}
 		

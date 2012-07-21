@@ -25,18 +25,18 @@ public class Conta extends AbstractPersistentClass<Conta> {
 	public static HibernateDao<Conta> dao;
 	
 	public static List<Conta> listar(final Long usuarioId) throws Exception {
-		return dao.findAllByField("usuario.id", usuarioId);
+		return dao.allByFields("usuario.id", usuarioId);
 	}
 	
 	public static List<Conta> listarAtivas(final Long usuarioId)
 			throws Exception {
-		return dao.findAllByFields("usuario.id", usuarioId, "ativa", true);
+		return dao.allByFields("usuario.id", usuarioId, "ativa", true);
 	}
 	
 	public static Conta obterCarteira(final Usuario usuario) throws Exception {
 		final Conta template = new Conta(usuario, ContaType.CARTEIRA,
 				"Carteira");
-		Conta result = Conta.dao.findFirstByTemplate(template);
+		Conta result = Conta.dao.first(template);
 		
 		if (result == null) {
 			result = template.save();

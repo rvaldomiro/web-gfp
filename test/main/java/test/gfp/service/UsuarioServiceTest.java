@@ -40,7 +40,7 @@ public class UsuarioServiceTest {
 		this.controller.salvarUsuario(u);
 		
 		final Conta template = new Conta(u, ContaType.CARTEIRA, "Carteira");
-		final Conta conta = Conta.dao.findFirstByTemplate(template);
+		final Conta conta = Conta.dao.first(template);
 		assertNotNull(conta);
 		assertEquals(true, conta.isAtiva());
 	}
@@ -75,8 +75,8 @@ public class UsuarioServiceTest {
 		assertTrue(u.isAtivo());
 		assertFalse(u.isAdministrador());
 		assertEquals("senha".hashCode(), Integer.parseInt(u.getSenha()));
-		assertEquals(9, Categoria.dao.findAllByField("usuario", u).size());
-		assertEquals(1, Conta.dao.findAllByField("usuario", u).size());
+		assertEquals(9, Categoria.dao.allByFields("usuario", u).size());
+		assertEquals(1, Conta.dao.allByFields("usuario", u).size());
 		
 		final Usuario u1 = new Usuario("nome sobrenome", "login", "senha");
 		

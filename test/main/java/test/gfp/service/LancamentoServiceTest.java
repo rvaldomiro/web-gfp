@@ -22,7 +22,7 @@ import gfp.type.LancamentoSituacaoType;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -90,74 +90,52 @@ public class LancamentoServiceTest {
 		dto.setLancamento(lancamento);
 		dto.setFrequencia(FrequenciaAgendamentoType.MENSAL.ordinal());
 		dto.setDia(25);
-		dto.setDataInicio(AbstractDateTime.date(25, 1, 2012));
-		dto.setDataFinal(AbstractDateTime.date(25, 12, 2012));
+		dto.setDataInicio(DateUtil.date(25, 1, 2012));
+		dto.setDataFinal(DateUtil.date(25, 12, 2012));
 		dto.setAnteciparFinaisSemana(true);
 		
-		final Date[] vencimentos = { AbstractDateTime.date(25, 1, 2012),
-				AbstractDateTime.date(25, 2, 2012),
-				AbstractDateTime.date(25, 3, 2012),
-				AbstractDateTime.date(25, 4, 2012),
-				AbstractDateTime.date(25, 5, 2012),
-				AbstractDateTime.date(25, 6, 2012),
-				AbstractDateTime.date(25, 7, 2012),
-				AbstractDateTime.date(25, 8, 2012),
-				AbstractDateTime.date(25, 9, 2012),
-				AbstractDateTime.date(25, 10, 2012),
-				AbstractDateTime.date(25, 11, 2012),
-				AbstractDateTime.date(25, 12, 2012) };
+		final Date[] vencimentos = { DateUtil.date(25, 1, 2012),
+				DateUtil.date(25, 2, 2012), DateUtil.date(25, 3, 2012),
+				DateUtil.date(25, 4, 2012), DateUtil.date(25, 5, 2012),
+				DateUtil.date(25, 6, 2012), DateUtil.date(25, 7, 2012),
+				DateUtil.date(25, 8, 2012), DateUtil.date(25, 9, 2012),
+				DateUtil.date(25, 10, 2012), DateUtil.date(25, 11, 2012),
+				DateUtil.date(25, 12, 2012) };
 		
 		dto.setAnteciparFinaisSemana(true);
-		final Date[] previsoesAntecipadas = {
-				AbstractDateTime.date(25, 1, 2012),
-				AbstractDateTime.date(24, 2, 2012),
-				AbstractDateTime.date(23, 3, 2012),
-				AbstractDateTime.date(25, 4, 2012),
-				AbstractDateTime.date(25, 5, 2012),
-				AbstractDateTime.date(25, 6, 2012),
-				AbstractDateTime.date(25, 7, 2012),
-				AbstractDateTime.date(24, 8, 2012),
-				AbstractDateTime.date(25, 9, 2012),
-				AbstractDateTime.date(25, 10, 2012),
-				AbstractDateTime.date(23, 11, 2012),
-				AbstractDateTime.date(25, 12, 2012) };
+		final Date[] previsoesAntecipadas = { DateUtil.date(25, 1, 2012),
+				DateUtil.date(24, 2, 2012), DateUtil.date(23, 3, 2012),
+				DateUtil.date(25, 4, 2012), DateUtil.date(25, 5, 2012),
+				DateUtil.date(25, 6, 2012), DateUtil.date(25, 7, 2012),
+				DateUtil.date(24, 8, 2012), DateUtil.date(25, 9, 2012),
+				DateUtil.date(25, 10, 2012), DateUtil.date(23, 11, 2012),
+				DateUtil.date(25, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentos, previsoesAntecipadas);
 		
 		dto.setAnteciparFinaisSemana(false);
-		final Date[] previsoesAtrasadas = { AbstractDateTime.date(25, 1, 2012),
-				AbstractDateTime.date(27, 2, 2012),
-				AbstractDateTime.date(26, 3, 2012),
-				AbstractDateTime.date(25, 4, 2012),
-				AbstractDateTime.date(25, 5, 2012),
-				AbstractDateTime.date(25, 6, 2012),
-				AbstractDateTime.date(25, 7, 2012),
-				AbstractDateTime.date(27, 8, 2012),
-				AbstractDateTime.date(25, 9, 2012),
-				AbstractDateTime.date(25, 10, 2012),
-				AbstractDateTime.date(26, 11, 2012),
-				AbstractDateTime.date(25, 12, 2012) };
+		final Date[] previsoesAtrasadas = { DateUtil.date(25, 1, 2012),
+				DateUtil.date(27, 2, 2012), DateUtil.date(26, 3, 2012),
+				DateUtil.date(25, 4, 2012), DateUtil.date(25, 5, 2012),
+				DateUtil.date(25, 6, 2012), DateUtil.date(25, 7, 2012),
+				DateUtil.date(27, 8, 2012), DateUtil.date(25, 9, 2012),
+				DateUtil.date(25, 10, 2012), DateUtil.date(26, 11, 2012),
+				DateUtil.date(25, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentos, previsoesAtrasadas);
 		
 		dto.setFrequencia(FrequenciaAgendamentoType.DIA_UTIL_MES.ordinal());
 		dto.setDia(5);
-		dto.setDataInicio(AbstractDateTime.date(6, 1, 2012));
-		dto.setDataFinal(AbstractDateTime.date(31, 12, 2012));
+		dto.setDataInicio(DateUtil.date(6, 1, 2012));
+		dto.setDataFinal(DateUtil.date(31, 12, 2012));
 		dto.setAnteciparFinaisSemana(false);
-		final Date[] vencimentosDiasUteis = {
-				AbstractDateTime.date(6, 1, 2012),
-				AbstractDateTime.date(7, 2, 2012),
-				AbstractDateTime.date(7, 3, 2012),
-				AbstractDateTime.date(6, 4, 2012),
-				AbstractDateTime.date(7, 5, 2012),
-				AbstractDateTime.date(7, 6, 2012),
-				AbstractDateTime.date(6, 7, 2012),
-				AbstractDateTime.date(7, 8, 2012),
-				AbstractDateTime.date(7, 9, 2012),
-				AbstractDateTime.date(5, 10, 2012),
-				AbstractDateTime.date(7, 11, 2012),
-				AbstractDateTime.date(7, 12, 2012) };
+		final Date[] vencimentosDiasUteis = { DateUtil.date(6, 1, 2012),
+				DateUtil.date(7, 2, 2012), DateUtil.date(7, 3, 2012),
+				DateUtil.date(6, 4, 2012), DateUtil.date(7, 5, 2012),
+				DateUtil.date(7, 6, 2012), DateUtil.date(6, 7, 2012),
+				DateUtil.date(7, 8, 2012), DateUtil.date(7, 9, 2012),
+				DateUtil.date(5, 10, 2012), DateUtil.date(7, 11, 2012),
+				DateUtil.date(7, 12, 2012) };
 		testarAgendamentos(this.controller.agendarLancamentos(dto), lancamento,
 				vencimentosDiasUteis, vencimentosDiasUteis);
 	}
@@ -183,13 +161,13 @@ public class LancamentoServiceTest {
 		
 		final Lancamento l2 = new Lancamento(u, cd, 10.0,
 				FormaPagamentoType.CARTAO);
-		l2.setDataVencimento(AbstractDateTime.addDay(1));
+		l2.setDataVencimento(DateUtil.add(1));
 		l2.setConta(c);
 		l2.save();
 		
 		final Lancamento l3 = new Lancamento(u, cd, 50.0,
 				FormaPagamentoType.DINHEIRO);
-		l3.setDataVencimento(AbstractDateTime.addDay(2));
+		l3.setDataVencimento(DateUtil.add(2));
 		l3.save();
 		
 		final LancamentoDto dto = new LancamentoDto(u);
@@ -197,7 +175,7 @@ public class LancamentoServiceTest {
 		assertEquals(3, result.size());
 		
 		dto.setCategoria(cr.getId());
-		dto.setDataFinal(AbstractDateTime.addDay(2));
+		dto.setDataFinal(DateUtil.add(2));
 		result = this.controller.listarLancamentos(dto);
 		assertEquals(2, result.size());
 		
@@ -235,7 +213,7 @@ public class LancamentoServiceTest {
 		assertEquals(46, result.size());
 		
 		SaldoDiarioDto dto = result.get(0);
-		assertEquals(AbstractDateTime.today(), dto.dataCompensacao);
+		assertEquals(DateUtil.today(), dto.dataCompensacao);
 		
 		assertEquals(0.0, dto.saldoInicial);
 		assertEquals(10.0, dto.receitas);
@@ -244,43 +222,43 @@ public class LancamentoServiceTest {
 		assertEquals(8.0, dto.saldoFinal);
 		
 		dto = result.get(30);
-		assertEquals(AbstractDateTime.addDay(30), dto.dataCompensacao);
+		assertEquals(DateUtil.add(30), dto.dataCompensacao);
 		
 		Lancamento l;
 		
 		Lancamento.dao.deleteAll();
 		
 		l = new Lancamento(u, cr, 200.0, FormaPagamentoType.CARTAO);
-		l.setDataPagamento(AbstractDateTime.date(26, 10, 2010));
+		l.setDataPagamento(DateUtil.date(26, 10, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
 		l = new Lancamento(u, cr, 43.32, FormaPagamentoType.CHEQUE);
-		l.setDataPagamento(AbstractDateTime.date(26, 10, 2010));
+		l.setDataPagamento(DateUtil.date(26, 10, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
 		l = new Lancamento(u, cd, 75.0, FormaPagamentoType.CARTAO);
-		l.setDataPagamento(AbstractDateTime.date(26, 10, 2010));
+		l.setDataPagamento(DateUtil.date(26, 10, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
 		result = this.controller.listarPrevisaoSaldoDiario(u.getId(),
-				AbstractDateTime.date(26, 10, 2010),
+				DateUtil.date(26, 10, 2010),
 				LancamentoService.MODO_PREVISAO_DIARIA);
 		
 		dto = result.get(0);
-		assertEquals(AbstractDateTime.date(26, 10, 2010), dto.dataCompensacao);
+		assertEquals(DateUtil.date(26, 10, 2010), dto.dataCompensacao);
 		assertEquals(0.0, dto.saldoInicial);
 		assertEquals(200.0, dto.receitas);
 		assertEquals(75.0, dto.despesas);
 		assertEquals(125.0, dto.saldoFinal);
 		
 		dto = result.get(3);
-		assertEquals(AbstractDateTime.date(29, 10, 2010), dto.dataCompensacao);
+		assertEquals(DateUtil.date(29, 10, 2010), dto.dataCompensacao);
 		assertEquals(125.0, dto.saldoInicial);
 		assertEquals(43.32, dto.receitas);
 		assertEquals(0.0, dto.despesas);
@@ -299,7 +277,7 @@ public class LancamentoServiceTest {
 		l.save();
 		
 		l = new Lancamento(u, cd, 50.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(AbstractDateTime.addDay(1));
+		l.setDataVencimento(DateUtil.add(1));
 		l.setDataPrevisaoPagamento(l.getDataVencimento());
 		l.save();
 		
@@ -373,7 +351,7 @@ public class LancamentoServiceTest {
 		assertEquals(l.getId() + 1, l2.getId().intValue());
 		assertNull(l2.getContaTransferencia());
 		
-		final Date d = AbstractDateTime.addDay(1);
+		final Date d = DateUtil.add(1);
 		l.setDataCompensacao(d);
 		l.setDataPagamento(d);
 		l.setDataPrevisaoPagamento(d);

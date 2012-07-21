@@ -21,7 +21,7 @@ public class Banco extends AbstractPersistentClass<Banco> {
 	public static HibernateDao<Banco> dao;
 	
 	public static List<Banco> listar() {
-		return dao.findAll();
+		return dao.all();
 	}
 	
 	@Id

@@ -11,7 +11,7 @@ import logus.commons.web.AbstractServlet;
 public class GfpServlet extends AbstractServlet {
 	
 	private void setup() throws Exception {
-		if (Usuario.dao.findAll().size() == 0) {
+		if (Usuario.dao.all().size() == 0) {
 			new Usuario("Administrador", "admin", "admin", true).save();
 		}
 		
@@ -25,7 +25,7 @@ public class GfpServlet extends AbstractServlet {
 			new Banco("Santander").save();
 		}
 		
-		for (final Lancamento lancamento : Lancamento.dao.findAllByField(
+		for (final Lancamento lancamento : Lancamento.dao.allByFields(
 				"dataPagamento", null)) {
 			lancamento.save();
 		}

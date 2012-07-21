@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src/main/config"/>
 	<classpathentry excluding="commons/datetime/**|commons/file/**|commons/jdbc/**|commons/log/**|commons/persistence/**|commons/sql/**|commons/util/**|commons/web/**" kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="test/main/java"/>
-	<classpathentry excluding="br/**|logus/commons/gui/**|logus/commons/modem/**|logus/commons/report/**|logus/commons/web/AbstractFacesController**|logus/commons/web/ReportManager**" kind="src" path="java_commons/src"/>
+	<classpathentry excluding="br/**|logus/commons/gui/**|logus/commons/modem/**|logus/commons/report/**|logus/commons/web/AbstractFacesController**|logus/commons/web/ReportManager**|logus/commons/ws/**" kind="src" path="java_commons/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

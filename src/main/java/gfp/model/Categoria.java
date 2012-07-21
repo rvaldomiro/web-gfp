@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import logus.commons.datetime.AbstractDateTime;
+import logus.commons.datetime.DateUtil;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
 import logus.commons.string.StringUtil;
@@ -44,7 +44,7 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	}
 	
 	public static List<Categoria> listar(final Long usuarioId) throws Exception {
-		return dao.findAllByField("usuario.id", usuarioId);
+		return dao.allByFields("usuario.id", usuarioId);
 	}
 	
 	public static Categoria obterTransferencia(final Usuario usuario)
@@ -55,7 +55,7 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 		template.setInterna(true);
 		template.setTransferencia(true);
 		
-		Categoria result = Categoria.dao.findFirstByTemplate(template);
+		Categoria result = Categoria.dao.first(template);
 		
 		if (result == null) {
 			result = template.save();
@@ -123,9 +123,9 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	}
 	
 	public double calcularMedia(final Date referencia, final int meses) {
-		final int[] datePart = AbstractDateTime.getDatePart(referencia);
-		Date dataInicio = AbstractDateTime.removeMonth(
-				AbstractDateTime.setDate(1, datePart[1], datePart[2]), meses);
+		final int[] datePart = DateUtil.datePart(referencia);
+		Date dataInicio = DateUtil.removeMonth(
+				DateUtil.build(1, datePart[1], datePart[2]), meses);
 		double totalPeriodo = 0.0;
 		int mesesPeriodo = 0;
 		
@@ -137,7 +137,7 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 				mesesPeriodo++;
 			}
 			
-			dataInicio = AbstractDateTime.addMonth(dataInicio, 1);
+			dataInicio = DateUtil.addMonth(dataInicio, 1);
 		}
 		
 		return totalPeriodo / mesesPeriodo;
