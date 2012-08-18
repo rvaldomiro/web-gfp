@@ -22,7 +22,7 @@
 		</copy>
 	</target>
 
-	<target name="deploy-test" depends="stop-server, test">
+	<target name="deploy-test" depends="stop-server, _test-web">
 		<antcall target="_deploy">
 			<param name="context-root" value="${context-root}-test" />
 			<param name="submodules" value="commons" />
@@ -35,7 +35,7 @@
 		<antcall target="start-server" />
 	</target>
 
-	<target name="deploy" depends="stop-server, test">
+	<target name="deploy" depends="stop-server, _test-web">
 		<antcall target="_deploy">
 			<param name="submodules" value="commons" />
 			<param name="test" value="" />
@@ -47,14 +47,16 @@
 		<antcall target="start-server" />
 	</target>
 
+	<!--
 	<target name="test">
 		<junit haltonfailure="true" haltonerror="true">
-			<classpath refid="test.class.path" />
-			<classpath refid="build.class.path" />
+			<classpath refid="test.class.path.web" />
+			<classpath refid="build.class.path.web" />
 			<formatter type="brief" usefile="false" />
 			<test name="AllTests" />
 		</junit>
 	</target>
+	-->
 
 	<target name="release">
 		<antcall target="git-release">
@@ -76,13 +78,13 @@
 
 	<target name="start-server">
 		<exec executable="bash">
-			<arg value="${user.home}/Documents/Projetos/Sheels/start-gfp.command" />
+			<arg value="${user.home}/Projetos/Sheels/start-gfp.command" />
 		</exec>
 	</target>
 
 	<target name="stop-server">
 		<exec executable="bash">
-			<arg value="${user.home}/Documents/Projetos/Sheels/stop-gfp.command" />
+			<arg value="${user.home}/Projetos/Sheels/stop-gfp.command" />
 		</exec>
 	</target>
 

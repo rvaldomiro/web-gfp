@@ -101,16 +101,11 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		final Map<Date, Double> m = new HashMap<Date, Double>();
 		
 		for (final Object[] o : saldoDiario) {
-			Date d = (Date) o[0];
+			Date d = DateUtil.firstDayOfMonth((Date) o[0]);
+			d = DateUtil.time(d, 12, 0, 0);
+			final Double v = m.get(d);
 			final Double v1 = (Double) o[1];
-			
-			if (DateUtil.getDayOfMonth(d) == 1) {
-				m.put(d, v1);
-			} else {
-				d = DateUtil.firstDayOfMonth(d);
-				final Double v = m.get(d);
-				m.put(d, v != null ? v + v1 : v1);
-			}
+			m.put(d, v != null ? v + v1 : v1);
 		}
 		
 		for (final Date d : m.keySet()) {
