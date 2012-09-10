@@ -1,238 +1,116 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project [
-<!ENTITY common SYSTEM "build.xml">
-]>
-<project name="gfp" basedir="." default="install">
-	<import file="${basedir}/../resources/lib/git/build.xml" />
+<?xml version = "1.0" encoding = "UTF-8"?>
+<project name = "gfp"
+		 basedir = "."
+		 default = "install">
+	<import file = "${basedir}/../resources/lib/git/build.xml"/>
 
-	<property name="web" value="web" />
-	<property name="context-root" value="gfp" />
-	<property name="shell-name" value="web-gfp" />
-	<property name="no-mail" value="true" />
+	<property name = "web"
+			  value = "web"/>
 
-	<property name="FLEX_SDK" value="4.5.1" />
-	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
-	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+	<property name = "context-root"
+			  value = "gfp"/>
 
-	<property name="webapps-dir" value="/Applications/apache-tomcat-7.0.11/webapps/${context-root}" />
-	<property name="webapps-dir-test" value="${webapps-dir}-test" />
+	<property name = "shell-name"
+			  value = "web-gfp"/>
 
-	<target name="install" depends="clean_web, copy-common-dependencies-ivy_web">
-		<copy todir="${basedir}/flex_libs" preservelastmodified="true">
-			<fileset dir="${repository-dir}/swiz/1.3" />
+	<property name = "no-mail"
+			  value = "true"/>
+
+	<property name = "FLEX_SDK"
+			  value = "4.5.1"/>
+
+	<property name = "FLEX_HOME"
+			  value = "${FLEX_ROOT}/${FLEX_SDK}"/>
+
+	<taskdef resource = "flexTasks.tasks"
+			 classpath = "${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+	<property name = "webapps-dir"
+			  value = "/Applications/apache-tomcat-7.0.11/webapps/${context-root}"/>
+
+	<property name = "webapps-dir-test"
+			  value = "${webapps-dir}-test"/>
+
+	<target name = "install"
+			depends = "clean_web, copy-common-dependencies-ivy_web">
+		<copy todir = "${basedir}/flex_libs"
+			  preservelastmodified = "true">
+			<fileset dir = "${repository-dir}/swiz/1.3"/>
 		</copy>
 	</target>
 
-	<target name="deploy-test" depends="stop-server, _test-web">
-		<antcall target="_deploy">
-			<param name="context-root" value="${context-root}-test" />
-			<param name="submodules" value="commons" />
-			<param name="test" value="test" />
-			<param name="dir" value="${webapps-dir-test}" />
+	<target name = "deploy-test"
+			depends = "stop-server, _test-web">
+		<antcall target = "_deploy">
+			<param name = "context-root"
+				   value = "${context-root}-test"/>
+
+			<param name = "submodules"
+				   value = "commons"/>
+
+			<param name = "test"
+				   value = "test"/>
+
+			<param name = "dir"
+				   value = "${webapps-dir-test}"/>
 		</antcall>
 
-		<copy file="db/bd-gfp-cfg.properties" todir="${webapps-dir-test}" />
+		<copy file = "db/bd-gfp-cfg.properties"
+			  todir = "${webapps-dir-test}"/>
 
-		<antcall target="start-server" />
+		<antcall target = "start-server"/>
 	</target>
 
-	<target name="deploy" depends="stop-server, _test-web">
-		<antcall target="_deploy">
-			<param name="submodules" value="commons" />
-			<param name="test" value="" />
-			<param name="dir" value="${webapps-dir}" />
+	<target name = "deploy"
+			depends = "stop-server, _test-web">
+		<antcall target = "_deploy">
+			<param name = "submodules"
+				   value = "commons"/>
+
+			<param name = "test"
+				   value = ""/>
+
+			<param name = "dir"
+				   value = "${webapps-dir}"/>
 		</antcall>
 
-		<copy file="db/bd-gfp-prod-cfg.properties" tofile="${webapps-dir}/bd-gfp-cfg.properties" />
+		<copy file = "db/bd-gfp-prod-cfg.properties"
+			  tofile = "${webapps-dir}/bd-gfp-cfg.properties"/>
 
-		<antcall target="start-server" />
+		<antcall target = "start-server"/>
 	</target>
 
-	<!--
-	<target name="test">
-		<junit haltonfailure="true" haltonerror="true">
-			<classpath refid="test.class.path.web" />
-			<classpath refid="build.class.path.web" />
-			<formatter type="brief" usefile="false" />
-			<test name="AllTests" />
-		</junit>
-	</target>
-	-->
-
-	<target name="release">
-		<antcall target="git-release">
-			<param name="target-dir" value="${basedir}/java_commons" />
+	<target name = "release">
+		<antcall target = "git-release">
+			<param name = "target-dir"
+				   value = "${basedir}/java_commons"/>
 		</antcall>
 
-		<antcall target="git-release">
-			<param name="target-dir" value="${basedir}/flex_commons" />
+		<antcall target = "git-release">
+			<param name = "target-dir"
+				   value = "${basedir}/flex_commons"/>
 		</antcall>
 
-		<antcall target="git-release">
-			<param name="target-dir" value="${basedir}/../resources" />
+		<antcall target = "git-release">
+			<param name = "target-dir"
+				   value = "${basedir}/../resources"/>
 		</antcall>
 
-		<antcall target="git-release">
-			<param name="target-dir" value="${basedir}" />
+		<antcall target = "git-release">
+			<param name = "target-dir"
+				   value = "${basedir}"/>
 		</antcall>
 	</target>
 
-	<target name="start-server">
-		<exec executable="bash">
-			<arg value="${user.home}/Projetos/Sheels/start-gfp.command" />
+	<target name = "start-server">
+		<exec executable = "bash">
+			<arg value = "${user.home}/Projetos/Sheels/start-gfp.command"/>
 		</exec>
 	</target>
 
-	<target name="stop-server">
-		<exec executable="bash">
-			<arg value="${user.home}/Projetos/Sheels/stop-gfp.command" />
+	<target name = "stop-server">
+		<exec executable = "bash">
+			<arg value = "${user.home}/Projetos/Sheels/stop-gfp.command"/>
 		</exec>
 	</target>
-
-
-
-
-
-
-
-
-
-
-
-
-	<!--
-
-	<condition property="FLEX_ROOT" value="C:/Program Files/Adobe\Adobe Flash Builder 4.5/sdks">
-		<os family="windows" />
-	</condition>
-
-	<condition property="FLEX_ROOT" value="/Applications/Adobe Flash Builder 4.5/sdks">
-		<os family="mac" />
-	</condition>
-
-	<property name="web" value="web" />
-	<property name="web-lib-dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
-
-	<property name="context-root" value="gfp" />
-	<property name="FLEX_SDK" value="4.5.1" />
-	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
-	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
-
-
-	<target name="install" depends="clean, copy-dependencies" />
-
-	<target name="clean">
-		<delete failonerror="false">
-			<fileset dir="${web-lib-dir}" />
-		</delete>
-
-		<delete failonerror="false">
-			<fileset dir="${basedir}/flex_libs" excludes="swiz-framework*" />
-		</delete>
-
-		<delete dir="${basedir}/bin-debug/assets" />
-		<delete dir="${basedir}/bin-debug/common" />
-	</target>
-
-	<target name="copy-dependencies" depends="ivy-resolve">
-		<copy todir="${basedir}/src/main/flex/assets/skins" preservelastmodified="true">
-			<fileset dir="${basedir}/flex_commons/src/assets/skins" />
-		</copy>
-
-		<copy todir="${basedir}/src/main/flex/assets/fonts" preservelastmodified="true">
-			<fileset dir="${basedir}/flex_commons/src/assets/fonts" />
-		</copy>
-	</target>
-	
-	<property name="main-app" value="Main" />
-	<property name="context-root" value="gfp" />
-
-	<property name="prop-file" value="src/main/java/gfp/config/gfp.properties" />
-	<property file="${prop-file}" />
-
-	<property name="repository-dir" value="../resources/lib" />
-	<property name="lib-dir" value="${basedir}/src/main/webapp/WEB-INF/lib" />
-	<property name="class-dir" value="${basedir}/src/main/webapp/WEB-INF/classes" />
-	<property name="deploy-dir" value="${user.home}/Sites/apache-tomcat-7.0.11/webapps/${context-root}" />
-
-	<condition property="FLEX_ROOT" value="C:/Program Files/Adobe\Adobe Flash Builder 4.5/sdks">
-		<os family="windows" />
-	</condition>
-
-	<condition property="FLEX_ROOT" value="/Applications/Adobe Flash Builder 4.5/sdks">
-		<os family="mac" />
-	</condition>
-
-	<property name="FLEX_SDK" value="4.5.1" />
-	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
-	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
-
-	<path id="test.class.path">
-		<pathelement location="${class-dir}" />
-	</path>
-
-	<path id="build.class.path">
-		<fileset dir="${lib-dir}">
-			<include name="*.jar" />
-		</fileset>
-	</path>
-
-	<target name="install">
-		<delete dir="${lib-dir}" failonerror="false" />
-
-		<copy todir="${lib-dir}" preservelastmodified="true">
-			<fileset dir="${repository-dir}/blazeds/template/4.0.0/lib" />
-			<fileset dir="${repository-dir}/hibernate/3.5.5" />
-			<fileset dir="${repository-dir}/jdbc/postgresql" />
-			<fileset dir="${repository-dir}/junit/4.0.0" />
-		</copy>
-	</target>
-
-	<target name="deploy" depends="install, test, compile">
-		<copy file="${basedir}/bd-gfp-cfg.properties.production" tofile="${deploy-dir}/../../bin/bd-gfp-cfg.properties" overwrite="true" />
-
-		<copy todir="${deploy-dir}">
-			<fileset dir="${basedir}/src/main/webapp" />
-		</copy>
-
-		<antcall target="git-release">
-			<param name="release-version" value="${current-version}" />
-			<param name="target-dir" value="${basedir}" />
-		</antcall>
-
-		<exec executable="bash">
-			<arg value="${user.home}/Projetos/Sheels/start-gfp.command" />
-		</exec>
-	</target>
-
-	<target name="compile" depends="make-wrapper">
-		<copy todir="${deploy-dir}/common/components/preloader">
-			<fileset dir="${basedir}/src/main/flex/common/components/preloader" includes="*.swf" />
-		</copy>
-
-		<mxmlc file="${basedir}/src/main/flex/${main-app}.mxml" output="${deploy-dir}/${main-app}.swf" accessible="true" strict="true" show-actionscript-warnings="true" debug="false" optimize="false" target-player="10.2.0" keep-generated-actionscript="false" verify-digests="true" services="${lib-dir}/../flex/services-config.xml" context-root="${context-root}" locale="pt_BR" incremental="false">
-			<compiler.library-path dir="${basedir}/flex_libs" append="true">
-				<include name="*.swc" />
-			</compiler.library-path>
-
-			<compiler.library-path dir="${basedir}/src/main/flex/libs" append="true">
-				<include name="*.swc" />
-			</compiler.library-path>
-		</mxmlc>
-
-		<delete dir="${basedir}/bin-debug" />
-		<mkdir dir="${basedir}/bin-debug" />
-	</target>
-
-	<target name="make-wrapper">
-		<delete dir="${deploy-dir}" />
-		<delete dir="${deploy-dir}/../../work/Catalina/localhost/${context-root}" />
-		<mkdir dir="${deploy-dir}" />
-		<html-wrapper title="Gerente Financeiro Pessoal" file="${main-app}.html" height="100%" width="100%" application="${main-app}" swf="${main-app}" history="true" express-install="true" version-detection="true" output="${deploy-dir}" />
-	</target>
-
-	
-
-	
--->
 </project>
