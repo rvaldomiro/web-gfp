@@ -1,4 +1,5 @@
 import gfp.model.Banco;
+import gfp.model.Conta;
 import gfp.model.Lancamento;
 import gfp.model.Usuario;
 
@@ -23,6 +24,32 @@ public class GfpServlet extends AbstractServlet {
 			new Banco("HSBC").save();
 			new Banco("Safra").save();
 			new Banco("Santander").save();
+		}
+		
+		for (final Conta conta : Conta.dao.all()) {
+			if (conta.getBanco() == null) {
+				continue;
+			}
+			
+			if ("Real".equals(conta.getBanco().getNome())) {
+				conta.setBanco(Banco.dao.findByFields("nome", "Santander"));
+				conta.save();
+			} else if ("Unibanco".equals(conta.getBanco().getNome())) {
+				conta.setBanco(Banco.dao.findByFields("nome", "Itaú"));
+				conta.save();
+			}
+		}
+		
+		final Banco bancoReal = Banco.dao.findByFields("nome", "Real");
+		
+		if (bancoReal != null) {
+			bancoReal.delete();
+		}
+		
+		final Banco bancoUnibanco = Banco.dao.findByFields("nome", "Unibanco");
+		
+		if (bancoUnibanco != null) {
+			bancoUnibanco.delete();
 		}
 		
 		for (final Lancamento lancamento : Lancamento.dao.allByFields(

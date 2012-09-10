@@ -82,7 +82,8 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 			final Date dataFinal, final int modo) {
 		final List<SaldoDiarioDto> result = new ArrayList<SaldoDiarioDto>();
 		
-		for (Date data = dataInicio; !data.after(dataFinal); data = modo == LancamentoService.MODO_PREVISAO_DIARIA ? DateUtil
+		for (Date data = dataInicio; !data.after(DateUtil.time(dataFinal,
+				"01:00:00")); data = modo == LancamentoService.MODO_PREVISAO_DIARIA ? DateUtil
 				.add(data, 1) : DateUtil.addMonth(data, 1)) {
 			result.add(new SaldoDiarioDto(data));
 		}
@@ -102,8 +103,12 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 	
 	public double saldoAcumulado;
 	
+	public String dataCompensacaoString;
+	
 	public SaldoDiarioDto(final Date dataCompensacao) {
 		this.dataCompensacao = dataCompensacao;
+		this.dataCompensacaoString = DateUtil
+				.toStringDateFormat(dataCompensacao);
 	}
 	
 	private void setDespesas(final Double arg0) {
@@ -116,7 +121,7 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 	
 	@Override
 	public int compareTo(final SaldoDiarioDto o) {
-		return this.dataCompensacao.compareTo(o.dataCompensacao);
+		return this.dataCompensacaoString.compareTo(o.dataCompensacaoString);
 	}
 	
 	@Override
@@ -131,11 +136,12 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 			return false;
 		}
 		final SaldoDiarioDto other = (SaldoDiarioDto) obj;
-		if (this.dataCompensacao == null) {
-			if (other.dataCompensacao != null) {
+		if (this.dataCompensacaoString == null) {
+			if (other.dataCompensacaoString != null) {
 				return false;
 			}
-		} else if (!this.dataCompensacao.equals(other.dataCompensacao)) {
+		} else if (!this.dataCompensacaoString
+				.equals(other.dataCompensacaoString)) {
 			return false;
 		}
 		return true;
@@ -147,8 +153,8 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 		int result = 1;
 		result = prime *
 				result +
-				(this.dataCompensacao == null ? 0 : this.dataCompensacao
-						.hashCode());
+				(this.dataCompensacaoString == null ? 0
+						: this.dataCompensacaoString.hashCode());
 		return result;
 	}
 	

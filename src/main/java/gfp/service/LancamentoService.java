@@ -222,7 +222,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			
 			for (final Object[] o : saldoDiario) {
 				final Date dataCompensacao = DateUtil.time(new Date(
-						((Timestamp) o[0]).getTime()), "00:00:00");
+						((Timestamp) o[0]).getTime()), "01:00:00");
 				final Double saldo = (Double) o[1];
 				final SaldoDiarioDto dto = result.get(result
 						.indexOf(new SaldoDiarioDto(dataCompensacao)));

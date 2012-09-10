@@ -8,6 +8,7 @@
 	<property name="web" value="web" />
 	<property name="context-root" value="gfp" />
 	<property name="shell-name" value="web-gfp" />
+	<property name="no-mail" value="true" />
 
 	<property name="FLEX_SDK" value="4.5.1" />
 	<property name="FLEX_HOME" value="${FLEX_ROOT}/${FLEX_SDK}" />
