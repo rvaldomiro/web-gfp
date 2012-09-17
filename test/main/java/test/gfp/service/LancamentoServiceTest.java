@@ -153,14 +153,14 @@ public class LancamentoServiceTest {
 		new Lancamento(u, cd, 2.0, FormaPagamentoType.DINHEIRO).save();
 		
 		final Lancamento l1 = new Lancamento(u, cr, 100.0,
-				FormaPagamentoType.CARTAO);
+				FormaPagamentoType.DEBITO);
 		l1.setDataPagamento(l1.getDataVencimento());
 		l1.setValorPago(l1.getValorOriginal());
 		l1.setConta(c);
 		l1.save();
 		
 		final Lancamento l2 = new Lancamento(u, cd, 10.0,
-				FormaPagamentoType.CARTAO);
+				FormaPagamentoType.DEBITO);
 		l2.setDataVencimento(DateUtil.add(1));
 		l2.setConta(c);
 		l2.save();
@@ -228,7 +228,7 @@ public class LancamentoServiceTest {
 		
 		Lancamento.dao.deleteAll();
 		
-		l = new Lancamento(u, cr, 200.0, FormaPagamentoType.CARTAO);
+		l = new Lancamento(u, cr, 200.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(DateUtil.date(26, 10, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
@@ -240,7 +240,7 @@ public class LancamentoServiceTest {
 		l.setConta(c);
 		l.save();
 		
-		l = new Lancamento(u, cd, 75.0, FormaPagamentoType.CARTAO);
+		l = new Lancamento(u, cd, 75.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(DateUtil.date(26, 10, 2010));
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
@@ -266,13 +266,13 @@ public class LancamentoServiceTest {
 		
 		Lancamento.dao.deleteAll();
 		
-		l = new Lancamento(u, cr, 100.0, FormaPagamentoType.CARTAO);
+		l = new Lancamento(u, cr, 100.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(l.getDataVencimento());
 		l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
-		l = new Lancamento(u, cd, 10.0, FormaPagamentoType.CARTAO);
+		l = new Lancamento(u, cd, 10.0, FormaPagamentoType.DEBITO);
 		l.setConta(c);
 		l.save();
 		
@@ -317,7 +317,7 @@ public class LancamentoServiceTest {
 		carteira.setTipo(ContaType.CARTEIRA.ordinal());
 		carteira.save();
 		
-		Lancamento l = new Lancamento(u, cd, 10, FormaPagamentoType.CARTAO);
+		Lancamento l = new Lancamento(u, cd, 10, FormaPagamentoType.DEBITO);
 		l.setConta(corrente);
 		l.setContaTransferencia(carteira);
 		this.controller.salvarLancamento(l);
@@ -345,7 +345,7 @@ public class LancamentoServiceTest {
 		this.controller.salvarLancamento(l);
 		l2 = l.getVinculados().get(0);
 		assertEquals(corrente, l2.getConta());
-		assertEquals(FormaPagamentoType.CARTAO.ordinal(), l2
+		assertEquals(FormaPagamentoType.DEBITO.ordinal(), l2
 				.getFormaPagamento().intValue());
 		assertEquals(l.getCategoria(), l2.getCategoria());
 		assertEquals(l.getId() + 1, l2.getId().intValue());
@@ -374,7 +374,7 @@ public class LancamentoServiceTest {
 		assertEquals(0, l.getVinculados().size());
 		assertNull(Lancamento.dao.find(idVinculado));
 		
-		l = new Lancamento(u, cd, 10, FormaPagamentoType.CARTAO);
+		l = new Lancamento(u, cd, 10, FormaPagamentoType.DEBITO);
 		l.setContaTransferencia(carteira);
 		this.controller.salvarLancamento(l);
 		final Long id = l.getId();

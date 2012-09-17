@@ -69,6 +69,36 @@ public class Conta extends AbstractPersistentClass<Conta> {
 	@NotNull
 	private Integer tipo;
 	
+	@NotNull
+	private boolean operaCheque;
+	
+	@NotNull
+	private boolean operaCartaoDebito;
+	
+	@NotNull
+	private boolean operaCartaoMastercard;
+	
+	@NotNull
+	private double limiteMastercard;
+	
+	@NotNull
+	private int fechamentoMastercard;
+	
+	@NotNull
+	private int vencimentoMastercard;
+	
+	@NotNull
+	private boolean operaCartaoVisa;
+	
+	@NotNull
+	private double limiteVisa;
+	
+	@NotNull
+	private int fechamentoVisa;
+	
+	@NotNull
+	private int vencimentoVisa;
+	
 	public Conta() {
 		super();
 	}
@@ -148,6 +178,14 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		return this.banco;
 	}
 	
+	public int getFechamentoMastercard() {
+		return this.fechamentoMastercard;
+	}
+	
+	public int getFechamentoVisa() {
+		return this.fechamentoVisa;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -156,12 +194,28 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		return this.identificacao;
 	}
 	
+	public double getLimiteMastercard() {
+		return this.limiteMastercard;
+	}
+	
+	public double getLimiteVisa() {
+		return this.limiteVisa;
+	}
+	
 	public Integer getTipo() {
 		return this.tipo;
 	}
 	
 	public Usuario getUsuario() {
 		return this.usuario;
+	}
+	
+	public int getVencimentoMastercard() {
+		return this.vencimentoMastercard;
+	}
+	
+	public int getVencimentoVisa() {
+		return this.vencimentoVisa;
 	}
 	
 	@Override
@@ -176,12 +230,36 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		return this.ativa;
 	}
 	
+	public boolean isOperaCartaoDebito() {
+		return this.operaCartaoDebito;
+	}
+	
+	public boolean isOperaCartaoMastercard() {
+		return this.operaCartaoMastercard;
+	}
+	
+	public boolean isOperaCartaoVisa() {
+		return this.operaCartaoVisa;
+	}
+	
+	public boolean isOperaCheque() {
+		return this.operaCheque;
+	}
+	
 	public void setAtiva(final boolean ativa) {
 		this.ativa = ativa;
 	}
 	
 	public void setBanco(final Banco banco) {
 		this.banco = banco;
+	}
+	
+	public void setFechamentoMastercard(final int fechamentoMastercard) {
+		this.fechamentoMastercard = fechamentoMastercard;
+	}
+	
+	public void setFechamentoVisa(final int fechamentoVisa) {
+		this.fechamentoVisa = fechamentoVisa;
 	}
 	
 	public void setId(final Long id) {
@@ -192,12 +270,44 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		this.identificacao = identificacao;
 	}
 	
+	public void setLimiteMastercard(final double limiteMastercard) {
+		this.limiteMastercard = limiteMastercard;
+	}
+	
+	public void setLimiteVisa(final double limiteVisa) {
+		this.limiteVisa = limiteVisa;
+	}
+	
+	public void setOperaCartaoDebito(final boolean operaCartaoDebito) {
+		this.operaCartaoDebito = operaCartaoDebito;
+	}
+	
+	public void setOperaCartaoMastercard(final boolean operaCartaoMastercard) {
+		this.operaCartaoMastercard = operaCartaoMastercard;
+	}
+	
+	public void setOperaCartaoVisa(final boolean operaCartaoVisa) {
+		this.operaCartaoVisa = operaCartaoVisa;
+	}
+	
+	public void setOperaCheque(final boolean operaCheque) {
+		this.operaCheque = operaCheque;
+	}
+	
 	public void setTipo(final Integer tipo) {
 		this.tipo = tipo;
 	}
 	
 	public void setUsuario(final Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public void setVencimentoMastercard(final int vencimentoMastercard) {
+		this.vencimentoMastercard = vencimentoMastercard;
+	}
+	
+	public void setVencimentoVisa(final int vencimentoVisa) {
+		this.vencimentoVisa = vencimentoVisa;
 	}
 	
 }

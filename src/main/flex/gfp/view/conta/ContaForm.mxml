@@ -58,6 +58,17 @@
 				}
 			}
 			
+			private function groupTipoConta_changeHandler(event:Event):void
+			{
+				if (groupTipoConta.selectedValue == ContaType.CARTEIRA)
+				{
+					checkOperaCheque.selected = false;
+					checkOperaCartaoDebito.selected = false;
+					checkOperaCartaoMastercard.selected = false;
+					checkOperaCartaoVisa.selected = false;
+				}
+			}
+			
 			private function radioCarteira_clickHandler(event:MouseEvent):void
 			{
 				comboBancos.selectedItem = null;
@@ -87,6 +98,20 @@
 				{
 					result = RequiredValidator.validate(RequiredValidator.STRING
 														, [textIdentificacao], dispatcher);
+				}
+				
+				if (result && checkOperaCartaoMastercard.selected)
+				{
+					result = RequiredValidator.validate(RequiredValidator.NUMBER
+														, [textLimiteMastercard]
+														, dispatcher, .01);
+				}
+				
+				if (result && checkOperaCartaoVisa.selected)
+				{
+					result = RequiredValidator.validate(RequiredValidator.NUMBER
+														, [textLimiteVisa], dispatcher
+														, .01);
 				}
 				
 				service.selecionada.tipo = groupTipoConta.selectedValue as int;
@@ -119,7 +144,8 @@
 					alphaTo = "0"/>
 		</s:Parallel>
 
-		<s:RadioButtonGroup id = "groupTipoConta"/>
+		<s:RadioButtonGroup id = "groupTipoConta"
+							change = "groupTipoConta_changeHandler(event)"/>
 	</fx:Declarations>
 
 	<s:VGroup id = "form"
@@ -161,6 +187,80 @@
 		<s:CheckBox id = "checkAtiva"
 					selected = "@{service.selecionada.ativa}"
 					label = "{checkAtiva.selected ? 'Ativa' : 'Inativa'}"/>
+
+		<s:CheckBox id = "checkOperaCheque"
+					selected = "@{service.selecionada.operaCheque}"
+					label = "{checkOperaCheque.selected ? '' : 'Não '}Possui Cheque"
+					enabled = "{groupTipoConta.selectedValue != ContaType.CARTEIRA}"/>
+
+		<s:CheckBox id = "checkOperaCartaoDebito"
+					selected = "@{service.selecionada.operaCartaoDebito}"
+					label = "{checkOperaCartaoDebito.selected ? '' : 'Não '}Possui Cartão de Débito"
+					enabled = "{groupTipoConta.selectedValue != ContaType.CARTEIRA}"/>
+
+		<mx:HRule width = "100%"/>
+
+		<s:CheckBox id = "checkOperaCartaoMastercard"
+					selected = "@{service.selecionada.operaCartaoMastercard}"
+					label = "{checkOperaCartaoMastercard.selected ? '' : 'Não '}Possui Cartão de Crédito Mastercard"
+					enabled = "{groupTipoConta.selectedValue == ContaType.CONTA_CORRENTE}"/>
+
+		<s:HGroup enabled = "{checkOperaCartaoMastercard.selected}"
+				  verticalAlign = "baseline">
+			<s:Label text = "Limite:"/>
+
+			<component:TextInputNumeric id = "textLimiteMastercard"
+										value = "@{service.selecionada.limiteMastercard}"/>
+
+			<s:Label text = "Fechamento:"/>
+
+			<s:NumericStepper id = "stepperFechamentoMastercard"
+							  value = "@{service.selecionada.fechamentoMastercard}"
+							  minimum = "1"
+							  maximum = "28"
+							  stepSize = "1"/>
+
+			<s:Label text = "Vencimento:"/>
+
+			<s:NumericStepper id = "stepperVencimentoMastercard"
+							  value = "@{service.selecionada.vencimentoMastercard}"
+							  minimum = "1"
+							  maximum = "28"
+							  stepSize = "1"/>
+		</s:HGroup>
+
+		<mx:HRule width = "100%"/>
+
+		<s:CheckBox id = "checkOperaCartaoVisa"
+					selected = "@{service.selecionada.operaCartaoVisa}"
+					label = "{checkOperaCartaoVisa.selected ? '' : 'Não '}Possui Cartão de Crédito Visa"
+					enabled = "{groupTipoConta.selectedValue == ContaType.CONTA_CORRENTE}"/>
+
+		<s:HGroup enabled = "{checkOperaCartaoVisa.selected}"
+				  verticalAlign = "baseline">
+			<s:Label text = "Limite:"/>
+
+			<component:TextInputNumeric id = "textLimiteVisa"
+										value = "@{service.selecionada.limiteVisa}"/>
+
+			<s:Label text = "Fechamento:"/>
+
+			<s:NumericStepper id = "stepperFechamentoVisa"
+							  value = "@{service.selecionada.fechamentoVisa}"
+							  minimum = "1"
+							  maximum = "28"
+							  stepSize = "1"/>
+
+			<s:Label text = "Vencimento:"/>
+
+			<s:NumericStepper id = "stepperVencimentoVisa"
+							  value = "@{service.selecionada.vencimentoVisa}"
+							  minimum = "1"
+							  maximum = "28"
+							  stepSize = "1"/>
+		</s:HGroup>
+
+		<mx:HRule width = "100%"/>
 
 		<s:HGroup width = "100%"
 				  horizontalAlign = "center">

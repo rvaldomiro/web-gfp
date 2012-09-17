@@ -84,7 +84,7 @@
 					imageFormaPagamento.source = ImageUtil.CHEQUE32;
 					descricaoFormaPagamento.text = "Cheque";
 				}
-				else if (o.formaPagamento == FormaPagamentoType.CARTAO)
+				else if (o.formaPagamento == FormaPagamentoType.DEBITO)
 				{
 					imageFormaPagamento.source = ImageUtil.CARD32;
 					descricaoFormaPagamento.text = "Cartão";

@@ -169,10 +169,10 @@
 				{
 					for each (var conta:Conta in comboContaTransferencia.dataProvider)
 					{
-						if ((service.selecionado.contaTransferencia && conta.id ==
-							service.selecionado.contaTransferencia.id) || (!service
-							.selecionado.contaTransferencia && conta.id != service
-							.selecionado.conta.id))
+						if ((service.selecionado.contaTransferencia && conta.id == service
+							.selecionado.contaTransferencia.id) || (!service.selecionado
+							.contaTransferencia && conta.id != service.selecionado
+							.conta.id))
 						{
 							comboContaTransferencia.selectedItem = conta;
 							service.selecionado.contaTransferencia = conta as Conta;
@@ -214,21 +214,22 @@
 																	, function(re:ResultEvent):void
 																	{
 																		changed = true;
-																		var agendamentos:ArrayCollection =
-																			re.result as
-																			ArrayCollection;
+																		var agendamentos:ArrayCollection
+																			= re
+																			.result
+																			as ArrayCollection;
 																		currentState = "Principal";
 																		
-																		var _dto:LancamentoDto =
-																			new LancamentoDto();
+																		var _dto:LancamentoDto
+																			= new LancamentoDto();
 																		_dto.tipoPeriodo = 1;
-																		_dto.dataInicio = (agendamentos[0] as
-																			Lancamento)
+																		_dto.dataInicio = (agendamentos[0]
+																			as Lancamento)
 																			.dataPrevisaoPagamento;
 																		_dto.dataFinal = (agendamentos[agendamentos
-																			.length -
-																			1] as
-																			Lancamento)
+																			.length
+																			- 1]
+																			as Lancamento)
 																			.dataPrevisaoPagamento;
 																		_dto.categoria = dto
 																			.lancamento
@@ -378,7 +379,7 @@
 		<s:Label text = "Forma de Pagamento / Recebimento:"/>
 
 		<transacao:SelecaoFormaPagamentoRecebimentoRenderer id = "selecaoFormaPagamentoRecebimento"
-															width = "{contaService.list.length > 1 ? 498 : 490}"
+															width = "{contaService.list.length > 1 ? 617 : 609}"
 															height = "80"
 															enabled.Agendamento = "false"
 															change = "dispatchEvent(new Event('permiteTransferir'))"/>

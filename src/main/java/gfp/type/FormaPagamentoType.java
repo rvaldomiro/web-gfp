@@ -5,5 +5,8 @@ public enum FormaPagamentoType {
 	INDEFINIDA,
 	DINHEIRO,
 	CHEQUE,
-	CARTAO
+	DEBITO,
+	CREDITO_MASTERCARD,
+	CREDITO_VISA
+	
 }

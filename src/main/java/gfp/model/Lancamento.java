@@ -331,7 +331,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				l.setCategoria(Categoria.obterTransferencia(this.usuario));
 				l.setFormaPagamento(this.contaTransferencia.getTipo().equals(
 						ContaType.CARTEIRA.ordinal()) ? FormaPagamentoType.DINHEIRO
-						.ordinal() : FormaPagamentoType.CARTAO.ordinal());
+						.ordinal() : FormaPagamentoType.DEBITO.ordinal());
 				
 				if (this.vinculados == null) {
 					this.vinculados = new ArrayList<Lancamento>();
@@ -344,7 +344,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				vinculado
 						.setFormaPagamento(this.contaTransferencia.getTipo()
 								.equals(ContaType.CARTEIRA.ordinal()) ? FormaPagamentoType.DINHEIRO
-								.ordinal() : FormaPagamentoType.CARTAO
+								.ordinal() : FormaPagamentoType.DEBITO
 								.ordinal());
 				
 				vinculado.setConta(this.contaTransferencia);

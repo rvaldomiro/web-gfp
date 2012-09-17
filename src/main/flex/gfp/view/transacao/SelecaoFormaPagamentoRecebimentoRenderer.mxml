@@ -42,24 +42,48 @@
 					if (conta.tipo == ContaType.CARTEIRA)
 					{
 						var dinheiro:Object = new Object();
-						dinheiro.formaPagamento = 1;
+						dinheiro.formaPagamento = FormaPagamentoType.DINHEIRO;
 						dinheiro.descricao = "Dinheiro";
 						dinheiro.conta = conta;
 						_dataProvider.addItem(dinheiro);
 					}
 					else
 					{
-						var cheque:Object = new Object();
-						cheque.formaPagamento = 2;
-						cheque.descricao = "Cheque"
-						cheque.conta = conta;
-						_dataProvider.addItem(cheque);
+						if (conta.operaCheque)
+						{
+							var cheque:Object = new Object();
+							cheque.formaPagamento = FormaPagamentoType.CHEQUE;
+							cheque.descricao = "Cheque"
+							cheque.conta = conta;
+							_dataProvider.addItem(cheque);
+						}
 						
-						var cartao:Object = new Object();
-						cartao.formaPagamento = 3;
-						cartao.descricao = "Cartão";
-						cartao.conta = conta;
-						_dataProvider.addItem(cartao);
+						if (conta.operaCartaoDebito)
+						{
+							var cartao:Object = new Object();
+							cartao.formaPagamento = FormaPagamentoType.DEBITO;
+							cartao.descricao = "Débito";
+							cartao.conta = conta;
+							_dataProvider.addItem(cartao);
+						}
+						
+						if (conta.operaCartaoMastercard)
+						{
+							var mastercard:Object = new Object();
+							mastercard.formaPagamento = FormaPagamentoType.CREDITO_MASTERCARD;
+							mastercard.descricao = "Crédito Mastercard";
+							mastercard.conta = conta;
+							_dataProvider.addItem(mastercard);
+						}
+						
+						if (conta.operaCartaoVisa)
+						{
+							var visa:Object = new Object();
+							visa.formaPagamento = FormaPagamentoType.CREDITO_VISA;
+							visa.descricao = "Crédito Visa";
+							visa.conta = conta;
+							_dataProvider.addItem(visa);
+						}
 					}
 				}
 				
@@ -80,8 +104,8 @@
 				
 				for (i = 0; i < _dataProvider.length; i++)
 				{
-					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento &&
-						_lancamento.conta && _dataProvider[i].conta.id == _lancamento
+					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento
+						&& _lancamento.conta && _dataProvider[i].conta.id == _lancamento
 						.conta.id)
 					{
 						selectedIndex = i;
@@ -92,8 +116,10 @@
 				
 				for (i = 0; i < _dataProvider.length; i++)
 				{
-					if (_dataProvider[i].formaPagamento == FormaPagamentoType.DINHEIRO ||
-						_dataProvider[i].formaPagamento == FormaPagamentoType.CARTAO)
+					if (_dataProvider[i].formaPagamento != FormaPagamentoType.CHEQUE)
+//					if (_dataProvider[i].formaPagamento == FormaPagamentoType.DINHEIRO
+//						|| _dataProvider[i].formaPagamento == FormaPagamentoType
+//						.DEBITO)
 					{
 						selectedIndex = i;
 						changeHandler();
