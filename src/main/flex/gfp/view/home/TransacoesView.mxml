@@ -69,14 +69,15 @@
 					if ((!selecionado || lancamento.selected) && !lancamento.categoria
 						.interna && !lancamento.categoria.transferencia)
 					{
-						var valorConsiderado:Number = lancamento.dataPagamento &&
-							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento
-							.valorOriginal;
+//						var valorConsiderado:Number = lancamento.dataPagamento &&
+//							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento
+//							.valorOriginal;
 						
 						quantidade++;
-						valor += valorConsiderado;
-						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA ?
-							valorConsiderado : valorConsiderado * -1;
+						valor += lancamento.valorOriginal;
+						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA
+							? lancamento.valorOriginal : lancamento.valorOriginal
+							* -1;
 						media = valor / quantidade;
 					}
 				}

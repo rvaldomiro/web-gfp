@@ -13,7 +13,7 @@ package gfp.factory
 			o.dataVencimento = DateUtil.today;
 			o.dataPrevisaoPagamento = DateUtil.today;
 			o.valorOriginal = 0;
-			o.valorPago = 0;
+//			o.valorPago = 0;
 			o.formaPagamento = FormaPagamentoType.DINHEIRO;
 			o.parcelaNumero = 1;
 			o.parcelaQuantidade = 1;

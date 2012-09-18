@@ -310,4 +310,32 @@ public class Conta extends AbstractPersistentClass<Conta> {
 		this.vencimentoVisa = vencimentoVisa;
 	}
 	
+	@Override
+	public void validate() throws Exception {
+		super.validate();
+		
+		if (this.tipo.equals(ContaType.POUPANCA.ordinal()) ||
+				this.tipo.equals(ContaType.CARTEIRA.ordinal())) {
+			this.operaCartaoMastercard = false;
+			this.operaCartaoVisa = false;
+			
+			if (this.tipo.equals(ContaType.CARTEIRA.ordinal())) {
+				this.operaCheque = false;
+				this.operaCartaoDebito = false;
+			}
+		}
+		
+		if (!this.operaCartaoMastercard) {
+			this.limiteMastercard = 0.0;
+			this.fechamentoMastercard = 1;
+			this.vencimentoMastercard = 1;
+		}
+		
+		if (!this.operaCartaoVisa) {
+			this.limiteVisa = 0.0;
+			this.fechamentoVisa = 1;
+			this.vencimentoVisa = 1;
+		}
+	}
+	
 }

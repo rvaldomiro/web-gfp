@@ -6,6 +6,10 @@ public class SaldoDto {
 	
 	public static final String SALDO_DISPONIVEL = "Disponível";
 	
+	public static final String SALDO_DISPONIVEL_MASTERCARD = "Mastercard";
+	
+	public static final String SALDO_DISPONIVEL_VISA = "Visa";
+	
 	public static final String SALDO_BLOQUEADO = "Bloqueado";
 	
 	public static final String SALDO_TOTAL_CONTA = "Total";

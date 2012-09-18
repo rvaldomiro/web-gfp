@@ -2,14 +2,12 @@ package test.gfp.service;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import gfp.model.Categoria;
 import gfp.model.Conta;
 import gfp.model.Usuario;
 import gfp.service.UsuarioService;
-import gfp.type.ContaType;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,17 +30,6 @@ public class UsuarioServiceTest {
 	@After
 	public void tearDown() throws Exception {
 		Usuario.dao.deleteAll();
-	}
-	
-	@Test
-	public void testCriarContaCarteira() throws Exception {
-		final Usuario u = new Usuario("usuario", "usuario", "usuario");
-		this.controller.salvarUsuario(u);
-		
-		final Conta template = new Conta(u, ContaType.CARTEIRA, "Carteira");
-		final Conta conta = Conta.dao.first(template);
-		assertNotNull(conta);
-		assertEquals(true, conta.isAtiva());
 	}
 	
 	@Test

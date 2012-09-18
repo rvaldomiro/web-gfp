@@ -47,6 +47,8 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.ResultEvent;
 			
+			import spark.events.IndexChangeEvent;
+			
 			[Bindable]
 			[Inject]
 			public var categoriaServcie:CategoriaService;
@@ -69,6 +71,12 @@
 			
 			private var changed:Boolean = false;
 			
+			private function get pagamentoComCartaoDeCredito():Boolean
+			{
+				return service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD
+					|| service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_VISA;
+			}
+			
 			[Bindable]
 			private var periodicidadesAgendamento:ArrayCollection = new ArrayCollection([{data: 1
 																							 , label: "Diária"}
@@ -81,81 +89,23 @@
 																						 , {data: 5
 																							 , label: "Dia Útil do Mês"}]);
 			
-			private function buttonRepetir_clickHandler(event:MouseEvent):void
-			{
-				if (validateForm(false))
-				{
-					currentState = "Agendamento";
-					dto = new AgendamentoDto();
-					dto.lancamento = service.selecionado;
-					dto.dataInicio = service.selecionado.dataVencimento;
-					dto.dataFinal = DateUtil.add(dto.dataInicio, 31);
-					dto.dia = dto.dataInicio.date;
-					dto.valor = dto.lancamento.valorOriginal;
-					stepperDia.setFocus();
-				}
-			}
-			
-			private function cancelar():void
-			{
-				currentState == "Principal" ? fadeOut.play([this]) : currentState = "Principal";
-			}
-			
-			private function creationCompleteHandler(event:FlexEvent):void
-			{
-				selecaoFormaPagamentoRecebimento.init(service.selecionado);
-				comboCategorias.selectedItem = service.selecionado.categoria;
-				dispatchEvent(new Event("permiteRepetir"));
-				dispatchEvent(new Event("permiteTransferir"));
-			}
-			
-			private function datePagamento_focusOutHandler(event:FocusEvent):void
-			{
-				if (service.selecionado.valorPago == 0 && (event.target as DateField)
-					.selectedDate)
-				{
-					service.selecionado.valorPago = service.selecionado.valorOriginal;
-				}
-			}
-			
-			private function dateVencimento_changeHandler(event:CalendarLayoutChangeEvent):void
-			{
-				service.selecionado.dataPrevisaoPagamento = event.target.selectedDate;
-			}
-			
-			private function efetivarTransacao():void
-			{
-				service.selecionado.dataPagamento = service.selecionado.dataPrevisaoPagamento;
-				service.selecionado.valorPago = service.selecionado.valorOriginal;
-				salvar();
-			}
-			
-			private function fadeOut_effectEndHandler(event:EffectEvent):void
-			{
-				PopUpManager.removePopUp(this);
-				
-				if (changed)
-				{
-					dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_DASHBOARD));
-					dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES));
-				}
-			}
-			
 			[Bindable(event = "permiteRepetir")]
-			private function permiteRepetir():Boolean
+			private function get permiteRepetir():Boolean
 			{
 				return comboCategorias.selectedItem is Categoria && service.selecionado
-					.valorOriginal > 0 && currentState == "Principal";
+					.valorOriginal > 0; // && currentState == "Principal";
 			}
 			
 			[Bindable(event = "permiteTransferir")]
-			private function permiteTransferir():Boolean
+			private function get permiteTransferir():Boolean
 			{
 				if (service == null || service.selecionado == null || !(comboCategorias
 					.selectedItem is Categoria))
 				{
 					return false;
 				}
+				
+				service.selecionado.calcularDataPrevisaoPagamento();
 				
 				var result:Boolean = comboCategorias.selectedItem.transferencia;
 				
@@ -184,10 +134,86 @@
 				return result;
 			}
 			
+			private function buttonRepetir_clickHandler(event:MouseEvent):void
+			{
+				if (validateForm(false))
+				{
+					currentState = "Agendamento";
+					dto = new AgendamentoDto();
+					dto.lancamento = service.selecionado;
+					dto.dataInicio = dto.lancamento.dataVencimento;
+					dto.dataFinal = DateUtil.addMonth(!pagamentoComCartaoDeCredito
+													  ? dto.dataInicio : dto.lancamento
+													  .dataPrevisaoPagamento, 1);
+					dto.dia = !pagamentoComCartaoDeCredito ? dto.dataInicio.date
+						: dto.lancamento.dataPrevisaoPagamento.date;
+					dto.valor = dto.lancamento.valorOriginal;
+					
+					comboFrequencia.enabled = !pagamentoComCartaoDeCredito;
+					stepperDia.enabled = !pagamentoComCartaoDeCredito;
+					groupAntecipaFS.visible = !pagamentoComCartaoDeCredito;
+					
+					if (stepperDia.enabled)
+					{
+						stepperDia.setFocus();
+					}
+					else
+					{
+						textDataFinal.setFocus();
+					}
+				}
+			}
+			
+			private function cancelar():void
+			{
+				currentState == "Principal" ? fadeOut.play([this]) : currentState = "Principal";
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void
+			{
+				selecaoFormaPagamentoRecebimento.init(service.selecionado);
+				comboCategorias.selectedItem = service.selecionado.categoria;
+				dispatchEvent(new Event("permiteRepetir"));
+				dispatchEvent(new Event("permiteTransferir"));
+			}
+			
+//			private function datePagamento_focusOutHandler(event:FocusEvent):void
+//			{
+//				if (service.selecionado.valorPago == 0 && (event.target as DateField)
+//					.selectedDate)
+//				{
+//					service.selecionado.valorPago = service.selecionado.valorOriginal;
+//				}
+//			}
+			
+			private function dateVencimento_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				service.selecionado.dataPrevisaoPagamento = event.target.selectedDate;
+				service.selecionado.calcularDataPrevisaoPagamento();
+			}
+			
+			private function efetivarTransacao():void
+			{
+				service.selecionado.dataPagamento = service.selecionado.dataPrevisaoPagamento;
+//				service.selecionado.valorPago = service.selecionado.valorOriginal;
+				salvar();
+			}
+			
+			private function fadeOut_effectEndHandler(event:EffectEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				
+				if (changed)
+				{
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.ATUALIZAR_DASHBOARD));
+					dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES));
+				}
+			}
+			
 			private function prepararPagamento():void
 			{
 				service.selecionado.dataPagamento = DateUtil.today;
-				service.selecionado.valorPago = service.selecionado.valorOriginal;
+//				service.selecionado.valorPago = service.selecionado.valorOriginal;
 				salvar();
 			}
 			
@@ -248,8 +274,8 @@
 			
 			private function stateChangeCompleteHandler(event:FlexEvent):void
 			{
-				dispatchEvent(new Event("permiteRepetir"));
 				dispatchEvent(new Event("permiteTransferir"));
+				dispatchEvent(new Event("permiteRepetir"));
 			}
 			
 			private function validateForm(save:Boolean = true):Boolean
@@ -367,7 +393,7 @@
 			</s:VGroup>
 
 			<s:VGroup>
-				<s:Label text = "Valor Original:"/>
+				<s:Label text = "Valor:"/>
 
 				<component:TextInputNumeric id = "textValorOriginal"
 											value = "@{service.selecionado.valorOriginal}"
@@ -379,7 +405,7 @@
 		<s:Label text = "Forma de Pagamento / Recebimento:"/>
 
 		<transacao:SelecaoFormaPagamentoRecebimentoRenderer id = "selecaoFormaPagamentoRecebimento"
-															width = "{contaService.list.length > 1 ? 617 : 609}"
+															width = "{(selecaoFormaPagamentoRecebimento.dataProvider as ArrayCollection).length > 5 ? 617 : 602}"
 															height = "80"
 															enabled.Agendamento = "false"
 															change = "dispatchEvent(new Event('permiteTransferir'))"/>
@@ -389,7 +415,7 @@
 		<s:DropDownList id = "comboContaTransferencia"
 						dataProvider = "{contaService.list}"
 						width = "100%"
-						enabled = "{permiteTransferir()}"/>
+						enabled = "{permiteTransferir}"/>
 
 		<s:Label text = "Observação:"/>
 
@@ -440,12 +466,14 @@
 											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
+				<!--
 				<s:VGroup>
 					<s:Label text = "Valor Pago:"/>
 
 					<component:TextInputNumeric id = "textValorPago"
 												value = "@{service.selecionado.valorPago}"/>
 				</s:VGroup>
+				-->
 			</s:HGroup>
 		</s:VGroup>
 
@@ -455,7 +483,8 @@
 				  showEffect = "{mx.effects.Fade}">
 			<s:Label text = "Frequência:"/>
 
-			<s:DropDownList dataProvider = "{AgendamentoDto.frequencias}"
+			<s:DropDownList id = "comboFrequencia"
+							dataProvider = "{AgendamentoDto.frequencias}"
 							selectedIndex = "@{dto.frequencia}"/>
 
 			<s:HGroup width = "100%"
@@ -472,12 +501,14 @@
 				<s:VGroup>
 					<s:Label text = "Até:"/>
 
-					<component:CustomDateField selectedDate = "@{dto.dataFinal}"
+					<component:CustomDateField id = "textDataFinal"
+											   selectedDate = "@{dto.dataFinal}"
 											   selectableRange = "{{rangeStart:dto.dataInicio}}"
 											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
-				<s:VGroup height = "100%"
+				<s:VGroup id = "groupAntecipaFS"
+						  height = "100%"
 						  verticalAlign = "bottom"
 						  paddingBottom = "5">
 					<s:CheckBox selected = "@{dto.anteciparFinaisSemana}"
@@ -501,9 +532,9 @@
 									label = "Efetivar"
 									click = "efetivarTransacao()"
 									styleName = "styleButtonCheck"
-									visible.Principal = "{permiteRepetir()}"
+									visible.Principal = "{permiteRepetir}"
 									visible.Agendamento = "false"
-									includeInLayout.Principal = "{permiteRepetir()}"
+									includeInLayout.Principal = "{permiteRepetir}"
 									includeInLayout.Agendamento = "false"
 									showEffect = "{mx.effects.Fade}"
 									hideEffect = "{mx.effects.Fade}"/>
@@ -512,9 +543,9 @@
 									label = "Repetir"
 									click = "buttonRepetir_clickHandler(event)"
 									styleName = "styleButtonAdd"
-									visible.Principal = "{permiteRepetir()}"
+									visible.Principal = "{permiteRepetir}"
 									visible.Agendamento = "false"
-									includeInLayout.Principal = "{permiteRepetir()}"
+									includeInLayout.Principal = "{permiteRepetir}"
 									includeInLayout.Agendamento = "false"
 									showEffect = "{mx.effects.Fade}"
 									hideEffect = "{mx.effects.Fade}"/>

@@ -151,7 +151,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.createAlias("categoria", "_categoria");
 		
 		final ProjectionList p = Projections.projectionList();
-		p.add(Projections.sum("valorPago"));
+// p.add(Projections.sum("valorPago"));
+		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("conta", conta));
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
 		c.add(Restrictions.le("dataPagamento", dataSaldo));
@@ -169,7 +170,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.createAlias("categoria", "_categoria");
 		
 		final ProjectionList p = Projections.projectionList();
-		p.add(Projections.sum("valorPago"));
+// p.add(Projections.sum("valorPago"));
+		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("conta", conta));
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
 		c.add(Restrictions.le("dataPagamento", dataSaldo));
@@ -178,6 +180,24 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		
 		final Double result = (Double) c.uniqueResult();
 		return result != null ? Number.round(result, 2) : 0.0;
+	}
+	
+	public static double obterSaldoDisponivel(final Conta conta,
+			final FormaPagamentoType formaPagamento) throws Exception {
+		final Criteria c = dao.createCriteria();
+		final ProjectionList p = Projections.projectionList();
+		p.add(Projections.sum("valorOriginal"));
+		c.add(Restrictions.eq("conta", conta));
+		c.add(Restrictions.eq("formaPagamento", formaPagamento.ordinal()));
+		c.add(Restrictions.isNull("dataPagamento"));
+		c.setProjection(p);
+		
+		Double result = (Double) c.uniqueResult();
+		result = result != null ? Number.round(result, 2) : 0.0;
+		result = (formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD ? conta
+				.getLimiteMastercard() : conta.getLimiteVisa()) -
+				result;
+		return result;
 	}
 	
 	public static double obterTotal(final Categoria categoria,
@@ -221,9 +241,9 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	@JoinColumn(name = "conta")
 	private Conta conta;
 	
-	@NotNull
-	@Column(name = "valor_pago")
-	private double valorPago;
+// @NotNull
+// @Column(name = "valor_pago")
+// private double valorPago;
 	
 	@NotNull
 	@Column(name = "parcela_numero")
@@ -276,7 +296,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		this.usuario = usuario;
 		this.categoria = categoria;
 		this.valorOriginal = valorOriginal;
-		this.valorPago = 0.0;
+// this.valorPago = 0.0;
 		this.dataVencimento = DateUtil.today();
 		this.dataPrevisaoPagamento = DateUtil.today();
 		this.formaPagamento = formaPagamento.ordinal();
@@ -353,7 +373,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 				vinculado.setDataPrevisaoPagamento(this.dataPrevisaoPagamento);
 				vinculado.setDataVencimento(this.dataVencimento);
 				vinculado.setValorOriginal(this.valorOriginal);
-				vinculado.setValorPago(this.valorPago);
+// vinculado.setValorPago(this.valorPago);
 			}
 		} else {
 			if (this.vinculados != null && this.vinculados.size() > 0) {
@@ -432,9 +452,9 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		return this.valorOriginal;
 	}
 	
-	public double getValorPago() {
-		return this.valorPago;
-	}
+// public double getValorPago() {
+// return this.valorPago;
+// }
 	
 	public List<Lancamento> getVinculados() {
 		return this.vinculados;
@@ -500,9 +520,9 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		this.valorOriginal = valorOriginal;
 	}
 	
-	public void setValorPago(final double valorPago) {
-		this.valorPago = valorPago;
-	}
+// public void setValorPago(final double valorPago) {
+// this.valorPago = valorPago;
+// }
 	
 	public void setVinculados(final List<Lancamento> vinculados) {
 		this.vinculados = vinculados;

@@ -8,6 +8,7 @@ import gfp.dto.SaldoDto;
 import gfp.model.Conta;
 import gfp.model.Lancamento;
 import gfp.type.CategoriaType;
+import gfp.type.FormaPagamentoType;
 import gfp.type.FrequenciaAgendamentoType;
 import gfp.type.LancamentoPeriodoType;
 import gfp.type.LancamentoSituacaoType;
@@ -49,54 +50,72 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	public List<Lancamento> agendarLancamentos(final AgendamentoDto dto)
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
-		
 		final Date dataInicio = DateUtil.parseBRST(dto.getDataInicio());
 		final Date dataFinal = DateUtil.parseBRST(dto.getDataFinal());
+		final boolean pagamentoComCartaoDeCredito = dto.getLancamento()
+				.getFormaPagamento()
+				.equals(FormaPagamentoType.CREDITO_MASTERCARD.ordinal()) ||
+				dto.getLancamento().getFormaPagamento()
+						.equals(FormaPagamentoType.CREDITO_VISA.ordinal());
+		
 		Date dataVencimento = dataInicio;
 		
-		if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL.ordinal()) {
-			dataVencimento = DateUtil.date(dto.getDia(),
-					DateUtil.month(dataVencimento),
-					DateUtil.year(dataVencimento));
-			
-			if (dataVencimento.compareTo(dataInicio) < 0) {
-				dataVencimento = DateUtil.addMonth(dataVencimento, 1);
-			}
-		} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
-				.ordinal()) {
-			dataVencimento = DateUtil.usefulDayOfMonth(dataVencimento,
-					dto.getDia());
-			
-			if (dataVencimento.compareTo(dataInicio) < 0) {
-				dataVencimento = DateUtil.usefulDayOfMonth(
-						DateUtil.addMonth(dataVencimento, 1), dto.getDia());
+		if (!pagamentoComCartaoDeCredito) {
+			if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL
+					.ordinal()) {
+				dataVencimento = DateUtil.date(dto.getDia(),
+						DateUtil.month(dataVencimento),
+						DateUtil.year(dataVencimento));
+				
+				if (dataVencimento.compareTo(dataInicio) < 0) {
+					dataVencimento = DateUtil.addMonth(dataVencimento, 1);
+				}
+			} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
+					.ordinal()) {
+				dataVencimento = DateUtil.usefulDayOfMonth(dataVencimento,
+						dto.getDia());
+				
+				if (dataVencimento.compareTo(dataInicio) < 0) {
+					dataVencimento = DateUtil.usefulDayOfMonth(
+							DateUtil.addMonth(dataVencimento, 1), dto.getDia());
+				}
 			}
 		}
 		
 		int parcela = 1;
+		Date dataReferencia = !pagamentoComCartaoDeCredito ? dataVencimento
+				: DateUtil.parseBRST(dto.getLancamento()
+						.getDataPrevisaoPagamento());
+		final String referencia = DateUtil.DATE_FORMAT_NO_BAR_MONTH_YEAR
+				.format(dataReferencia);
 		
-		while (dataVencimento.compareTo(dataFinal) <= 0) {
-			Date dataPrevisaoPagamento = dataVencimento;
+		while (dataReferencia.compareTo(dataFinal) <= 0) {
+			Date dataPrevisaoPagamento = dataReferencia;
 			
-			final int diaDaSemana = DateUtil.dayOfWeek(dataVencimento);
+			final int diaDaSemana = DateUtil.dayOfWeek(dataReferencia);
 			
-			if (diaDaSemana == DateUtil.DOMINGO) {
-				if (dto.isAnteciparFinaisSemana()) {
-					dataPrevisaoPagamento = DateUtil.remove(dataVencimento, 2);
-				} else {
-					dataPrevisaoPagamento = DateUtil.add(dataVencimento, 1);
-				}
-			} else if (diaDaSemana == DateUtil.SABADO) {
-				if (dto.isAnteciparFinaisSemana()) {
-					dataPrevisaoPagamento = DateUtil.remove(dataVencimento, 1);
-				} else {
-					dataPrevisaoPagamento = DateUtil.add(dataVencimento, 2);
+			if (!pagamentoComCartaoDeCredito) {
+				if (diaDaSemana == DateUtil.DOMINGO) {
+					if (dto.isAnteciparFinaisSemana()) {
+						dataPrevisaoPagamento = DateUtil.remove(dataReferencia,
+								2);
+					} else {
+						dataPrevisaoPagamento = DateUtil.add(dataReferencia, 1);
+					}
+				} else if (diaDaSemana == DateUtil.SABADO) {
+					if (dto.isAnteciparFinaisSemana()) {
+						dataPrevisaoPagamento = DateUtil.remove(dataReferencia,
+								1);
+					} else {
+						dataPrevisaoPagamento = DateUtil.add(dataReferencia, 2);
+					}
 				}
 			}
 			
 			final Lancamento l = new Lancamento();
 			l.setUsuario(dto.getLancamento().getUsuario());
-			l.setDataVencimento(dataVencimento);
+			l.setDataVencimento(!pagamentoComCartaoDeCredito ? dataReferencia
+					: dataVencimento);
 			l.setCategoria(dto.getLancamento().getCategoria());
 			l.setConta(dto.getLancamento().getConta());
 			l.setValorOriginal(dto.getLancamento().getValorOriginal());
@@ -105,17 +124,24 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			l.setParcelaNumero(parcela);
 			l.setDataPrevisaoPagamento(dataPrevisaoPagamento);
 			l.setDataPagamento(null);
-			l.setValorPago(0);
+// l.setValorPago(0);
+			
+			if (pagamentoComCartaoDeCredito) {
+				l.setObservacao(l.getObservacao().replace(
+						referencia,
+						DateUtil.DATE_FORMAT_NO_BAR_MONTH_YEAR.format(l
+								.getDataPrevisaoPagamento())));
+			}
 			
 			result.add(l);
 			
 			if (dto.getFrequencia() == FrequenciaAgendamentoType.MENSAL
 					.ordinal()) {
-				dataVencimento = DateUtil.addMonth(dataVencimento, 1);
+				dataReferencia = DateUtil.addMonth(dataReferencia, 1);
 			} else if (dto.getFrequencia() == FrequenciaAgendamentoType.DIA_UTIL_MES
 					.ordinal()) {
-				dataVencimento = DateUtil.usefulDayOfMonth(
-						DateUtil.addMonth(dataVencimento, 1), dto.getDia());
+				dataReferencia = DateUtil.usefulDayOfMonth(
+						DateUtil.addMonth(dataReferencia, 1), dto.getDia());
 			}
 			
 			parcela++;
@@ -304,6 +330,19 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			if (saldoBloqueado > 0) {
 				result.add(new SaldoDto(conta, SaldoDto.SALDO_BLOQUEADO,
 						saldoBloqueado));
+			}
+			
+			if (conta.isOperaCartaoMastercard()) {
+				result.add(new SaldoDto(conta,
+						SaldoDto.SALDO_DISPONIVEL_MASTERCARD, Lancamento
+								.obterSaldoDisponivel(conta,
+										FormaPagamentoType.CREDITO_MASTERCARD)));
+			}
+			
+			if (conta.isOperaCartaoVisa()) {
+				result.add(new SaldoDto(conta, SaldoDto.SALDO_DISPONIVEL_VISA,
+						Lancamento.obterSaldoDisponivel(conta,
+								FormaPagamentoType.CREDITO_VISA)));
 			}
 			
 			result.add(new SaldoDto(conta, SaldoDto.SALDO_TOTAL_CONTA,

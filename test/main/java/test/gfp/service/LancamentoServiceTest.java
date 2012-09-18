@@ -59,7 +59,7 @@ public class LancamentoServiceTest {
 			assertEquals(quantidadeParcelas, l.getParcelaQuantidade());
 			assertEquals(previsoes[parcela - 1], l.getDataPrevisaoPagamento());
 			assertNull(l.getDataPagamento());
-			assertEquals(0.0, l.getValorPago());
+// assertEquals(0.0, l.getValorPago());
 			parcela++;
 		}
 	}
@@ -155,7 +155,7 @@ public class LancamentoServiceTest {
 		final Lancamento l1 = new Lancamento(u, cr, 100.0,
 				FormaPagamentoType.DEBITO);
 		l1.setDataPagamento(l1.getDataVencimento());
-		l1.setValorPago(l1.getValorOriginal());
+// l1.setValorPago(l1.getValorOriginal());
 		l1.setConta(c);
 		l1.save();
 		
@@ -230,19 +230,19 @@ public class LancamentoServiceTest {
 		
 		l = new Lancamento(u, cr, 200.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(DateUtil.date(26, 10, 2010));
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
 		l = new Lancamento(u, cr, 43.32, FormaPagamentoType.CHEQUE);
 		l.setDataPagamento(DateUtil.date(26, 10, 2010));
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
 		l = new Lancamento(u, cd, 75.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(DateUtil.date(26, 10, 2010));
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
@@ -268,7 +268,7 @@ public class LancamentoServiceTest {
 		
 		l = new Lancamento(u, cr, 100.0, FormaPagamentoType.DEBITO);
 		l.setDataPagamento(l.getDataVencimento());
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l.setConta(c);
 		l.save();
 		
@@ -357,7 +357,7 @@ public class LancamentoServiceTest {
 		l.setDataPrevisaoPagamento(d);
 		l.setDataVencimento(d);
 		l.setValorOriginal(1);
-		l.setValorPago(1);
+// l.setValorPago(1);
 		this.controller.salvarLancamento(l);
 		
 		l2 = l.getVinculados().get(0);
@@ -366,7 +366,7 @@ public class LancamentoServiceTest {
 		assertEquals(d, l2.getDataPrevisaoPagamento());
 		assertEquals(d, l2.getDataVencimento());
 		assertEquals(1.0, l2.getValorOriginal());
-		assertEquals(1.0, l2.getValorPago());
+// assertEquals(1.0, l2.getValorPago());
 		
 		Long idVinculado = l2.getId();
 		l.setContaTransferencia(null);

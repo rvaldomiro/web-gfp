@@ -44,13 +44,13 @@ public class LancamentoTest {
 		
 		l = new Lancamento(this.usuario, cr, 300.0, FormaPagamentoType.CHEQUE);
 		l.setDataPagamento(DateUtil.date(5, 11, 2010));
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l = l.save();
 		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
 		
 		l = new Lancamento(this.usuario, cr, 300.0, FormaPagamentoType.CHEQUE);
 		l.setDataPagamento(DateUtil.time(DateUtil.date(4, 11, 2010), "23:00:00"));
-		l.setValorPago(l.getValorOriginal());
+// l.setValorPago(l.getValorOriginal());
 		l = l.save();
 		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
 	}

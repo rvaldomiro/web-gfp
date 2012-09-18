@@ -51,7 +51,7 @@
 			{
 				service.selecionado = data as Lancamento;
 				service.selecionado.dataPagamento = DateUtil.today;
-				service.selecionado.valorPago = (data as Lancamento).valorOriginal;
+//				service.selecionado.valorPago = (data as Lancamento).valorOriginal;
 				
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.SALVAR
 															, service.selecionado
