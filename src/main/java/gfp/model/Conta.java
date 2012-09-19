@@ -4,6 +4,7 @@ import gfp.type.ContaType;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -70,33 +71,43 @@ public class Conta extends AbstractPersistentClass<Conta> {
 	private Integer tipo;
 	
 	@NotNull
+	@Column(name = "opera_cheque")
 	private boolean operaCheque;
 	
 	@NotNull
+	@Column(name = "opera_cartao_debito")
 	private boolean operaCartaoDebito;
 	
 	@NotNull
+	@Column(name = "opera_cartao_mastercard")
 	private boolean operaCartaoMastercard;
 	
 	@NotNull
+	@Column(name = "limite_mastercard")
 	private double limiteMastercard;
 	
 	@NotNull
+	@Column(name = "fechamento_mastercard")
 	private int fechamentoMastercard;
 	
 	@NotNull
+	@Column(name = "vencimento_mastercard")
 	private int vencimentoMastercard;
 	
 	@NotNull
+	@Column(name = "opera_cartao_visa")
 	private boolean operaCartaoVisa;
 	
 	@NotNull
+	@Column(name = "limite_visa")
 	private double limiteVisa;
 	
 	@NotNull
+	@Column(name = "fechamento_visa")
 	private int fechamentoVisa;
 	
 	@NotNull
+	@Column(name = "vencimento_visa")
 	private int vencimentoVisa;
 	
 	public Conta() {
