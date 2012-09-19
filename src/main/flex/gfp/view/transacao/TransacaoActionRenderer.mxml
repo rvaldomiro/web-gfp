@@ -9,6 +9,7 @@
 			import common.custom.CustomEvent;
 			import common.util.DateUtil;
 			import common.util.MessageUtil;
+			import common.util.NumberUtil;
 			
 			import gfp.event.AppEvent;
 			import gfp.event.TransacaoEvent;
@@ -32,7 +33,10 @@
 			
 			private function excluir():void
 			{
-				MessageUtil.confirmDelete(excluirHandler);
+				MessageUtil.confirmDelete(excluirHandler, (data as Lancamento).categoria
+										  .descricao + " R$ " + NumberUtil.formatMoney((data
+																					   as Lancamento)
+																					   .valorOriginal));
 			}
 			
 			private function excluirHandler():void

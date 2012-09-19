@@ -93,7 +93,7 @@
 			private function get permiteRepetir():Boolean
 			{
 				return comboCategorias.selectedItem is Categoria && service.selecionado
-					.valorOriginal > 0; // && currentState == "Principal";
+					.valorOriginal > 0;
 			}
 			
 			[Bindable(event = "permiteTransferir")]
@@ -139,15 +139,12 @@
 				if (validateForm(false))
 				{
 					currentState = "Agendamento";
-					dto = new AgendamentoDto();
-					dto.lancamento = service.selecionado;
 					dto.dataInicio = dto.lancamento.dataVencimento;
 					dto.dataFinal = DateUtil.addMonth(!pagamentoComCartaoDeCredito
 													  ? dto.dataInicio : dto.lancamento
 													  .dataPrevisaoPagamento, 1);
 					dto.dia = !pagamentoComCartaoDeCredito ? dto.dataInicio.date
 						: dto.lancamento.dataPrevisaoPagamento.date;
-					dto.valor = dto.lancamento.valorOriginal;
 					
 					comboFrequencia.enabled = !pagamentoComCartaoDeCredito;
 					stepperDia.enabled = !pagamentoComCartaoDeCredito;
@@ -280,6 +277,13 @@
 			
 			private function validateForm(save:Boolean = true):Boolean
 			{
+				if (!dto || dto.valor == 0)
+				{
+					dto = new AgendamentoDto();
+					dto.lancamento = service.selecionado;
+					dto.valor = dto.lancamento.valorOriginal;
+				}
+				
 				if (!(comboCategorias.selectedItem is Categoria))
 				{
 					if (comboCategorias.textInput.text.length > 0)
@@ -410,12 +414,15 @@
 															enabled.Agendamento = "false"
 															change = "dispatchEvent(new Event('permiteTransferir'))"/>
 
-		<s:Label text = "Transferir para:"/>
+		<s:Label text = "Transferir para:"
+				 visible = "{permiteTransferir}"
+				 includeInLayout = "{permiteTransferir}"/>
 
 		<s:DropDownList id = "comboContaTransferencia"
 						dataProvider = "{contaService.list}"
 						width = "100%"
-						enabled = "{permiteTransferir}"/>
+						visible = "{permiteTransferir}"
+						includeInLayout = "{permiteTransferir}"/>
 
 		<s:Label text = "Observação:"/>
 
@@ -430,9 +437,13 @@
 				  visible.Agendamento = "false"
 				  includeInLayout.Agendamento = "false"
 				  showEffect = "{mx.effects.Fade}">
-			<s:Label text = "Parcela:"/>
+			<s:Label text = "Parcela:"
+					 visible = "{service.selecionado.id != null}"
+					 includeInLayout = "{service.selecionado.id != null}"/>
 
-			<s:HGroup verticalAlign = "middle">
+			<s:HGroup verticalAlign = "middle"
+					  visible = "{service.selecionado.id != null}"
+					  includeInLayout = "{service.selecionado.id != null}">
 				<s:NumericStepper value = "@{service.selecionado.parcelaNumero}"
 								  minimum = "1"
 								  maximum = "100"
@@ -465,15 +476,6 @@
 											   disabledRanges = "{[{rangeStart: DateUtil.add(new Date(), 1)}]}"
 											   tabFocusEnabled = "false"/>
 				</s:VGroup>
-
-				<!--
-				<s:VGroup>
-					<s:Label text = "Valor Pago:"/>
-
-					<component:TextInputNumeric id = "textValorPago"
-												value = "@{service.selecionado.valorPago}"/>
-				</s:VGroup>
-				-->
 			</s:HGroup>
 		</s:VGroup>
 
@@ -481,21 +483,24 @@
 				  visible.Principal = "false"
 				  includeInLayout.Principal = "false"
 				  showEffect = "{mx.effects.Fade}">
-			<s:Label text = "Frequência:"/>
-
-			<s:DropDownList id = "comboFrequencia"
-							dataProvider = "{AgendamentoDto.frequencias}"
-							selectedIndex = "@{dto.frequencia}"/>
-
 			<s:HGroup width = "100%"
 					  gap = "10">
+				<s:VGroup width = "100%">
+					<s:Label text = "Frequência:"/>
+
+					<s:DropDownList id = "comboFrequencia"
+									dataProvider = "{AgendamentoDto.frequencias}"
+									selectedIndex = "@{dto.frequencia}"
+									width = "100%"/>
+				</s:VGroup>
+
 				<s:VGroup>
 					<s:Label text = "Dia:"/>
 
 					<s:NumericStepper id = "stepperDia"
 									  value = "@{dto.dia}"
 									  minimum = "1"
-									  maximum = "{dto.frequencia == 0 ? 31 : 22}"/>
+									  maximum = "{dto.frequencia == 0 ? 28 : 22}"/>
 				</s:VGroup>
 
 				<s:VGroup>
@@ -507,21 +512,23 @@
 											   tabFocusEnabled = "false"/>
 				</s:VGroup>
 
-				<s:VGroup id = "groupAntecipaFS"
-						  height = "100%"
-						  verticalAlign = "bottom"
-						  paddingBottom = "5">
-					<s:CheckBox selected = "@{dto.anteciparFinaisSemana}"
-								label = "Antecipar em finais de semana"
-								visible = "{dto.frequencia == 0}"
-								tabFocusEnabled = "false"/>
+				<s:VGroup>
+					<s:Label text = "Valor:"/>
+
+					<component:TextInputNumeric id = "textValorAgendamento"
+												value = "@{dto.valor}"/>
 				</s:VGroup>
 			</s:HGroup>
 
-			<s:Label text = "Valor:"/>
-
-			<component:TextInputNumeric id = "textValorAgendamento"
-										value = "@{dto.valor}"/>
+			<s:VGroup id = "groupAntecipaFS"
+					  height = "100%"
+					  verticalAlign = "bottom"
+					  paddingBottom = "5">
+				<s:CheckBox selected = "@{dto.anteciparFinaisSemana}"
+							label = "Antecipar em finais de semana"
+							visible = "{dto.frequencia == 0}"
+							tabFocusEnabled = "false"/>
+			</s:VGroup>
 		</s:VGroup>
 
 		<mx:HRule width = "100%"/>

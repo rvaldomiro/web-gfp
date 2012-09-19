@@ -116,16 +116,16 @@
 				
 				for (i = 0; i < _dataProvider.length; i++)
 				{
-					if (_dataProvider[i].formaPagamento != FormaPagamentoType.CHEQUE)
-//					if (_dataProvider[i].formaPagamento == FormaPagamentoType.DINHEIRO
-//						|| _dataProvider[i].formaPagamento == FormaPagamentoType
-//						.DEBITO)
+					if (_dataProvider[i].formaPagamento == FormaPagamentoType.DEBITO)
 					{
 						selectedIndex = i;
 						changeHandler();
 						return;
 					}
 				}
+				
+				selectedIndex = 0;
+				changeHandler();
 			}
 		]]>
 	</mx:Script>

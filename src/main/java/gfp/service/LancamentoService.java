@@ -124,7 +124,6 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			l.setParcelaNumero(parcela);
 			l.setDataPrevisaoPagamento(dataPrevisaoPagamento);
 			l.setDataPagamento(null);
-// l.setValorPago(0);
 			
 			if (pagamentoComCartaoDeCredito) {
 				l.setObservacao(l.getObservacao().replace(

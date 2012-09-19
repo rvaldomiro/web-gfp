@@ -223,8 +223,9 @@
 					 selectable = "false"
 					 alternatingItemColors = "[#eef4fb, #eef4fb]"
 					 borderVisible = "false"
-					 horizontalGridLineColor = "#c8c8c8"
-					 horizontalGridLines = "true">
+					 horizontalGridLineColor = "#e5e5e5"
+					 horizontalGridLines = "true"
+					 rowHeight = "40">
 			<mx:columns>
 				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoSelectionRenderer"
 								   width = "26"/>
