@@ -1,5 +1,7 @@
 bin-debug/**
 bin-release/**
+src/main/flex/fusioncharts/**
+src/main/flex/fusionwidgets/**
 src/main/webapp/WEB-INF/lib/**
 src/main/webapp/WEB-INF/classes/**
 *.log
