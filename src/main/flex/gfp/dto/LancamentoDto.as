@@ -42,3 +42,4 @@ package gfp.dto
 																	   , {label: 'Compensação'}]);
 	}
 }
+

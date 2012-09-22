@@ -1,7 +1,7 @@
 package gfp.model
 {
 	
-	[RemoteClass(alias="gfp.model.Usuario")]
+	[RemoteClass(alias = "gfp.model.Usuario")]
 	[Bindable]
 	public class Usuario
 	{
@@ -27,3 +27,4 @@ package gfp.model
 		public var senha:String;
 	}
 }
+

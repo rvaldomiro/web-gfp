@@ -75,9 +75,9 @@
 						
 						quantidade++;
 						valor += lancamento.valorOriginal;
-						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA
-							? lancamento.valorOriginal : lancamento.valorOriginal
-							* -1;
+						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA ?
+							lancamento.valorOriginal : lancamento.valorOriginal *
+							-1;
 						media = valor / quantidade;
 					}
 				}

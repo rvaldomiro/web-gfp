@@ -104,8 +104,8 @@
 				
 				for (i = 0; i < _dataProvider.length; i++)
 				{
-					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento
-						&& _lancamento.conta && _dataProvider[i].conta.id == _lancamento
+					if (_dataProvider[i].formaPagamento == _lancamento.formaPagamento &&
+						_lancamento.conta && _dataProvider[i].conta.id == _lancamento
 						.conta.id)
 					{
 						selectedIndex = i;

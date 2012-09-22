@@ -1,10 +1,18 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<s:Group xmlns:ai="http://ns.adobe.com/ai/2008" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:lib="Haupt_library.*" xmlns:fc="http://ns.adobe.com/thermo/2009" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
-	<s:Group horizontalCenter="0" verticalCenter="0" >
-	<s:Path winding="nonZero" ai:knockout="0" data="M 19.862 15.14 L 14.862 10.14 L 20 5.001 L 15 0 L 9.861 5.14 L 4.86 0.14 L 0 5.001 L 5 10 L 0 15 L 5 20 L 10 15 L 15 20 L 19.862 15.14 Z">
-		<s:fill>
-			<s:SolidColor color="0x020202"/>
-		</s:fill>
-	</s:Path>
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<s:Group xmlns:ai = "http://ns.adobe.com/ai/2008"
+		 xmlns:d = "http://ns.adobe.com/fxg/2008/dt"
+		 xmlns:lib = "Haupt_library.*"
+		 xmlns:fc = "http://ns.adobe.com/thermo/2009"
+		 xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		 xmlns:s = "library://ns.adobe.com/flex/spark">
+	<s:Group horizontalCenter = "0"
+			 verticalCenter = "0">
+		<s:Path winding = "nonZero"
+				ai:knockout = "0"
+				data = "M 19.862 15.14 L 14.862 10.14 L 20 5.001 L 15 0 L 9.861 5.14 L 4.86 0.14 L 0 5.001 L 5 10 L 0 15 L 5 20 L 10 15 L 15 20 L 19.862 15.14 Z">
+			<s:fill>
+				<s:SolidColor color = "0x020202"/>
+			</s:fill>
+		</s:Path>
 	</s:Group>
 </s:Group>

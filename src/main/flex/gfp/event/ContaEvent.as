@@ -12,10 +12,11 @@ package gfp.event
 		
 		public static const SALVAR:String = "ContaEvent_Salvar";
 		
-		public function ContaEvent(type:String, object:Object = null, result:Function
-								   = null, fault:Function = null):void
+		public function ContaEvent(type:String, object:Object = null, result:Function =
+								   null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}
 	}
 }
+

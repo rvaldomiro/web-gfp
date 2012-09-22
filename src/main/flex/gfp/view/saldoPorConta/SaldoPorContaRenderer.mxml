@@ -54,13 +54,13 @@
 
 			<s:Label text = "{StringUtil.decode(_data.situacao)}"
 					 fontSize = "10"
-					 width = "70"
+					 width = "50"
 					 textAlign = "right"/>
 
 			<s:Label id = "labelSaldo"
 					 text = "{NumberUtil.formatNumber(_data.saldo, 2)}"
 					 fontSize = "12"
-					 width = "60"
+					 width = "50"
 					 textAlign = "right"/>
 		</s:HGroup>
 	</s:BorderContainer>

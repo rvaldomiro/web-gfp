@@ -22,11 +22,12 @@ package gfp.event
 		
 		public static const TO_TRANSACOES_ULTIMO_ANO:String = "AppEvent_ToTransacoesUltimoAno";
 		
-		public function AppEvent(type:String, object:Object = null, result:Function
-								 = null, fault:Function = null):void
+		public function AppEvent(type:String, object:Object = null, result:Function =
+								 null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}
 	}
 
 }
+

@@ -4,17 +4,32 @@
 	   xmlns:lib = "Haupt_library.*"
 	   xmlns:fc = "http://ns.adobe.com/thermo/2009"
 	   xmlns:fx = "http://ns.adobe.com/mxml/2009"
-	   xmlns = "library://ns.adobe.com/flex/spark" >
+	   xmlns = "library://ns.adobe.com/flex/spark">
 	<Group horizontalCenter = "0"
 		   verticalCenter = "0">
-		<Rect x="0" y="8" width="20" height="4" alpha="1" blendMode="normal" radiusX="0" radiusY="0">
+		<Rect x = "0"
+			  y = "8"
+			  width = "20"
+			  height = "4"
+			  alpha = "1"
+			  blendMode = "normal"
+			  radiusX = "0"
+			  radiusY = "0">
 			<fill>
-				<SolidColor color="#ffffff"/>
+				<SolidColor color = "#ffffff"/>
 			</fill>
 		</Rect>
-		<Rect x="8" y="0" width="4" height="20" alpha="1" blendMode="normal" radiusX="0" radiusY="0">
+
+		<Rect x = "8"
+			  y = "0"
+			  width = "4"
+			  height = "20"
+			  alpha = "1"
+			  blendMode = "normal"
+			  radiusX = "0"
+			  radiusY = "0">
 			<fill>
-				<SolidColor color="#ffffff"/>
+				<SolidColor color = "#ffffff"/>
 			</fill>
 		</Rect>
 	</Group>

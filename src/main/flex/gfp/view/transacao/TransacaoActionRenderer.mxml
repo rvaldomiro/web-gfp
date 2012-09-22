@@ -34,8 +34,8 @@
 			private function excluir():void
 			{
 				MessageUtil.confirmDelete(excluirHandler, (data as Lancamento).categoria
-										  .descricao + " R$ " + NumberUtil.formatMoney((data
-																					   as Lancamento)
+										  .descricao + " R$ " + NumberUtil.formatMoney((data as
+																					   Lancamento)
 																					   .valorOriginal));
 			}
 			

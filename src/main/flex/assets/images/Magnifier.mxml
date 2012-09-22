@@ -1,15 +1,28 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<s:Group xmlns:ai="http://ns.adobe.com/ai/2008" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:lib="Haupt_library.*" xmlns:fc="http://ns.adobe.com/thermo/2009" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
-	<s:Group horizontalCenter="0" verticalCenter="0" >
-	<s:Path winding="nonZero" ai:knockout="0" data="M 1.714 9.905 C -0.546 7.646 -0.546 3.971 1.714 1.712 C 3.972 -0.546 7.647 -0.546 9.907 1.712 C 12.165 3.971 12.165 7.646 9.907 9.905 C 7.647 12.165 3.972 12.165 1.714 9.905 L 1.714 9.905 Z M 8.888 2.73 C 7.191 1.032 4.428 1.032 2.731 2.73 C 1.034 4.429 1.034 7.19 2.731 8.888 C 4.428 10.585 7.191 10.585 8.888 8.888 C 10.586 7.19 10.586 4.429 8.888 2.73 L 8.888 2.73 Z" x="9">
-		<s:fill>
-			<s:SolidColor color="0x050505"/>
-		</s:fill>
-	</s:Path>
-	<s:Path winding="nonZero" ai:knockout="0" data="M 2.28 9.14 C 1.758 9.662 0.913 9.662 0.392 9.14 L 0.392 9.14 C -0.13 8.618 -0.13 7.774 0.392 7.252 L 7.237 0.407 C 7.758 -0.115 8.604 -0.115 9.125 0.407 L 9.125 0.407 C 9.647 0.928 9.647 1.774 9.125 2.294 L 2.28 9.14 Z" y="10">
-		<s:fill>
-			<s:SolidColor color="0x050505"/>
-		</s:fill>
-	</s:Path>
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<s:Group xmlns:ai = "http://ns.adobe.com/ai/2008"
+		 xmlns:d = "http://ns.adobe.com/fxg/2008/dt"
+		 xmlns:lib = "Haupt_library.*"
+		 xmlns:fc = "http://ns.adobe.com/thermo/2009"
+		 xmlns:fx = "http://ns.adobe.com/mxml/2009"
+		 xmlns:s = "library://ns.adobe.com/flex/spark">
+	<s:Group horizontalCenter = "0"
+			 verticalCenter = "0">
+		<s:Path winding = "nonZero"
+				ai:knockout = "0"
+				data = "M 1.714 9.905 C -0.546 7.646 -0.546 3.971 1.714 1.712 C 3.972 -0.546 7.647 -0.546 9.907 1.712 C 12.165 3.971 12.165 7.646 9.907 9.905 C 7.647 12.165 3.972 12.165 1.714 9.905 L 1.714 9.905 Z M 8.888 2.73 C 7.191 1.032 4.428 1.032 2.731 2.73 C 1.034 4.429 1.034 7.19 2.731 8.888 C 4.428 10.585 7.191 10.585 8.888 8.888 C 10.586 7.19 10.586 4.429 8.888 2.73 L 8.888 2.73 Z"
+				x = "9">
+			<s:fill>
+				<s:SolidColor color = "0x050505"/>
+			</s:fill>
+		</s:Path>
+
+		<s:Path winding = "nonZero"
+				ai:knockout = "0"
+				data = "M 2.28 9.14 C 1.758 9.662 0.913 9.662 0.392 9.14 L 0.392 9.14 C -0.13 8.618 -0.13 7.774 0.392 7.252 L 7.237 0.407 C 7.758 -0.115 8.604 -0.115 9.125 0.407 L 9.125 0.407 C 9.647 0.928 9.647 1.774 9.125 2.294 L 2.28 9.14 Z"
+				y = "10">
+			<s:fill>
+				<s:SolidColor color = "0x050505"/>
+			</s:fill>
+		</s:Path>
 	</s:Group>
 </s:Group>

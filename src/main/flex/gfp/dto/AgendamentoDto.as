@@ -33,3 +33,4 @@ package gfp.dto
 		public var valor:Number;
 	}
 }
+

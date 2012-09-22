@@ -12,10 +12,11 @@ package gfp.event
 		
 		public static const SALVAR:String = "CategoriaEvent_Salvar";
 		
-		public function CategoriaEvent(type:String, object:Object = null, result:Function
-									   = null, fault:Function = null):void
+		public function CategoriaEvent(type:String, object:Object = null, result:Function =
+									   null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}
 	}
 }
+

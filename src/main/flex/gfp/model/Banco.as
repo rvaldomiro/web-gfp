@@ -1,7 +1,7 @@
 package gfp.model
 {
 	
-	[RemoteClass(alias="gfp.model.Banco")]
+	[RemoteClass(alias = "gfp.model.Banco")]
 	[Bindable]
 	public class Banco
 	{
@@ -21,3 +21,4 @@ package gfp.model
 		}
 	}
 }
+

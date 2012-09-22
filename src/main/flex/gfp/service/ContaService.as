@@ -14,7 +14,7 @@ package gfp.service
 	import mx.rpc.remoting.RemoteObject;
 	import mx.utils.ObjectUtil;
 	
-	public class ContaService extends AbstractService 
+	public class ContaService extends AbstractService
 	{
 		
 		[Bindable]
@@ -23,13 +23,13 @@ package gfp.service
 		[Bindable]
 		public var selecionada:Conta;
 		
+		[Inject]
+		public var usuarioService:UsuarioService;
+		
 		private function get service():RemoteObject
 		{
 			return RemoteUtil.createRemoteObject("contaService") as RemoteObject;
 		}
-		
-		[Inject]
-		public var usuarioService:UsuarioService;
 		
 		[EventHandler(event = "ContaEvent.EXCLUIR", properties = "event")]
 		public function excluir(event:ICustomEvent):void
@@ -50,12 +50,11 @@ package gfp.service
 							   SortUtil.sortText(list, "identificacao");
 						   });
 			
-			executeService(service.listarContas(usuarioService.idUsuarioLogado)
-						   , function(re:ResultEvent):void
-						   {
-							   listaCompleta = re.result as ArrayCollection;
-							   SortUtil.sortText(listaCompleta, "identificacao");
-						   });
+			executeService(service.listarContas(usuarioService.idUsuarioLogado), function(re:ResultEvent):void
+			{
+				listaCompleta = re.result as ArrayCollection;
+				SortUtil.sortText(listaCompleta, "identificacao");
+			});
 		}
 		
 		[EventHandler(event = "ContaEvent.EDITAR", properties = "event")]
@@ -76,3 +75,4 @@ package gfp.service
 		}
 	}
 }
+

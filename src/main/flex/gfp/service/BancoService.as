@@ -11,7 +11,7 @@ package gfp.service
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
-	public class BancoService extends AbstractService 
+	public class BancoService extends AbstractService
 	{
 		
 		private function get service():RemoteObject
@@ -30,3 +30,4 @@ package gfp.service
 		}
 	}
 }
+

@@ -33,20 +33,20 @@
 			
 			private function dataChangeHandler(event:FlexEvent):void
 			{
-				var compareHoje:int = DateUtil.compareToday(o.dataPrevisaoPagamento)
-					* -1;
+				var compareHoje:int = DateUtil.compareToday(o.dataPrevisaoPagamento) *
+					-1;
 				
 				if (compareHoje >= 0)
 				{
 					if (!o.dataPagamento)
 					{
-						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à "
-							+ compareHoje + " dia" + (compareHoje == 1 ? "" : "s"))
-							: "Vencendo hoje";
+						labelPrevisaoPagamento.toolTip = compareHoje > 0 ? ("Vencida à " +
+							compareHoje + " dia" + (compareHoje == 1 ? "" : "s")) :
+							"Vencendo hoje";
 						labelPrevisaoPagamento.setStyle("color", 0xff0000);
 					}
-					else if (DateUtil.compareDate(o.dataPagamento, o.dataPrevisaoPagamento)
-						<= 0)
+					else if (DateUtil.compareDate(o.dataPagamento, o.dataPrevisaoPagamento) <=
+						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
@@ -56,16 +56,16 @@
 						labelPrevisaoPagamento.toolTip = "Paga com " + DateUtil.compareDate(o
 																							.dataPagamento
 																							, o
-																							.dataPrevisaoPagamento)
-							+ " dias de atraso";
+																							.dataPrevisaoPagamento) +
+							" dias de atraso";
 						labelPrevisaoPagamento.setStyle("color", 0xd59600);
 					}
 				}
 				else
 				{
 					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, o
-																.dataPrevisaoPagamento)
-						<= 0)
+																.dataPrevisaoPagamento) <=
+						0)
 					{
 						labelPrevisaoPagamento.toolTip = "Paga em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
@@ -84,9 +84,9 @@
 					imageFormaPagamento.source = ImageUtil.CHEQUE32;
 					descricaoFormaPagamento.text = "Cheque";
 				}
-				else if (o.formaPagamento == FormaPagamentoType.DEBITO || o.formaPagamento
-					== FormaPagamentoType.CREDITO_MASTERCARD || o.formaPagamento
-					== FormaPagamentoType.CREDITO_VISA)
+				else if (o.formaPagamento == FormaPagamentoType.DEBITO || o.formaPagamento ==
+					FormaPagamentoType.CREDITO_MASTERCARD || o.formaPagamento ==
+					FormaPagamentoType.CREDITO_VISA)
 				{
 					imageFormaPagamento.source = ImageUtil.CARD32;
 					

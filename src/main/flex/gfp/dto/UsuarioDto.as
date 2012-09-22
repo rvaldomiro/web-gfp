@@ -14,3 +14,4 @@ package gfp.dto
 		public var senha:String;
 	}
 }
+

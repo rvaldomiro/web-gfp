@@ -8,10 +8,11 @@ package gfp.event
 		
 		public static const SALVAR:String = "UsuarioEvent_Salvar";
 		
-		public function UsuarioEvent(type:String, object:Object = null, result:Function
-									 = null, fault:Function = null):void
+		public function UsuarioEvent(type:String, object:Object = null, result:Function =
+									 null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}
 	}
 }
+

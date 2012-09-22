@@ -12,13 +12,13 @@ package gfp.helper
 			
 			if (diasParaPrevisaoPagamento < -1)
 			{
-				return diasParaPrevisaoPagamento * (-1) + (diasParaPrevisaoPagamento
-					== -1 ? " dia" : " dias") + " atrás";
+				return diasParaPrevisaoPagamento * (-1) + (diasParaPrevisaoPagamento ==
+					-1 ? " dia" : " dias") + " atrás";
 			}
 			else if (diasParaPrevisaoPagamento > 1)
 			{
-				return "em " + diasParaPrevisaoPagamento + (diasParaPrevisaoPagamento
-					== 1 ? " dia" : " dias");
+				return "em " + diasParaPrevisaoPagamento + (diasParaPrevisaoPagamento ==
+					1 ? " dia" : " dias");
 			}
 			else
 			{
@@ -27,3 +27,4 @@ package gfp.helper
 		}
 	}
 }
+

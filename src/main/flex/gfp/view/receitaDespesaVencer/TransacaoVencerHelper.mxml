@@ -22,8 +22,8 @@
 			{
 				var result:Number = 0;
 				
-				for each (var lancamento:Lancamento in gridLancamentos.dataProvider
-					as ArrayCollection)
+				for each (var lancamento:Lancamento in gridLancamentos.dataProvider as
+					ArrayCollection)
 				{
 					result += lancamento.valorOriginal;
 				}

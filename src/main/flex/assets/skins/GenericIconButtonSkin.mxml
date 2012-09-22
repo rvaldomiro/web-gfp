@@ -68,8 +68,8 @@
 					el.verticalCenter = -1;
 					el.width = el.height = 0;
 					
-					if (currentState == "up" || (currentState == "over" && oldState
-						!= "down"))
+					if (currentState == "up" || (currentState == "over" && oldState !=
+						"down"))
 					{
 						el.scaleX = el.scaleY = baseIconScale;
 					}
@@ -131,8 +131,8 @@
 				}
 				var color:uint = hostComponent.getStyle('iconColor');
 				
-				if (currentSymbol == null || currentSymbol != null && currentIconClass
-					!= iconClass)
+				if (currentSymbol == null || currentSymbol != null && currentIconClass !=
+					iconClass)
 				{
 					var el:Group = getLibraryDefinitionInstance(iconClass, event
 																.oldState, event

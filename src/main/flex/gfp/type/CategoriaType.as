@@ -8,3 +8,4 @@ package gfp.type
 		public static const RECEITA:int = 1;
 	}
 }
+

@@ -32,10 +32,11 @@ package gfp.event
 		
 		public static const SALVAR:String = "TransacaoEvent_Salvar";
 		
-		public function TransacaoEvent(type:String, object:Object = null, result:Function
-									   = null, fault:Function = null):void
+		public function TransacaoEvent(type:String, object:Object = null, result:Function =
+									   null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}
 	}
 }
+
