@@ -220,7 +220,8 @@ public class LancamentoServiceTest {
 		assertEquals(8.0, dto.saldoFinal);
 		
 		dto = result.get(30);
-		assertEquals(DateUtil.add(30), dto.dataCompensacao);
+		assertEquals(DateUtil.toStringDateFormat(DateUtil.add(30)),
+				DateUtil.toStringDateFormat(dto.dataCompensacao));
 		
 		Lancamento l;
 		

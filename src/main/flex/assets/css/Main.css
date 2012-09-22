@@ -2,7 +2,6 @@
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
 @namespace ah "common.spark.component.tooltip.*";
-@namespace chartClasses "mx.charts.chartClasses.*";
 @namespace main "gfp.view.main.*";
 
 @font-face {
@@ -42,13 +41,6 @@ main|CustomButtonBar, main|CustomButtonBarButton {
 s|Label, s|ButtonBar, s|RadioButton {	
 	color: #2074A3;
 	fontWeight: normal;
-}
-
-chartClasses|DataTip {
-	fontFamily: Default;
-	color: #2876A4;
-	fontSize: 11;
-	background-color: #FFF4D3;	
 }
 
 s|CheckBox {
@@ -102,7 +94,7 @@ mx|HRule {
 	stroke-color: #c4e3ff;
 }
 
-mx|ChartBase, mx|Alert, mx|TileList {
+mx|Alert, mx|TileList {
 	borderColor: #BDC0CB;
 	color: #2074A3;
 }

@@ -13,6 +13,11 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.00.00	22/09/12
+
+*	M	Substituição dos graficos default pela biblioteca fusioncharts.
+*	M	Reestilização do componente: Saldo das Contas.
+
 01.07.00.00	19/09/12
 
 *	M	Suporte inicial à cartões de crédito Visa e Mastercard.

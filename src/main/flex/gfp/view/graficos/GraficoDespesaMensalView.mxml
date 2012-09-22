@@ -23,7 +23,7 @@
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_DESPESA_MENSAL
 															, event.object, function(re:ResultEvent):void
 															{
-																grafico.dataProvider = service
+																dataProvider = service
 																	.listaDespesaMensal;
 																atualizarTotal("Despesas");
 															}));

@@ -36,6 +36,13 @@
 		<copy todir = "${basedir}/flex_libs"
 			  preservelastmodified = "true">
 			<fileset dir = "${repository-dir}/swiz/1.3"/>
+
+			<fileset dir = "${repository-dir}/fusioncharts/4"/>
+		</copy>
+
+		<copy todir = "${basedir}/src/main/flex"
+			  preservelastmodified = "true">
+			<fileset dir = "${repository-dir}/fusioncharts/lib"/>
 		</copy>
 	</target>
 
@@ -55,6 +62,13 @@
 				   value = "${webapps-dir-test}"/>
 		</antcall>
 
+		<copy todir = "${webapps-dir-test}">
+			<fileset dir = "${basedir}/src/main/flex"
+					 includes = "fusioncharts/**, fusionwidgets/**"/>
+		</copy>
+
+		<delete dir = "${webapps-dir-test}/common"/>
+
 		<copy file = "db/bd-gfp-cfg.properties"
 			  todir = "${webapps-dir-test}"/>
 
@@ -73,6 +87,13 @@
 			<param name = "dir"
 				   value = "${webapps-dir}"/>
 		</antcall>
+
+		<copy todir = "${webapps-dir}">
+			<fileset dir = "${basedir}/src/main/flex"
+					 includes = "fusioncharts/**, fusionwidgets/**"/>
+		</copy>
+
+		<delete dir = "${webapps-dir}/common"/>
 
 		<copy file = "db/bd-gfp-prod-cfg.properties"
 			  tofile = "${webapps-dir}/bd-gfp-cfg.properties"/>

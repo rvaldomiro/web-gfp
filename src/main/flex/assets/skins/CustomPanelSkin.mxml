@@ -99,7 +99,8 @@
 
 	<s:Rect id = "rectTopo"
 			width = "100%"
-			height = "30">
+			height = "30"
+			radiusY = "5">
 		<s:fill>
 			<s:LinearGradient rotation = "90">
 				<s:entries>
@@ -119,16 +120,10 @@
 			  paddingTop = "2">
 		<s:Label id = "titleDisplay"
 				 fontFamily = "Title"
-				 fontSize = "20"
-				 color = "#4267B7"
+				 fontSize = "16"
+				 color = "#014C6B"
 				 height = "100%"
-				 verticalAlign = "middle">
-			<s:filters>
-				<s:DropShadowFilter distance = "1"
-									quality = "1"
-									color = "#ffffff"/>
-			</s:filters>
-		</s:Label>
+				 verticalAlign = "middle"/>
 	</s:HGroup>
 
 	<s:HGroup id = "groupRodape"

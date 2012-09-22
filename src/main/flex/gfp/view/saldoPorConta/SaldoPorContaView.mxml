@@ -30,33 +30,49 @@
 		]]>
 	</fx:Script>
 
-	<s:HGroup verticalAlign = "bottom">
-		<s:Image source = "{ImageUtil.COINS}"/>
-
-		<s:VGroup gap = "0">
-			<s:Label text = "Saldo das Contas"
-					 fontFamily = "Title"
-					 fontSize = "14"
-					 color = "#014C6B"/>
-
-			<s:Label fontSize = "10"/>
-		</s:VGroup>
-	</s:HGroup>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace serviceFeedback "common.spark.component.serviceFeedback.*";
+		
+		.titleStyle {
+			fontFamily: "Title";
+			fontSize: 14;
+			color: #014C6B;
+		}		
+	</fx:Style>
 
 	<s:Group width = "100%"
 			 height = "100%">
-		<mx:DataGrid dataProvider = "{service.listaSaldoAtual}"
-					 width = "100%"
-					 height = "100%"
-					 showHeaders = "false"
-					 selectable = "false"
-					 alternatingItemColors = "[#eef4fb, #eef4fb]"
-					 borderVisible = "false">
-			<mx:columns>
-				<mx:DataGridColumn itemRenderer = "gfp.view.saldoPorConta.SaldoPorContaRenderer"
-								   width = "500"/>
-			</mx:columns>
-		</mx:DataGrid>
+		<mx:Panel backgroundColor = "#F9F9F9"
+				  borderColor = "#c4e3ff"
+				  width = "100%"
+				  height = "100%"
+				  paddingTop = "5"
+				  paddingBottom = "5"
+				  paddingLeft = "3"
+				  paddingRight = "3"
+				  headerHeight = "25"
+				  cornerRadius = "5"
+				  dropShadowVisible = "false"
+				  title = "Saldo das Contas"
+				  titleStyleName = "titleStyle">
+			<mx:DataGrid dataProvider = "{service.listaSaldoAtual}"
+						 width = "100%"
+						 height = "100%"
+						 showHeaders = "false"
+						 selectable = "false"
+						 alternatingItemColors = "[#F9F9F9, #F9F9F9]"
+						 borderVisible = "false"
+						 variableRowHeight = "true"
+						 paddingTop = "0"
+						 paddingBottom = "0">
+				<mx:columns>
+					<mx:DataGridColumn itemRenderer = "gfp.view.saldoPorConta.SaldoPorContaRenderer"
+									   width = "500"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Panel>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarSaldoPorConta"
 										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"

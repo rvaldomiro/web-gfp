@@ -140,7 +140,7 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 			dataInicio = DateUtil.addMonth(dataInicio, 1);
 		}
 		
-		return totalPeriodo / mesesPeriodo;
+		return mesesPeriodo > 0 ? totalPeriodo / mesesPeriodo : 0.0;
 	}
 	
 	@Override

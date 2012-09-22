@@ -23,7 +23,7 @@
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_RECEITA_MENSAL
 															, event.object, function(re:ResultEvent):void
 															{
-																grafico.dataProvider = service
+																dataProvider = service
 																	.listaReceitaMensal;
 																atualizarTotal("Receitas");
 															}));

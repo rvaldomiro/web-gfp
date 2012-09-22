@@ -18,6 +18,8 @@ public class SaldoDto {
 	
 	public Conta conta;
 	
+	public Conta contaMestre;
+	
 	public String situacao;
 	
 	public double saldo;

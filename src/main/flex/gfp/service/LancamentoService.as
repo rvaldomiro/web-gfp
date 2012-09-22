@@ -9,6 +9,7 @@ package gfp.service
 	
 	import gfp.dto.LancamentoDto;
 	import gfp.factory.LancamentoFactory;
+	import gfp.model.Conta;
 	import gfp.model.Lancamento;
 	import gfp.type.CategoriaType;
 	
@@ -93,7 +94,7 @@ package gfp.service
 						   , function(re:ResultEvent):void
 						   {
 							   listaDespesaMensal = re.result as ArrayCollection;
-							   SortUtil.sortValue(listaDespesaMensal, "valor");
+							   SortUtil.sortValue(listaDespesaMensal, "valor", true);
 							   event.result(re);
 						   });
 		}
@@ -119,6 +120,7 @@ package gfp.service
 						   , function(re:ResultEvent):void
 						   {
 							   listaPrevisaoSaldoDiario = re.result as ArrayCollection;
+							   event.result(re);
 						   });
 		}
 		
@@ -133,7 +135,7 @@ package gfp.service
 						   , function(re:ResultEvent):void
 						   {
 							   listaReceitaMensal = re.result as ArrayCollection;
-							   SortUtil.sortValue(listaReceitaMensal, "valor");
+							   SortUtil.sortValue(listaReceitaMensal, "valor", true);
 							   event.result(re);
 						   });
 		}
@@ -160,6 +162,22 @@ package gfp.service
 							   listaSaldoAtual = re.result as ArrayCollection;
 							   listaSaldoAtual.filterFunction = listaSaldoAtualFilter;
 							   listaSaldoAtual.refresh();
+							   
+							   var contaAnterior:Object;
+							   
+							   for each (var dto:Object in listaSaldoAtual)
+							   {
+								   if (!dto.conta)
+								   {
+									   continue;
+								   }
+								   
+								   if (dto.conta.id != contaAnterior)
+								   {
+									   dto.contaMestre = dto.conta;
+									   contaAnterior = dto.conta.id;
+								   }
+							   }
 						   });
 		}
 		
