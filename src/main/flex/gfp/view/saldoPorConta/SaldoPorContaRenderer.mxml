@@ -18,7 +18,7 @@
 				textSituacao.text = StringUtil.decode(value.situacao);
 				labelSaldo.text = NumberUtil.formatNumber(value.saldo, 2);
 				
-				if (value.situacao == "Saldo Atual" || value.situacao == "Total" &&
+				if ((value.situacao == "Saldo Atual" || value.situacao == "Total") &&
 					value.saldo > 0)
 				{
 					labelSaldo.setStyle("color", 0x138b0d);
