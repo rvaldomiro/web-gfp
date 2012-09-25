@@ -2,13 +2,10 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.components.serviceFeedback.*"
 		  xmlns:components = "com.fusioncharts.components.*"
 		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
-			import common.component.custom.StyleColumnChart;
-			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
 			import common.util.DateUtil;
 			import common.util.NumberUtil;
@@ -16,16 +13,13 @@
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
 			import gfp.event.TransacaoEvent;
-			import gfp.model.Categoria;
 			
-			import mx.charts.HitData;
-			import mx.charts.events.ChartItemEvent;
 			import mx.collections.ArrayCollection;
-			
-			import spark.components.Application;
 			
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
+			
+			public var grafico:GraficoTemplate;
 			
 			[Bindable]
 			protected var dataProvider:ArrayCollection;
@@ -36,76 +30,79 @@
 			{
 				var result:ArrayCollection = new ArrayCollection();
 				
-				if (dataProvider.length == 0)
+				if (dataProvider && dataProvider.length > 0)
 				{
-					return result;
-				}
-				
-				var dto:Object;
-				var sLink:String;
-				
-				for each (dto in dataProvider)
-				{
-					result.addItem({label: dto.categoria.descricao});
-				}
-				
-				result.addItem({seriesName: 'Realizado'});
-				
-				for each (dto in dataProvider)
-				{
-					var sRealizado:String = "{br}Realizado: " + NumberUtil.formatNumber(dto
-																						.valor
-																						, 2);
-					var sPrevisto:String = dto.previsao > 0 ? "{br}" + NumberUtil
-						.formatNumber(dto.valor / dto.previsao * 100, 1) + "% do Previsto" :
-						"";
-					var sTotal:String = "{br}" + NumberUtil.formatNumber(dto.valor /
-																		 total *
-																		 100, 1) +
-						"% do Total";
-					sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
-					result.addItem({value: dto.valor, tooltext: dto.categoria + sRealizado +
-										   sPrevisto + sTotal, link: sLink});
-				}
-				
-				result.addItem({seriesName: 'Previsto'});
-				
-				for each (dto in dataProvider)
-				{
-					sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
-					result.addItem({value: dto.previsao, tooltext: dto.categoria +
-										   "{br}Previsto: " + NumberUtil.formatNumber(dto
-																					  .previsao
-																					  , 2)
-									   , link: sLink});
+					var dto:Object;
+					var sLink:String;
+					var sTooltip:String;
+					
+					for each (dto in dataProvider)
+					{
+						result.addItem({label: dto.categoria.descricao});
+					}
+					
+					result.addItem({seriesName: 'Realizado'});
+					
+					for each (dto in dataProvider)
+					{
+						var sRealizado:String = "{br}Realizado: " + NumberUtil.formatNumber(dto
+																							.valor
+																							, 2);
+						var sPrevisto:String = dto.previsao > 0 ? "{br}" + NumberUtil
+							.formatNumber(dto.valor / dto.previsao * 100, 1) + "% do Previsto" :
+							"";
+						var sTotal:String = "{br}" + NumberUtil.formatNumber(dto
+																			 .valor /
+																			 total *
+																			 100
+																			 , 1) +
+							"% do Total";
+						sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
+						result.addItem({value: dto.valor, tooltext: dto.categoria +
+											   sRealizado + sPrevisto + sTotal, link: sLink});
+					}
+					
+					result.addItem({seriesName: 'Previsto'});
+					
+					for each (dto in dataProvider)
+					{
+						sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
+						sTooltip = dto.categoria + "{br}Previsto: " + NumberUtil
+							.formatNumber(dto.previsao, 2);
+						
+						result.addItem({value: dto.previsao, tooltext: sTooltip, link: sLink});
+					}
 				}
 				
 				return result;
 			}
 			
-			private var _chartParams:ArrayCollection;
-			
 			private function get chartParams():ArrayCollection
 			{
-				if (!dataProvider || dataProvider.length == 0)
+				var result:ArrayCollection = new ArrayCollection();
+				
+				if (dataProvider && dataProvider.length > 0)
 				{
-					return new ArrayCollection();
+					var params:Object = new Object();
+					params.showValues = "0";
+					params.forceDecimals = "0";
+					params.formatNumber = "1";
+					params.formatNumberScale = "0";
+					params.decimals = "0";
+					params.thousandSeparator = ".";
+					params.decimalSeparator = ",";
+					params.bgColor = "#eef4fb";
+					params.baseFontColor = "#2074A3";
+					params.toolTipBorderColor = "#2074A3";
+					params.showBorder = "0";
+					params.rotateLabels = "1";
+					params.slantLabels = "1";
+					params.caption = descricao;
+					params.subCaption = NumberUtil.formatNumber(total, 2);
+					result.addItem(params);
 				}
 				
-				_chartParams = new ArrayCollection();
-				var params:Object = new Object();
-				params.showValues = "0";
-				params.bgColor = "#eef4fb";
-				params.baseFontColor = "#2074A3";
-				params.toolTipBorderColor = "#2074A3";
-				params.showBorder = "0";
-				params.rotateLabels = "1";
-				params.slantLabels = "1";
-				params.caption = descricao;
-				params.subCaption = NumberUtil.formatNumber(total, 2);
-				_chartParams.addItem(params);
-				
-				return _chartParams;
+				return result;
 			}
 			
 			[Bindable]
@@ -157,27 +154,21 @@
 																, total));
 				}
 				
-				grafico.FCFlexFunctionsObject = this;
-				grafico.FCData(chartData);
-				grafico.FCParams(chartParams);
-				grafico.FCRender();
+				callLater(updateChart);
+			}
+			
+			private function updateChart():void
+			{
+				if (grafico)
+				{
+					removeElement(grafico);
+				}
+				
+				grafico = new GraficoTemplate();
+				addElement(grafico);
+				grafico.render(this, GraficoTemplate.TypeStackedBar3D, chartParams
+							   , chartData);
 			}
 		]]>
 	</fx:Script>
-
-	<s:Group width = "100%"
-			 height = "100%">
-		<components:FusionCharts id = "grafico"
-								 width = "100%"
-								 height = "100%"
-								 FCChartType = "StackedBar3D">
-			<components:FCChartData ChartNoDataText = "Não há lançamentos neste período."/>
-		</components:FusionCharts>
-
-		<mx:Canvas width = "{grafico.width}"
-				   height = "18"
-				   backgroundColor = "#eef4fb"
-				   x = "{grafico.x}"
-				   y = "{grafico.y}"/>
-	</s:Group>
 </s:VGroup>

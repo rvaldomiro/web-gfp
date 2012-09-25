@@ -2,7 +2,6 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		  xmlns:components = "com.fusioncharts.components.*"
 		  xmlns:custom = "common.spark.component.*"
 		  width = "100%"
@@ -10,9 +9,7 @@
 		  horizontalAlign = "center">
 	<fx:Script>
 		<![CDATA[
-			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
-			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.util.DateUtil;
 			import common.util.NumberUtil;
 			
@@ -21,12 +18,7 @@
 			import gfp.event.TransacaoEvent;
 			import gfp.service.LancamentoService;
 			
-			import mx.charts.CategoryAxis;
-			import mx.charts.HitData;
-			import mx.charts.chartClasses.IAxis;
-			import mx.charts.events.ChartItemEvent;
 			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
 			import mx.rpc.events.ResultEvent;
 			
 			import spark.events.IndexChangeEvent;
@@ -42,72 +34,111 @@
 			{
 				var result:ArrayCollection = new ArrayCollection();
 				
-				if (service.listaPrevisaoSaldoDiario.length == 0)
+				if (service.listaPrevisaoSaldoDiario && service.listaPrevisaoSaldoDiario
+					.length > 0)
 				{
-					return result;
-				}
-				
-				var dto:Object;
-				var sLink:String;
-				var sTooltip:String;
-				
-				for each (dto in service.listaPrevisaoSaldoDiario)
-				{
-					sTooltip = barTrocaModo.selectedIndex == 0 ? DateUtil.formatSimple(dto
-																					   .dataCompensacao) :
-						DateUtil.formatSimpleMonthYear(dto.dataCompensacao);
-					sTooltip += "{br}Inicial: " + NumberUtil.formatNumber(dto.saldoInicial
-																		  , 2);
-					sTooltip += "{br}Receitas: " + NumberUtil.formatNumber(dto.receitas
-																		   , 2);
-					sTooltip += "{br}Despesas: " + NumberUtil.formatNumber(dto.despesas
-																		   , 2);
-					sTooltip += "{br}Saldo: " + NumberUtil.formatNumber(dto.saldoAcumulado
-																		, 2);
-					sLink = "E-itemClickHandler," + service.listaPrevisaoSaldoDiario
-						.getItemIndex(dto);
+					var dto:Object;
+					var sLink:String;
+					var sTooltip:String;
 					
-					result.addItem({label: barTrocaModo.selectedIndex == 0 ? dto
-										   .dataCompensacao.date.toString() : DateUtil
-										   .formatSimpleMonthYear(dto.dataCompensacao)
-									   , value: dto.saldoAcumulado, tooltext: sTooltip
-									   , link: sLink});
+					saldoMinimo = 0;
+					
+					for each (dto in service.listaPrevisaoSaldoDiario)
+					{
+						if (dto.saldoAcumulado < saldoMinimo)
+						{
+							saldoMinimo = dto.saldoAcumulado;
+						}
+						
+						sTooltip = barTrocaModo.selectedIndex == 0 ? DateUtil.formatSimple(dto
+																						   .dataCompensacao) :
+							DateUtil.formatSimpleMonthYear(dto.dataCompensacao);
+						sTooltip += "{br}Inicial: " + NumberUtil.formatNumber(dto
+																			  .saldoInicial
+																			  , 2);
+						sTooltip += "{br}Receitas: " + NumberUtil.formatNumber(dto
+																			   .receitas
+																			   , 2);
+						sTooltip += "{br}Despesas: " + NumberUtil.formatNumber(dto
+																			   .despesas
+																			   , 2);
+						sTooltip += "{br}Saldo: " + NumberUtil.formatNumber(dto.saldoAcumulado
+																			, 2);
+						sLink = "E-itemClickHandler," + service.listaPrevisaoSaldoDiario
+							.getItemIndex(dto);
+						
+						result.addItem({label: barTrocaModo.selectedIndex == 0 ?
+											   dto.dataCompensacao.date.toString() :
+											   DateUtil.formatSimpleMonthYear(dto
+																			  .dataCompensacao)
+										   , value: dto.saldoAcumulado, tooltext: sTooltip
+										   , link: sLink});
+					}
 				}
 				
 				return result;
 			}
 			
-			private var _chartParams:ArrayCollection;
-			
 			private function get chartParams():ArrayCollection
 			{
-				if (!service.listaPrevisaoSaldoDiario || service.listaPrevisaoSaldoDiario
-					.length == 0)
+				var result:ArrayCollection = new ArrayCollection();
+				
+				if (service.listaPrevisaoSaldoDiario && service.listaPrevisaoSaldoDiario
+					.length > 0)
 				{
-					return new ArrayCollection();
+					var params:Object = new Object();
+					params.showValues = barTrocaModo.selectedIndex == 0 ? "0" : "1";
+					params.forceDecimals = "0";
+					params.formatNumber = "1";
+					params.formatNumberScale = "0";
+					params.decimals = "0";
+					params.thousandSeparator = ".";
+					params.decimalSeparator = ",";
+					params.bgColor = "#eef4fb";
+					params.baseFontColor = "#2074A3";
+					params.toolTipBorderColor = "#2074A3";
+					params.showBorder = "0";
+					params.rotateLabels = "1";
+					params.slantLabels = "1";
+					params.divLineIsDashed = "1";
+					params.palette = "3";
+					params.showAlternateHGridColor = "0";
+					params.caption = "Saldo Previsto";
+					params.subCaption = "Próximos " + (barTrocaModo.selectedIndex ==
+						0 ? "45 dias" : "12 meses");
+					result.addItem(params);
 				}
 				
-				_chartParams = new ArrayCollection();
-				var params:Object = new Object();
-				params.showValues = "0";
-				params.bgColor = "#eef4fb";
-				params.baseFontColor = "#2074A3";
-				params.toolTipBorderColor = "#2074A3";
-				params.showBorder = "0";
-				params.rotateLabels = "1";
-				params.slantLabels = "1";
-				params.palette = "3";
-				params.caption = "Saldo Previsto";
-				params.subCaption = "Próximos " + (barTrocaModo.selectedIndex ==
-					0 ? "45 dias" : "12 meses");
-				_chartParams.addItem(params);
-				
-				return _chartParams;
+				return result;
 			}
+			
+			private function get chartTrend():ArrayCollection
+			{
+				var result:ArrayCollection = new ArrayCollection();
+				
+				if (service.listaPrevisaoSaldoDiario && service.listaPrevisaoSaldoDiario
+					.length > 0 && saldoMinimo < 0)
+				{
+					var params:Object = new Object();
+					params.startValue = "0";
+					params.endValue = saldoMinimo.toString();
+					params.showOnToop = "0";
+					params.isTrendZone = "1";
+					params.displayvalue = " ";
+					params.color = "ffecec";
+					result.addItem(params);
+				}
+				
+				return result;
+			}
+			
+			public var grafico:GraficoTemplate;
 			
 			[Bindable]
 			private var listaModos:ArrayCollection = new ArrayCollection([{label: "Diário"}
 																		  , {label: "Mensal"}]);
+			
+			private var saldoMinimo:Number;
 			
 			[EventHandler(event = "AppEvent.ATUALIZAR_DASHBOARD")]
 			public function atualizar(event:ICustomEvent = null):void
@@ -133,10 +164,7 @@
 			
 			private function atualizar_Handler(re:ResultEvent):void
 			{
-				grafico.FCFlexFunctionsObject = this;
-				grafico.FCData(chartData);
-				grafico.FCParams(chartParams);
-				grafico.FCRender();
+				callLater(updateChart);
 			}
 			
 			private function barTrocaModo_changeHandler(event:IndexChangeEvent):void
@@ -144,6 +172,19 @@
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO
 															, event.newIndex + 1
 															, atualizar_Handler));
+			}
+			
+			private function updateChart():void
+			{
+				if (grafico)
+				{
+					removeElement(grafico);
+				}
+				
+				grafico = new GraficoTemplate();
+				addElement(grafico);
+				grafico.render(this, GraficoTemplate.TypeLine, chartParams, chartData
+							   , chartTrend);
 			}
 		]]>
 	</fx:Script>
@@ -154,20 +195,4 @@
 							height = "25"
 							change = "barTrocaModo_changeHandler(event)"
 							skinClass = "assets.skins.CustomButtonBarSkin"/>
-
-	<s:Group width = "100%"
-			 height = "100%">
-		<components:FusionCharts id = "grafico"
-								 width = "100%"
-								 height = "100%"
-								 FCChartType = "Line">
-			<components:FCChartData ChartNoDataText = "Não há lançamentos neste período."/>
-		</components:FusionCharts>
-
-		<mx:Canvas width = "{grafico.width}"
-				   height = "18"
-				   backgroundColor = "#eef4fb"
-				   x = "{grafico.x}"
-				   y = "{grafico.y}"/>
-	</s:Group>
 </s:VGroup>

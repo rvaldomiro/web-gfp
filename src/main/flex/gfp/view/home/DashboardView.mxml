@@ -78,11 +78,28 @@
 				{
 					service.listaReceitaMensal = null;
 					service.listaDespesaMensal = null;
+					
+					if (graficoPrevisaoSaldoDiarioView.grafico)
+					{
+						graficoPrevisaoSaldoDiarioView.grafico.visible = false;
+					}
+					
 					graficoPrevisaoSaldoDiarioView.atualizar();
 				}
 				else
 				{
 					service.listaPrevisaoSaldoDiario = null;
+					
+					if (graficoReceitaMensalView.grafico)
+					{
+						graficoReceitaMensalView.grafico.visible = false;
+					}
+					
+					if (graficoDespesaMensalView.grafico)
+					{
+						graficoDespesaMensalView.grafico.visible = false;
+					}
+					
 					mesAno_changeHandler();
 				}
 			}
@@ -193,7 +210,8 @@
 					<receitaDespesaVencer:ResultadoBalancoView width = "120"
 															   height = "50"/>
 
-					<graficos:GraficoDespesaMensalView width = "50%"
+					<graficos:GraficoDespesaMensalView id = "graficoDespesaMensalView"
+													   width = "50%"
 													   height = "100%"/>
 				</s:HGroup>
 			</s:VGroup>

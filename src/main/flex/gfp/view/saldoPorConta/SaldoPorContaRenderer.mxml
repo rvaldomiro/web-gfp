@@ -4,36 +4,35 @@
 						  xmlns:mx = "library://ns.adobe.com/flex/mx">
 	<fx:Script>
 		<![CDATA[
-			import assets.images.ImageUtil;
-			
 			import common.util.NumberUtil;
 			import common.util.StringUtil;
 			
-			[Bindable]
-			private var _data:Object;
-			
 			override public function set data(value:Object):void
 			{
-				_data = value;
+				super.data = value;
 				
-				if (_data.situacao == "Saldo Atual" || _data.situacao == "Total" &&
-					_data.saldo > 0)
+				container.height = value.situacao == "Total" ? 40 : 25;
+				sumRule.visible = value.situacao == "Saldo Atual" || value.situacao ==
+					"Total";
+				textConta.text = value.contaMestre;
+				textSituacao.text = StringUtil.decode(value.situacao);
+				labelSaldo.text = NumberUtil.formatNumber(value.saldo, 2);
+				
+				if (value.situacao == "Saldo Atual" || value.situacao == "Total" &&
+					value.saldo > 0)
 				{
 					labelSaldo.setStyle("color", 0x138b0d);
 				}
-				else if (_data.saldo < 0)
+				else if (value.saldo < 0)
 				{
 					labelSaldo.setStyle("color", 0xff0000);
 				}
-				
-				sumRule.visible = _data.situacao == "Saldo Atual" || _data.situacao ==
-					"Total";
 			}
 		]]>
 	</fx:Script>
 
-	<s:BorderContainer width = "100%"
-					   height = "{_data.situacao == 'Total' ? 40 : 25}"
+	<s:BorderContainer id = "container"
+					   width = "100%"
 					   backgroundColor = "#F9F9F9"
 					   borderVisible = "false">
 		<s:HGroup horizontalAlign = "right"
@@ -48,17 +47,16 @@
 				  paddingTop = "5"
 				  paddingBottom = "5"
 				  verticalAlign = "baseline">
-			<s:Label text = "{_data.contaMestre}"
+			<s:Label id = "textConta"
 					 fontSize = "10"
 					 width = "100%"/>
 
-			<s:Label text = "{StringUtil.decode(_data.situacao)}"
+			<s:Label id = "textSituacao"
 					 fontSize = "10"
 					 width = "50"
 					 textAlign = "right"/>
 
 			<s:Label id = "labelSaldo"
-					 text = "{NumberUtil.formatNumber(_data.saldo, 2)}"
 					 fontSize = "12"
 					 width = "50"
 					 textAlign = "right"/>
