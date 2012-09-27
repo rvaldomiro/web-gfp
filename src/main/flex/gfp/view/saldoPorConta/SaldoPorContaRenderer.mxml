@@ -27,6 +27,8 @@
 				{
 					labelSaldo.setStyle("color", 0xff0000);
 				}
+				
+				super.invalidateDisplayList();
 			}
 		]]>
 	</fx:Script>

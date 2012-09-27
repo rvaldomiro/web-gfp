@@ -4,24 +4,14 @@
 						  xmlns:mx = "library://ns.adobe.com/flex/mx">
 	<fx:Script>
 		<![CDATA[
-			import assets.images.ImageUtil;
-			
 			import common.util.DateUtil;
-			import common.util.NumberUtil;
+			
 			import gfp.model.Lancamento;
-			
-			import gfp.type.FormaPagamentoType;
-			
-			import mx.events.FlexEvent;
 			
 			override public function set data(value:Object):void
 			{
-				o = value as Lancamento;
 				super.data = value;
 			}
-			
-			[Bindable]
-			private var o:Lancamento;
 		]]>
 	</fx:Script>
 
@@ -32,10 +22,9 @@
 			  paddingRight = "2"
 			  paddingTop = "2"
 			  paddingBottom = "2">
-		<s:Label text = "{DateUtil.formatSimple(o.dataPagamento)}"
-				 width = "70"
-				 textAlign = "center"/>
+		<s:Label text = "{(data as Lancamento).dataPagamento ? ('Paga ' + DateUtil.formatSimple((data as Lancamento).dataPagamento)) : ''}"
+				 width = "110"/>
 
-		<s:Label text = "{o.observacao}"/>
+		<s:Label text = "{(data as Lancamento).observacao}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

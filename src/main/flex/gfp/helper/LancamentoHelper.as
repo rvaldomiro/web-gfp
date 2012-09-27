@@ -1,6 +1,7 @@
 package gfp.helper
 {
 	import common.util.DateUtil;
+	import common.util.StringUtil;
 	
 	import gfp.model.Lancamento;
 	
@@ -12,19 +13,21 @@ package gfp.helper
 			
 			if (diasParaPrevisaoPagamento < -1)
 			{
-				return diasParaPrevisaoPagamento * (-1) + (diasParaPrevisaoPagamento ==
-					-1 ? " dia" : " dias") + " atrás";
+				return " - " + diasParaPrevisaoPagamento * (-1) + StringUtil.pluralize(" dia"
+																					   , diasParaPrevisaoPagamento) +
+					" atrás";
 			}
 			else if (diasParaPrevisaoPagamento > 1)
 			{
-				return "em " + diasParaPrevisaoPagamento + (diasParaPrevisaoPagamento ==
-					1 ? " dia" : " dias");
+				return " - em " + diasParaPrevisaoPagamento + StringUtil.pluralize(" dia"
+																				   , diasParaPrevisaoPagamento);
 			}
 			else
 			{
-				return null;
+				return "   ";
 			}
 		}
 	}
+
 }
 

@@ -13,6 +13,11 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.02.00	26/09/12
+
+*	C	Desativado o suporte a cache do browser em index.template.html:55 -> "${swf}.swf?v=" + new Date().getTime(), "flashContent",
+*	M	Melhorias nas descrição dos tooltips das transações.
+
 01.08.01.00	25/09/12
 
 *	C	Correções diversas.
