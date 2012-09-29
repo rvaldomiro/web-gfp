@@ -2,8 +2,8 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:components = "com.fusioncharts.components.*"
-		  horizontalAlign = "center">
+		  horizontalAlign = "center"
+		  creationComplete = "creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import common.custom.ICustomEvent;
@@ -15,6 +15,7 @@
 			import gfp.event.TransacaoEvent;
 			
 			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
@@ -49,17 +50,18 @@
 																							.valor
 																							, 2);
 						var sPrevisto:String = dto.previsao > 0 ? "{br}" + NumberUtil
-							.formatNumber(dto.valor / dto.previsao * 100, 1) + "% do Previsto" :
-							"";
+							.formatNumber(dto.valor / dto.previsao * 100, 1) + "% do Previsto"
+							: "";
 						var sTotal:String = "{br}" + NumberUtil.formatNumber(dto
-																			 .valor /
-																			 total *
-																			 100
-																			 , 1) +
-							"% do Total";
+																			 .valor
+																			 / total
+																			 * 100
+																			 , 1)
+							+ "% do Total";
 						sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
-						result.addItem({value: dto.valor, tooltext: dto.categoria +
-											   sRealizado + sPrevisto + sTotal, link: sLink});
+						result.addItem({value: dto.valor, tooltext: dto.categoria
+											   + sRealizado + sPrevisto + sTotal
+										   , link: sLink});
 					}
 					
 					result.addItem({seriesName: 'Previsto'});
@@ -157,7 +159,7 @@
 				callLater(updateChart);
 			}
 			
-			private function updateChart():void
+			private function createGrafico():void
 			{
 				if (grafico)
 				{
@@ -166,6 +168,16 @@
 				
 				grafico = new GraficoTemplate();
 				addElement(grafico);
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void
+			{
+				createGrafico();
+			}
+			
+			private function updateChart():void
+			{
+				createGrafico();
 				grafico.render(this, GraficoTemplate.TypeStackedBar3D, chartParams
 							   , chartData);
 			}

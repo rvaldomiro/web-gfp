@@ -3,11 +3,10 @@
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
 		  xmlns:receitaDespesaVencer = "gfp.view.receitaDespesaVencer.*"
-		  xmlns:despesaVencer = "gfp.view.despesaVencer.*"
 		  xmlns:graficos = "gfp.view.graficos.*"
 		  xmlns:custom = "common.spark.component.*"
 		  horizontalAlign = "center"
-		  creationComplete = "vgroup1_creationCompleteHandler(event)">
+		  creationComplete = "creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import assets.images.ImageUtil;
@@ -104,27 +103,27 @@
 				}
 			}
 			
-			private function groupTransacoesVencerResizeEffect_effectEndHandler(event:EffectEvent):void
-			{
-				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_OUT :
-					ImageUtil.ZOOM_IN;
-				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Ocultar" :
-					"Exibir") + " Transações à Vencer";
-				groupTransacoesVencer.visible = groupTransacoesVencer.height > 0;
-			}
-			
-			private function imageZoom_clickHandler(event:MouseEvent):void
-			{
-				groupTransacoesVencer.height = groupTransacoesVencer.height == 0 ?
-					155 : 0;
-			}
-			
-			private function vgroup1_creationCompleteHandler(event:FlexEvent):void
+			private function creationCompleteHandler(event:FlexEvent):void
 			{
 				if (screen.height < 700)
 				{
 					groupTransacoesVencer.height = 0;
 				}
+			}
+			
+			private function groupTransacoesVencerResizeEffect_effectEndHandler(event:EffectEvent):void
+			{
+				imageZoom.source = groupTransacoesVencer.height > 0 ? ImageUtil.ZOOM_OUT
+					: ImageUtil.ZOOM_IN;
+				labelZoom.text = (groupTransacoesVencer.height > 0 ? "Ocultar" : "Exibir")
+					+ " Transações à Vencer";
+				groupTransacoesVencer.visible = groupTransacoesVencer.height > 0;
+			}
+			
+			private function imageZoom_clickHandler(event:MouseEvent):void
+			{
+				groupTransacoesVencer.height = groupTransacoesVencer.height == 0
+					? 155 : 0;
 			}
 		]]>
 	</fx:Script>

@@ -130,6 +130,12 @@ mx|global
 	chromeColor: #882E2D;
 }
 
+.stylePanelTitle {
+	fontFamily: "Title";
+	fontSize: 14;
+	color: #014C6B;
+}
+
 s|Button  {
 	skinClass: ClassReference('assets.skins.GenericIconButtonSkin');
 	fontSize: 16;

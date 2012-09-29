@@ -13,6 +13,11 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.03.00	29/09/12
+
+*	M	Reestilização dos painéis de visualização, ícones e labels.
+*	C	Correção na renderização do componente: Saldo das Contas.
+
 01.08.02.00	26/09/12
 
 *	C	Desativado o suporte a cache do browser em index.template.html:55 -> "${swf}.swf?v=" + new Date().getTime(), "flashContent",

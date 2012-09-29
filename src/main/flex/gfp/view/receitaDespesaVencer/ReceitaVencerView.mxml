@@ -27,9 +27,8 @@
 															{
 																dataProvider = service
 																	.listaReceitasVencer;
-																image.source = ImageUtil
-																	.UP;
-																labelDescricao.text = "Receitas à Vencer";
+																mainPanel.title = "Receitas à Vencer"
+																	+ mainPanel.title;
 															}));
 			}
 		]]>

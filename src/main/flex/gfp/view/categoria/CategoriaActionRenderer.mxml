@@ -6,8 +6,6 @@
 		<![CDATA[
 			import assets.images.ImageUtil;
 			
-			import common.custom.CustomEvent;
-			import common.util.DateUtil;
 			import common.util.MessageUtil;
 			
 			import gfp.event.AppEvent;
@@ -57,8 +55,10 @@
 
 	<s:HGroup horizontalAlign = "right"
 			  width = "100%"
+			  height = "100%"
 			  paddingRight = "3"
-			  gap = "3">
+			  gap = "3"
+			  verticalAlign = "middle">
 		<s:Image id = "imageEditar"
 				 source = "{ImageUtil.INFO}"
 				 click = "alterar()"

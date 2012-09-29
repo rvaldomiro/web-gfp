@@ -3,11 +3,10 @@
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
 		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
-		  xmlns:custom = "common.spark.component.*">
+		  xmlns:custom = "common.spark.component.*"
+		  xmlns:helper = "gfp.view.helper.*">
 	<fx:Script>
 		<![CDATA[
-			import common.custom.CustomEvent;
-			
 			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			
 			import gfp.event.CategoriaEvent;
@@ -33,30 +32,33 @@
 		]]>
 	</fx:Script>
 
-	<custom:CustomButton id = "buttonNovaCategoria"
-						 label = "Nova Categoria"
-						 click = "buttonNovaCategoria_clickHandler()"
-						 styleName = "styleButtonAdd"/>
-
 	<s:Group width = "100%"
 			 height = "100%">
-		<mx:DataGrid dataProvider = "{service.list}"
-					 width = "100%"
-					 height = "100%"
-					 showHeaders = "false"
-					 selectable = "false"
-					 alternatingItemColors = "[#eef4fb, #eef4fb]"
-					 borderVisible = "false"
-					 horizontalGridLineColor = "#c8c8c8"
-					 horizontalGridLines = "true">
-			<mx:columns>
-				<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaRenderer"
-								   width = "200"/>
+		<helper:BasePanel title = "Categorias">
+			<custom:CustomButton id = "buttonNovaCategoria"
+								 label = "Nova Categoria"
+								 click = "buttonNovaCategoria_clickHandler()"
+								 styleName = "styleButtonAdd"/>
 
-				<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaActionRenderer"
-								   width = "44"/>
-			</mx:columns>
-		</mx:DataGrid>
+			<mx:DataGrid dataProvider = "{service.list}"
+						 width = "100%"
+						 height = "100%"
+						 showHeaders = "false"
+						 selectable = "false"
+						 alternatingItemColors = "[#F9F9F9, #F9F9F9]"
+						 borderVisible = "false"
+						 horizontalGridLineColor = "#c4e3ff"
+						 horizontalGridLines = "true"
+						 rowHeight = "40">
+				<mx:columns>
+					<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaRenderer"
+									   width = "200"/>
+
+					<mx:DataGridColumn itemRenderer = "gfp.view.categoria.CategoriaActionRenderer"
+									   width = "44"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</helper:BasePanel>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarCategorias"
 										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"

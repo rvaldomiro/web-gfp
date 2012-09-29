@@ -29,9 +29,8 @@
 															{
 																dataProvider = service
 																	.listaDespesasVencer;
-																image.source = ImageUtil
-																	.DOWN;
-																labelDescricao.text = "Despesas à Vencer";
+																mainPanel.title = "Despesas à Vencer"
+																	+ mainPanel.title;
 															}));
 			}
 		]]>

@@ -12,20 +12,24 @@
 				super.data = value;
 				
 				container.height = value.situacao == "Total" ? 40 : 25;
-				sumRule.visible = value.situacao == "Saldo Atual" || value.situacao ==
-					"Total";
+				sumRule.visible = value.situacao == "Saldo Atual" || value.situacao
+					== "Total";
 				textConta.text = value.contaMestre;
 				textSituacao.text = StringUtil.decode(value.situacao);
 				labelSaldo.text = NumberUtil.formatNumber(value.saldo, 2);
 				
-				if ((value.situacao == "Saldo Atual" || value.situacao == "Total") &&
-					value.saldo > 0)
+				if ((value.situacao == "Saldo Atual" || value.situacao == "Total")
+					&& value.saldo > 0)
 				{
 					labelSaldo.setStyle("color", 0x138b0d);
 				}
 				else if (value.saldo < 0)
 				{
 					labelSaldo.setStyle("color", 0xff0000);
+				}
+				else
+				{
+					labelSaldo.setStyle("color", 0x2074A3);
 				}
 				
 				super.invalidateDisplayList();

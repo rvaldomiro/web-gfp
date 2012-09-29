@@ -5,7 +5,6 @@
 									 xmlns:graficos = "gfp.view.graficos.*">
 	<fx:Script>
 		<![CDATA[
-			import common.custom.CustomEvent;
 			import common.custom.ICustomEvent;
 			
 			import gfp.event.TransacaoEvent;

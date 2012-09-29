@@ -4,11 +4,10 @@
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
 		  xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		  xmlns:custom = "common.spark.component.*"
-		  xmlns:component = "common.component.*">
+		  xmlns:helper = "gfp.view.helper.*">
 	<fx:Script>
 		<![CDATA[
 			import common.custom.ICustomEvent;
-			
 			import common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin;
 			import common.util.NumberUtil;
 			
@@ -69,15 +68,11 @@
 					if ((!selecionado || lancamento.selected) && !lancamento.categoria
 						.interna && !lancamento.categoria.transferencia)
 					{
-//						var valorConsiderado:Number = lancamento.dataPagamento &&
-//							lancamento.valorPago > 0 ? lancamento.valorPago : lancamento
-//							.valorOriginal;
-						
 						quantidade++;
 						valor += lancamento.valorOriginal;
-						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA ?
-							lancamento.valorOriginal : lancamento.valorOriginal *
-							-1;
+						saldo += lancamento.categoria.tipo == CategoriaType.RECEITA
+							? lancamento.valorOriginal : lancamento.valorOriginal
+							* -1;
 						media = valor / quantidade;
 					}
 				}
@@ -155,111 +150,123 @@
 		]]>
 	</fx:Script>
 
-	<s:HGroup width = "100%"
-			  verticalAlign = "middle">
-		<s:VGroup width = "100%">
-			<s:HGroup width = "100%">
-				<s:DropDownList id = "comboTiposPeriodo"
-								width = "150"
-								dataProvider = "{dto.tiposPeriodo}"
-								selectedIndex = "@{dto.tipoPeriodo}"/>
-
-				<custom:CustomDateField selectedDate = "@{dto.dataInicio}"
-										editable = "true"/>
-
-				<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
-										editable = "true"/>
-
-				<s:DropDownList dataProvider = "{dto.situacoes}"
-								selectedIndex = "@{dto.situacao}"/>
-
-				<s:CheckBox id = "checkContas"
-							change = "if (event.target.selected) comboContas.selectedItem = null"
-							selected = "true"
-							skinClass = "spark.skins.spark.CheckBoxSkin"/>
-
-				<s:DropDownList id = "comboContas"
-								dataProvider = "{serviceConta.list}"
-								prompt = "Conta"
-								enabled = "{!checkContas.selected}"
-								selectedItem = "@{dto.conta}"/>
-
-				<s:CheckBox id = "checkCategorias"
-							change = "if (event.target.selected) comboCategorias.selectedItem = null"
-							selected = "true"
-							skinClass = "spark.skins.spark.CheckBoxSkin"/>
-
-				<s:DropDownList id = "comboCategorias"
-								dataProvider = "{categorias}"
-								prompt = "Categoria"
-								enabled = "{!checkCategorias.selected}"
-								width = "100%"/>
-			</s:HGroup>
-
-			<s:HGroup width = "100%">
-				<s:Label text = "Observação:"/>
-
-				<s:TextInput id = "textObservacao"
-							 text = "@{dto.observacao}"
-							 width = "100%"
-							 enter = "pesquisar()"/>
-			</s:HGroup>
-		</s:VGroup>
-
-		<s:VGroup height = "100%"
-				  verticalAlign = "bottom">
-			<custom:CustomButton label = "Buscar"
-								 click = "pesquisar()"
-								 styleName = "styleButtonFind"/>
-		</s:VGroup>
-	</s:HGroup>
-
 	<s:Group width = "100%"
 			 height = "100%">
-		<mx:DataGrid dataProvider = "{service.list}"
-					 width = "100%"
-					 height = "100%"
-					 showHeaders = "false"
-					 selectable = "false"
-					 alternatingItemColors = "[#eef4fb, #eef4fb]"
-					 borderVisible = "false"
-					 horizontalGridLineColor = "#e5e5e5"
-					 horizontalGridLines = "true"
-					 rowHeight = "40">
-			<mx:columns>
-				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoSelectionRenderer"
-								   width = "26"/>
+		<helper:BasePanel title = "Filtro">
+			<s:HGroup width = "100%"
+					  verticalAlign = "middle">
+				<s:VGroup width = "100%">
+					<s:HGroup width = "100%">
+						<s:DropDownList id = "comboTiposPeriodo"
+										width = "150"
+										dataProvider = "{dto.tiposPeriodo}"
+										selectedIndex = "@{dto.tipoPeriodo}"/>
 
-				<mx:DataGridColumn itemRenderer = "gfp.view.receitaDespesaVencer.TransacaoVencerRenderer"
-								   width = "440"/>
+						<custom:CustomDateField selectedDate = "@{dto.dataInicio}"
+												editable = "true"/>
 
-				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoComplementoRenderer"/>
+						<custom:CustomDateField selectedDate = "@{dto.dataFinal}"
+												editable = "true"/>
 
-				<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoActionRenderer"
-								   width = "100"/>
-			</mx:columns>
-		</mx:DataGrid>
+						<s:DropDownList dataProvider = "{dto.situacoes}"
+										selectedIndex = "@{dto.situacao}"/>
+
+						<s:CheckBox id = "checkContas"
+									change = "if (event.target.selected) comboContas.selectedItem = null"
+									selected = "true"
+									skinClass = "spark.skins.spark.CheckBoxSkin"/>
+
+						<s:DropDownList id = "comboContas"
+										dataProvider = "{serviceConta.list}"
+										prompt = "Conta"
+										enabled = "{!checkContas.selected}"
+										selectedItem = "@{dto.conta}"/>
+
+						<s:CheckBox id = "checkCategorias"
+									change = "if (event.target.selected) comboCategorias.selectedItem = null"
+									selected = "true"
+									skinClass = "spark.skins.spark.CheckBoxSkin"/>
+
+						<s:DropDownList id = "comboCategorias"
+										dataProvider = "{categorias}"
+										prompt = "Categoria"
+										enabled = "{!checkCategorias.selected}"
+										width = "100%"/>
+					</s:HGroup>
+
+					<s:HGroup width = "100%">
+						<s:Label text = "Observação:"/>
+
+						<s:TextInput id = "textObservacao"
+									 text = "@{dto.observacao}"
+									 width = "100%"
+									 enter = "pesquisar()"/>
+					</s:HGroup>
+				</s:VGroup>
+
+				<s:VGroup height = "100%"
+						  verticalAlign = "bottom">
+					<custom:CustomButton label = "Buscar"
+										 click = "pesquisar()"
+										 styleName = "styleButtonFind"/>
+				</s:VGroup>
+			</s:HGroup>
+
+			<mx:HRule width = "100%"/>
+
+			<s:Group width = "100%"
+					 height = "100%">
+				<mx:DataGrid dataProvider = "{service.list}"
+							 width = "100%"
+							 height = "100%"
+							 showHeaders = "false"
+							 selectable = "false"
+							 alternatingItemColors = "[#F9F9F9, #F9F9F9]"
+							 borderVisible = "false"
+							 horizontalGridLineColor = "#c4e3ff"
+							 horizontalGridLines = "true"
+							 rowHeight = "40">
+					<mx:columns>
+						<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoSelectionRenderer"
+										   width = "26"/>
+
+						<mx:DataGridColumn itemRenderer = "gfp.view.receitaDespesaVencer.TransacaoVencerRenderer"
+										   width = "440"/>
+
+						<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoComplementoRenderer"/>
+
+						<mx:DataGridColumn itemRenderer = "gfp.view.transacao.TransacaoActionRenderer"
+										   width = "100"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</s:Group>
+
+			<mx:HBox width = "100%"
+					 backgroundColor = "#f0edd6"
+					 height = "22"
+					 paddingLeft = "7"
+					 paddingRight = "7"
+					 verticalAlign = "middle">
+				<s:Label id = "textQuantidade"
+						 width = "100%"/>
+
+				<s:Label id = "textValor"
+						 width = "100%"
+						 textAlign = "center"/>
+
+				<s:Label id = "textMedia"
+						 width = "100%"
+						 textAlign = "center"/>
+
+				<s:Label id = "textSaldo"
+						 width = "100%"
+						 textAlign = "right"/>
+			</mx:HBox>
+		</helper:BasePanel>
 
 		<serviceFeedback:ServiceFeedback watchForCall = "listarLancamentos"
 										 skinClass = "common.spark.component.serviceFeedback.skins.LoadingWithBGTextSkin"
 										 width = "100%"
 										 height = "100%"/>
 	</s:Group>
-
-	<s:HGroup width = "100%">
-		<s:Label id = "textQuantidade"
-				 width = "100%"/>
-
-		<s:Label id = "textValor"
-				 width = "100%"
-				 textAlign = "center"/>
-
-		<s:Label id = "textMedia"
-				 width = "100%"
-				 textAlign = "center"/>
-
-		<s:Label id = "textSaldo"
-				 width = "100%"
-				 textAlign = "right"/>
-	</s:HGroup>
 </s:VGroup>

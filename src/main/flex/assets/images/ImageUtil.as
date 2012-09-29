@@ -25,20 +25,8 @@ package assets.images
 		public static var CLOSE:Class;
 		
 		[Bindable]
-		[Embed(source = "coins.png")]
-		public static var COINS:Class;
-		
-		[Bindable]
-		[Embed(source = "down.png")]
-		public static var DOWN:Class;
-		
-		[Bindable]
 		[Embed(source = "info.png")]
 		public static var INFO:Class;
-		
-		[Bindable]
-		[Embed(source = "lock.png")]
-		public static var LOCK:Class;
 		
 		[Bindable]
 		[Embed(source = "logo.png")]
@@ -47,10 +35,6 @@ package assets.images
 		[Bindable]
 		[Embed(source = "money-32.png")]
 		public static var MONEY32:Class;
-		
-		[Bindable]
-		[Embed(source = "up.png")]
-		public static var UP:Class;
 		
 		[Bindable]
 		[Embed(source = "zoom-in.png")]

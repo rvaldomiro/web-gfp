@@ -7,7 +7,6 @@
 		<![CDATA[
 			import assets.images.ImageUtil;
 			
-			import common.custom.CustomEvent;
 			import common.util.DateUtil;
 			import common.util.NumberUtil;
 			import common.util.StringUtil;
@@ -31,67 +30,69 @@
 			private function dataChangeHandler(event:FlexEvent):void
 			{
 				var o:Lancamento = data as Lancamento;
-				var compareHoje:int = DateUtil.compareToday(o.dataPrevisaoPagamento) *
-					-1;
+				var compareHoje:int = DateUtil.compareToday(o.dataPrevisaoPagamento)
+					* -1;
 				var pagamentoCartaoCredito:Boolean = o.formaPagamento >= FormaPagamentoType
 					.CREDITO_MASTERCARD;
-				var tooltip:String = "Vencimento: " + DateUtil.formatSimple(o.dataVencimento) +
-					"<br/>Previsão Pagamento: " + DateUtil.formatSimple(o.dataPrevisaoPagamento) +
-					(!o.dataPagamento ? " " + LancamentoHelper.intervaloPrevisaoPagamento(o) :
-					"");
+				var tooltip:String = "Vencimento: " + DateUtil.formatSimple(o.dataVencimento)
+					+ "<br/>Previsão Pagamento: " + DateUtil.formatSimple(o.dataPrevisaoPagamento)
+					+ (!o.dataPagamento ? " " + LancamentoHelper.intervaloPrevisaoPagamento(o)
+					: "");
+				
+				boxPrevisaoPagamento.setStyle("backgroundColor", 0xF9F9F9);
 				
 				if (compareHoje >= 0)
 				{
 					if (!o.dataPagamento)
 					{
-						labelPrevisaoPagamento.toolTip = tooltip + (compareHoje >
-							0 ? ("Vencida à " + compareHoje + StringUtil.pluralize(" dia"
-																				   , compareHoje)) :
-							"Vencendo hoje");
-						labelPrevisaoPagamento.setStyle("color", 0xff0000);
+						labelPrevisaoPagamento.toolTip = tooltip + (compareHoje > 0
+							? ("<br/>Vencida à " + compareHoje + StringUtil.pluralize(" dia"
+																					  , compareHoje))
+							: "<br/>Vencendo hoje");
+						boxPrevisaoPagamento.setStyle("backgroundColor", 0xbd0000);
+						labelPrevisaoPagamento.setStyle("color", 0xffffff);
 					}
 					else if ((!pagamentoCartaoCredito && DateUtil.compareDate(o.dataPagamento
 																			  , o
-																			  .dataVencimento) <=
-						0) || (pagamentoCartaoCredito && DateUtil.compareDate(o.dataPagamento
-																			  , o
-																			  .dataPrevisaoPagamento) <=
-						0))
+																			  .dataVencimento)
+						<= 0) || (pagamentoCartaoCredito && DateUtil.compareDate(o
+																				 .dataPagamento
+																				 , o
+																				 .dataPrevisaoPagamento)
+						<= 0))
 					{
-						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: " +
-							DateUtil.formatSimple(o.dataPagamento) + " - em dia";
-						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
+						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: "
+							+ DateUtil.formatSimple(o.dataPagamento) + " - em dia";
+						boxPrevisaoPagamento.setStyle("backgroundColor", 0x37a865);
+						labelPrevisaoPagamento.setStyle("color", 0xffffff);
 					}
 					else
 					{
-						var dif:int = DateUtil.compareDate(o.dataPagamento, !pagamentoCartaoCredito ?
-														   o.dataVencimento : o.dataPrevisaoPagamento);
+						var dif:int = DateUtil.compareDate(o.dataPagamento, !pagamentoCartaoCredito
+														   ? o.dataVencimento : o
+														   .dataPrevisaoPagamento);
 						
-						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: " +
-							DateUtil.formatSimple(o.dataPagamento) + " - " + dif +
-							StringUtil.pluralize(" dia", dif) + " de atraso";
-						labelPrevisaoPagamento.setStyle("color", 0xd59600);
+						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: "
+							+ DateUtil.formatSimple(o.dataPagamento) + " - " + dif
+							+ StringUtil.pluralize(" dia", dif) + " de atraso";
+						boxPrevisaoPagamento.setStyle("backgroundColor", 0xd59600);
+						labelPrevisaoPagamento.setStyle("color", 0xffffff);
 					}
 				}
 				else
 				{
-					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, !pagamentoCartaoCredito ?
-																o.dataVencimento :
-																o.dataPrevisaoPagamento) <=
-						0)
+					if (o.dataPagamento && DateUtil.compareDate(o.dataPagamento, !pagamentoCartaoCredito
+																? o.dataVencimento
+																: o.dataPrevisaoPagamento)
+						<= 0)
 					{
-						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: " +
-							DateUtil.formatSimple(o.dataPagamento) + " - em dia";
+						labelPrevisaoPagamento.toolTip = tooltip + "<br/>Pagamento: "
+							+ DateUtil.formatSimple(o.dataPagamento) + " - em dia";
 						labelPrevisaoPagamento.setStyle("color", 0x138b0d);
 					}
 					else
 					{
-						labelPrevisaoPagamento.toolTip = tooltip; // + " [" + DateUtil
-//							.compareToday(o.dataPrevisaoPagamento) + StringUtil.pluralize(" dia"
-//																						  , DateUtil
-//																						  .compareToday(o
-//																										.dataPrevisaoPagamento)) +
-//							"]";
+						labelPrevisaoPagamento.toolTip = tooltip;
 						labelPrevisaoPagamento.setStyle("color", 0x828282);
 					}
 				}
@@ -101,9 +102,9 @@
 					imageFormaPagamento.source = ImageUtil.CHEQUE32;
 					descricaoFormaPagamento.text = "Cheque";
 				}
-				else if (o.formaPagamento == FormaPagamentoType.DEBITO || o.formaPagamento ==
-					FormaPagamentoType.CREDITO_MASTERCARD || o.formaPagamento ==
-					FormaPagamentoType.CREDITO_VISA)
+				else if (o.formaPagamento == FormaPagamentoType.DEBITO || o.formaPagamento
+					== FormaPagamentoType.CREDITO_MASTERCARD || o.formaPagamento
+					== FormaPagamentoType.CREDITO_VISA)
 				{
 					imageFormaPagamento.source = ImageUtil.CARD32;
 					
@@ -146,8 +147,16 @@
 			  paddingBottom = "2">
 		<s:VGroup width = "70"
 				  horizontalAlign = "center">
-			<s:Label id = "labelPrevisaoPagamento"
-					 text = "{DateUtil.formatSimple((data as Lancamento).dataPrevisaoPagamento)}"/>
+			<mx:HBox id = "boxPrevisaoPagamento"
+					 cornerRadius = "3"
+					 width = "100%"
+					 height = "18"
+					 horizontalAlign = "center"
+					 verticalAlign = "middle"
+					 paddingTop = "2">
+				<s:Label id = "labelPrevisaoPagamento"
+						 text = "{DateUtil.formatSimple((data as Lancamento).dataPrevisaoPagamento)}"/>
+			</mx:HBox>
 
 			<s:Label id = "labelVencimento"
 					 text = "{!(data as Lancamento).dataPagamento ? LancamentoHelper.intervaloPrevisaoPagamento(data as Lancamento).substr(3) : ''}"

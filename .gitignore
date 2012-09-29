@@ -7,3 +7,4 @@ src/main/webapp/WEB-INF/classes/**
 *.log
 *.class
 *.lck
+*.DS_Store
