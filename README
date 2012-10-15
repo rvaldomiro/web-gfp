@@ -6,7 +6,7 @@ GFP é um sistema construído para administrar receitas e despesas pessoais, pos
 Está implementado sob as seguintes tecnologias/frameworks:
 
 	-	Java 1.6 (back-end).
-	-	Adobe Flex 4.5 (front-end).
+	-	Adobe Flex 4.5.1 (front-end).
 	-	PostgreSQL (database) opcionalmente pode ser substituído por qualquer outro devido ao uso do framework ORM Hibernate. 
 
 
