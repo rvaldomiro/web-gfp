@@ -74,10 +74,12 @@ package gfp.service
 			var dto:LancamentoDto = event.object as LancamentoDto;
 			dto.idUsuario = usuarioService.idUsuarioLogado;
 			
-			executeService(service.listarLancamentos(event.object), function(re:ResultEvent):void
+			executeService(service.listarLancamentos(dto), function(re:ResultEvent):void
 			{
 				list = re.result as ArrayCollection;
-				SortUtil.sortDateArray(list, ["dataPrevisaoPagamento", "dataVencimento"]);
+//				SortUtil.sortDateArray(list, ["dataPrevisaoPagamento", "dataVencimento"]);
+				SortUtil.sortDateArray(list, ["dataVencimento", "dataPrevisaoPagamento"
+											  , "valorOriginal"]);
 				list.refresh();
 				event.result(re);
 			});
@@ -87,8 +89,8 @@ package gfp.service
 		public function listarDespesaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
-															  , (event.object as
-															  Date).month + 1, (event
+															  , (event.object as Date)
+															  .month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.DESPESA)
 						   , function(re:ResultEvent):void
@@ -128,8 +130,8 @@ package gfp.service
 		public function listarReceitaMensal(event:ICustomEvent):void
 		{
 			executeService(service.listarSaldoCategoriaMensal(usuarioService.idUsuarioLogado
-															  , (event.object as
-															  Date).month + 1, (event
+															  , (event.object as Date)
+															  .month + 1, (event
 															  .object as Date).fullYear
 															  , CategoriaType.RECEITA)
 						   , function(re:ResultEvent):void
@@ -184,8 +186,8 @@ package gfp.service
 		[EventHandler(event = "TransacaoEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{
-			selecionado = event.object ? ObjectUtil.copy(event.object) as Lancamento :
-				LancamentoFactory.criar();
+			selecionado = event.object ? ObjectUtil.copy(event.object) as Lancamento
+				: LancamentoFactory.criar();
 			selecionado.usuario ||= usuarioService.usuarioLogado;
 		}
 		
@@ -200,9 +202,9 @@ package gfp.service
 		
 		private function listaSaldoAtualFilter(o:Object):Boolean
 		{
-			return Number(o.saldo) != 0.0 || o.situacao == "Saldo Atual" || (o.situacao ==
-				"Mastercard" && o.conta.operaCartaoMastercard) || (o.situacao ==
-				"Visa" && o.conta.operaCartaoVisa);
+			return Number(o.saldo) != 0.0 || o.situacao == "Saldo Atual" || (o.situacao
+				== "Mastercard" && o.conta.operaCartaoMastercard) || (o.situacao
+				== "Visa" && o.conta.operaCartaoVisa);
 		}
 	}
 }

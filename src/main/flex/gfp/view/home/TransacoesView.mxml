@@ -247,6 +247,10 @@
 					 paddingLeft = "7"
 					 paddingRight = "7"
 					 verticalAlign = "middle">
+				<mx:filters>
+					<mx:DropShadowFilter distance = "2"/>
+				</mx:filters>
+
 				<s:Label id = "textQuantidade"
 						 width = "100%"/>
 

@@ -93,7 +93,8 @@
 					else
 					{
 						labelPrevisaoPagamento.toolTip = tooltip;
-						labelPrevisaoPagamento.setStyle("color", 0x828282);
+//						labelPrevisaoPagamento.setStyle("color", 0x828282);
+						labelPrevisaoPagamento.setStyle("color", 0x2074A3);
 					}
 				}
 				
@@ -162,12 +163,14 @@
 					 text = "{!(data as Lancamento).dataPagamento ? LancamentoHelper.intervaloPrevisaoPagamento(data as Lancamento).substr(3) : ''}"
 					 width = "100%"
 					 textAlign = "center"
-					 fontSize = "10"/>
+					 fontSize = "10"
+					 color = "#828282"/>
 		</s:VGroup>
 
 		<s:Image id = "imageFormaPagamento"/>
 
-		<s:VGroup width = "100%">
+		<s:VGroup width = "100%"
+				  paddingTop = "4">
 			<s:Label id = "labelCategoria"
 					 click = "labelCategoria_clickHandler(event)"
 					 toolTip = "Visualizar transações nos últimos 12 meses"
@@ -175,13 +178,15 @@
 					 useHandCursor = "true"
 					 text = "{(data as Lancamento).categoria + ((data as Lancamento).parcelaQuantidade &gt; 1 ? ' (' + (data as Lancamento).parcelaNumero + '/' + (data as Lancamento).parcelaQuantidade + ')' : '')}"/>
 
-			<s:HGroup>
+			<s:HGroup paddingTop = "2">
 				<s:Label id = "descricaoFormaPagamento"
 						 fontSize = "10"
-						 width = "50"/>
+						 width = "50"
+						 color = "#828282"/>
 
 				<s:Label text = "{(data as Lancamento).conta}"
-						 fontSize = "10"/>
+						 fontSize = "10"
+						 color = "#828282"/>
 			</s:HGroup>
 		</s:VGroup>
 

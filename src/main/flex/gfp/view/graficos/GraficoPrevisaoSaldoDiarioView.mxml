@@ -2,7 +2,6 @@
 <s:VGroup xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		  xmlns:s = "library://ns.adobe.com/flex/spark"
 		  xmlns:mx = "library://ns.adobe.com/flex/mx"
-		  xmlns:components = "com.fusioncharts.components.*"
 		  xmlns:custom = "common.spark.component.*"
 		  width = "100%"
 		  height = "100%"
@@ -26,6 +25,8 @@
 			[Dispatcher]
 			public var dispatcher:IEventDispatcher;
 			
+			public var grafico:GraficoTemplate;
+			
 			[Inject]
 			[Bindable]
 			public var service:LancamentoService;
@@ -41,18 +42,36 @@
 					var sLink:String;
 					var sTooltip:String;
 					
-					saldoMinimo = 0;
+					saldoNegativo = 0;
+					saldoNegativoDias = 0;
+					saldoPositivo = 0;
+					saldoPositivoDias = 0;
 					
 					for each (dto in service.listaPrevisaoSaldoDiario)
 					{
-						if (dto.saldoAcumulado < saldoMinimo)
+						if (dto.saldoAcumulado < saldoNegativo)
 						{
-							saldoMinimo = dto.saldoAcumulado;
+							saldoNegativo = dto.saldoAcumulado;
+						}
+						
+						if (dto.saldoAcumulado < 0)
+						{
+							saldoNegativoDias++;
+						}
+						
+						if (dto.saldoAcumulado > saldoPositivo)
+						{
+							saldoPositivo = dto.saldoAcumulado;
+						}
+						
+						if (dto.saldoAcumulado > 0)
+						{
+							saldoPositivoDias++;
 						}
 						
 						sTooltip = barTrocaModo.selectedIndex == 0 ? DateUtil.formatSimple(dto
-																						   .dataCompensacao) :
-							DateUtil.formatSimpleMonthYear(dto.dataCompensacao);
+																						   .dataCompensacao)
+							: DateUtil.formatSimpleMonthYear(dto.dataCompensacao);
 						sTooltip += "{br}Inicial: " + NumberUtil.formatNumber(dto
 																			  .saldoInicial
 																			  , 2);
@@ -67,10 +86,9 @@
 						sLink = "E-itemClickHandler," + service.listaPrevisaoSaldoDiario
 							.getItemIndex(dto);
 						
-						result.addItem({label: barTrocaModo.selectedIndex == 0 ?
-											   dto.dataCompensacao.date.toString() :
-											   DateUtil.formatSimpleMonthYear(dto
-																			  .dataCompensacao)
+						result.addItem({label: barTrocaModo.selectedIndex == 0 ? dto
+											   .dataCompensacao.date.toString() : DateUtil
+											   .formatSimpleMonthYear(dto.dataCompensacao)
 										   , value: dto.saldoAcumulado, tooltext: sTooltip
 										   , link: sLink});
 					}
@@ -104,8 +122,8 @@
 					params.palette = "3";
 					params.showAlternateHGridColor = "0";
 					params.caption = "Saldo Previsto";
-					params.subCaption = "Próximos " + (barTrocaModo.selectedIndex ==
-						0 ? "45 dias" : "12 meses");
+					params.subCaption = "Próximos " + (barTrocaModo.selectedIndex
+						== 0 ? "45 dias" : "12 meses");
 					result.addItem(params);
 				}
 				
@@ -117,35 +135,66 @@
 				var result:ArrayCollection = new ArrayCollection();
 				
 				if (service.listaPrevisaoSaldoDiario && service.listaPrevisaoSaldoDiario
-					.length > 0 && saldoMinimo < 0)
+					.length > 0)
 				{
-					var params:Object = new Object();
-					params.startValue = "0";
-					params.endValue = saldoMinimo.toString();
-					params.showOnToop = "0";
-					params.isTrendZone = "1";
-					params.displayvalue = " ";
-					params.color = "ffecec";
-					result.addItem(params);
+					var params:Object;
+					
+					if (saldoPositivo > 0)
+					{
+						params = new Object();
+						params.startValue = "0";
+						params.endValue = saldoPositivo.toString();
+						params.showOnTop = "0";
+						params.isTrendZone = "1";
+						params.displayValue = "{br}Máx. " + NumberUtil.formatNumber(params
+																					.endValue
+																					, 0)
+							+ (saldoPositivoDias > 0 ? " " + saldoPositivoDias + (barTrocaModo
+							.selectedIndex == 0 ? "d" : "m") : "");
+						params.color = "37a865";
+						params.alpha = "5";
+						result.addItem(params);
+					}
+					
+					if (saldoNegativo < 0)
+					{
+						params = new Object();
+						params.startValue = "0";
+						params.endValue = saldoNegativo.toString();
+						params.showOnTop = "0";
+						params.isTrendZone = "1";
+						params.displayValue = "{br}Min. " + NumberUtil.formatNumber(params
+																					.endValue
+																					, 0)
+							+ (saldoNegativoDias > 0 ? " " + saldoNegativoDias + (barTrocaModo
+							.selectedIndex == 0 ? "d" : "m") : "");
+						params.color = "bd0000";
+						params.alpha = "5";
+						result.addItem(params);
+					}
 				}
 				
 				return result;
 			}
 			
-			public var grafico:GraficoTemplate;
-			
 			[Bindable]
 			private var listaModos:ArrayCollection = new ArrayCollection([{label: "Diário"}
 																		  , {label: "Mensal"}]);
 			
-			private var saldoMinimo:Number;
+			private var saldoNegativo:Number;
+			
+			private var saldoNegativoDias:int = 0;
+			
+			private var saldoPositivo:Number;
+			
+			private var saldoPositivoDias:int = 0;
 			
 			[EventHandler(event = "AppEvent.ATUALIZAR_DASHBOARD")]
 			public function atualizar(event:ICustomEvent = null):void
 			{
 				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.LISTAR_PREVISAO_SALDO_DIARIO
-															, barTrocaModo.selectedIndex +
-															1, atualizar_Handler));
+															, barTrocaModo.selectedIndex
+															+ 1, atualizar_Handler));
 			}
 			
 			public function itemClickHandler(index:int):void
@@ -155,9 +204,9 @@
 				var dto:LancamentoDto = new LancamentoDto();
 				dto.tipoPeriodo = 3;
 				dto.dataInicio = item.dataCompensacao;
-				dto.dataFinal = barTrocaModo.selectedIndex == 0 ? item.dataCompensacao :
-					DateUtil.lastDayOfMonth(item.dataCompensacao.month, item.dataCompensacao
-											.fullYear);
+				dto.dataFinal = barTrocaModo.selectedIndex == 0 ? item.dataCompensacao
+					: DateUtil.lastDayOfMonth(item.dataCompensacao.month, item.dataCompensacao
+											  .fullYear);
 				dispatcher.dispatchEvent(new AppEvent(AppEvent.TO_TRANSACOES_DIA
 													  , dto));
 			}

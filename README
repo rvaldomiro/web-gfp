@@ -13,6 +13,13 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.04.00	16/10/12
+
+*	M	Previsão de Saldo exibe valores mínimo e máximo juntamente com o total de dias em cada situação.
+*	M	Transações agora são ordenadas por vencimento + previsão de pagamento + valor.
+*	M	Substituído o ícones 'checked' e 'unchecked' do componente CustomCheckBox.
+*	M	Mudança na disposição das barras do gráfico de receitas e despesas do balanço mensal.
+
 01.08.03.00	29/09/12
 
 *	M	Reestilização dos painéis de visualização, ícones e labels.

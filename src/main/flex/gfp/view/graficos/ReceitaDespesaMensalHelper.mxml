@@ -72,7 +72,9 @@
 						sTooltip = dto.categoria + "{br}Previsto: " + NumberUtil
 							.formatNumber(dto.previsao, 2);
 						
-						result.addItem({value: dto.previsao, tooltext: sTooltip, link: sLink});
+						result.addItem({value: dto.valor <= dto.previsao ? dto.previsao
+											   - dto.valor : 0, tooltext: sTooltip
+										   , link: sLink});
 					}
 				}
 				
