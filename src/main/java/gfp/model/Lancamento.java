@@ -321,7 +321,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			}
 		}
 		
-		this.dataCompensacao = previsaoPagamento;
+		this.dataCompensacao = DateUtil.parseBRST(previsaoPagamento);
 	}
 	
 	private void corrigirHorarioDeVerao() {
