@@ -17,7 +17,7 @@
 			  value = "true"/>
 
 	<property name = "FLEX_SDK"
-			  value = "4.5.1"/>
+			  value = "4.6.0"/>
 
 	<property name = "FLEX_HOME"
 			  value = "${FLEX_ROOT}/${FLEX_SDK}"/>

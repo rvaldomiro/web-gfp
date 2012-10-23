@@ -13,9 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
-01.08.04.01	23/10/12
+01.08.05.00	23/10/12
 
 *	C	Pequenas correções no tratamento do horário de verão.
+*	M	Atualização para o Flex SDK 4.6
 
 01.08.04.00	16/10/12
 
