@@ -49,45 +49,38 @@ package gfp.model
 		
 		public var valorOriginal:Number;
 		
-//		public var valorPago:Number;
-		
 		public var vinculados:ArrayCollection;
 		
 		public function calcularDataPrevisaoPagamento():void
 		{
-			if (id != null)
-			{
-				return;
-			}
-			
-			if (formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD || formaPagamento ==
-				FormaPagamentoType.CREDITO_VISA)
+			if (formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD || formaPagamento
+				== FormaPagamentoType.CREDITO_VISA)
 			{
 				var fechamento:Date = new Date(dataVencimento.getFullYear(), dataVencimento
 											   .getMonth(), formaPagamento == FormaPagamentoType
-											   .CREDITO_MASTERCARD ? conta.fechamentoMastercard :
-											   conta.fechamentoVisa);
+											   .CREDITO_MASTERCARD ? conta.fechamentoMastercard
+											   : conta.fechamentoVisa);
 				var vencimento:Date = new Date(fechamento.getFullYear(), fechamento
 											   .getMonth(), formaPagamento == FormaPagamentoType
-											   .CREDITO_MASTERCARD ? conta.vencimentoMastercard :
-											   conta.vencimentoVisa);
+											   .CREDITO_MASTERCARD ? conta.vencimentoMastercard
+											   : conta.vencimentoVisa);
 				
 				if (DateUtil.compareDate(dataVencimento, fechamento) > 0)
 				{
 					vencimento = DateUtil.addMonth(vencimento, 1);
 				}
 				
-				var referencia:String = "Fatura " + conta.banco.nome.charAt(0) +
-					(formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD ? "M" :
-					"V") + DateUtil.formatDate(vencimento).substr(3, 2) + DateUtil
-					.formatDate(vencimento).substr(6, 2);
+				var referencia:String = "Fatura " + conta.banco.nome.charAt(0) + (formaPagamento
+					== FormaPagamentoType.CREDITO_MASTERCARD ? "M" : "V") + DateUtil
+					.formatDate(vencimento).substr(3, 2) + DateUtil.formatDate(vencimento)
+					.substr(6, 2);
 				var obs:String = observacao ? observacao.substring(referencia.length
-																   , observacao.length) :
-					"";
+																   , observacao.length)
+					: "";
 				observacao = referencia + obs;
 				dataPrevisaoPagamento = vencimento;
 			}
-			else
+			else if (id == null)
 			{
 				observacao = null;
 				dataPrevisaoPagamento = dataVencimento;

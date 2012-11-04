@@ -13,7 +13,6 @@ import gfp.type.FrequenciaAgendamentoType;
 import gfp.type.LancamentoPeriodoType;
 import gfp.type.LancamentoSituacaoType;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,8 +49,10 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	public List<Lancamento> agendarLancamentos(final AgendamentoDto dto)
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
-		final Date dataInicio = DateUtil.parseBRST(dto.getDataInicio());
-		final Date dataFinal = DateUtil.parseBRST(dto.getDataFinal());
+// final Date dataInicio = DateUtil.parseBRST(dto.getDataInicio());
+// final Date dataFinal = DateUtil.parseBRST(dto.getDataFinal());
+		final Date dataInicio = dto.getDataInicio();
+		final Date dataFinal = dto.getDataFinal();
 		final boolean pagamentoComCartaoDeCredito = dto.getLancamento()
 				.getFormaPagamento()
 				.equals(FormaPagamentoType.CREDITO_MASTERCARD.ordinal()) ||
@@ -84,8 +85,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		
 		int parcela = 1;
 		Date dataReferencia = !pagamentoComCartaoDeCredito ? dataVencimento
-				: DateUtil.parseBRST(dto.getLancamento()
-						.getDataPrevisaoPagamento());
+				: dto.getLancamento().getDataPrevisaoPagamento();
 		final String referencia = DateUtil.DATE_FORMAT_NO_BAR_MONTH_YEAR
 				.format(dataReferencia);
 		
@@ -190,8 +190,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
-		prm.add(DateUtil.parseBRST(dto.getDataInicio()));
-		prm.add(DateUtil.parseBRST(dto.getDataFinal()));
+		prm.add(dto.getDataInicio());
+		prm.add(dto.getDataFinal());
 		
 		if (dto.getSituacao() == LancamentoSituacaoType.EM_ABERTO.ordinal()) {
 			cdt.add("dataPagamento is null");
@@ -229,10 +229,12 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			Date dataInicio, final int modo) throws Exception {
 		final boolean modoDiario = modo == MODO_PREVISAO_DIARIA;
 		
-		dataInicio = modoDiario ? DateUtil.parseBRST(dataInicio) : DateUtil
-				.firstDayOfMonth(DateUtil.parseBRST(dataInicio));
-		final Date dataFinal = modoDiario ? DateUtil.add(dataInicio, 45)
-				: DateUtil.lastDayOfMonth(DateUtil.addYear(dataInicio, 1));
+		dataInicio = modoDiario ? dataInicio : DateUtil
+				.firstDayOfMonth(dataInicio);
+		dataInicio = DateUtil.time(dataInicio, "00:00:00");
+		Date dataFinal = modoDiario ? DateUtil.add(dataInicio, 45) : DateUtil
+				.lastDayOfMonth(DateUtil.addYear(dataInicio, 1));
+		dataFinal = DateUtil.time(dataFinal, "23:59:59");
 		final List<SaldoDiarioDto> result = SaldoDiarioDto.getInstance(
 				dataInicio, dataFinal, modo);
 		final CategoriaType[] categorias = new CategoriaType[] {
@@ -246,8 +248,7 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 							dataInicio, dataFinal);
 			
 			for (final Object[] o : saldoDiario) {
-				final Date dataCompensacao = DateUtil.time(new Date(
-						((Timestamp) o[0]).getTime()), "01:00:00");
+				final Date dataCompensacao = (Date) o[0];
 				final Double saldo = (Double) o[1];
 				final SaldoDiarioDto dto = result.get(result
 						.indexOf(new SaldoDiarioDto(dataCompensacao)));
@@ -301,8 +302,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	
 	@RemotingInclude
 	public List<SaldoDto> listarSaldoPorConta(final Long usuarioId,
-			Date dataSaldo) throws Exception {
-		dataSaldo = DateUtil.parseBRST(dataSaldo);
+			final Date dataSaldo) throws Exception {
+// dataSaldo = DateUtil.parseBRST(dataSaldo);
 		final List<SaldoDto> result = new ArrayList<SaldoDto>();
 		final List<Conta> contas = Conta.listarAtivas(usuarioId);
 		

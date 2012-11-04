@@ -1,6 +1,5 @@
 import gfp.model.Banco;
 import gfp.model.Conta;
-import gfp.model.Lancamento;
 import gfp.model.Usuario;
 
 import javax.servlet.ServletConfig;
@@ -52,10 +51,10 @@ public class GfpServlet extends AbstractServlet {
 			bancoUnibanco.delete();
 		}
 		
-		for (final Lancamento lancamento : Lancamento.dao.allByFields(
-				"dataPagamento", null)) {
-			lancamento.save();
-		}
+// for (final Lancamento lancamento : Lancamento.dao.allByFields(
+// "dataPagamento", null)) {
+// lancamento.save();
+// }
 	}
 	
 	@Override

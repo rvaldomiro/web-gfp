@@ -13,6 +13,11 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.06.00 04/11/12
+
+*	M	Permitir mudar forma de pagamento de um lançamento salvo e consequentemente recalcular as datas de previsão de pagamento.
+*	C	Tratamentos para horário de verão.
+
 01.08.05.00	23/10/12
 
 *	C	Pequenas correções no tratamento do horário de verão.

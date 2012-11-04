@@ -49,11 +49,11 @@ public class LancamentoDto {
 	}
 	
 	public Date getDataFinal() {
-		return this.dataFinal;
+		return DateUtil.time(this.dataFinal, "23:59:59");
 	}
 	
 	public Date getDataInicio() {
-		return this.dataInicio;
+		return DateUtil.time(this.dataInicio, "00:00:00");
 	}
 	
 	public Long getIdUsuario() {
@@ -81,11 +81,13 @@ public class LancamentoDto {
 	}
 	
 	public void setDataFinal(final Date dataFinal) {
-		this.dataFinal = DateUtil.parseBRST(dataFinal);
+// this.dataFinal = DateUtil.parseBRST(dataFinal);
+		this.dataFinal = dataFinal;
 	}
 	
 	public void setDataInicio(final Date dataInicio) {
-		this.dataInicio = DateUtil.parseBRST(dataInicio);
+// this.dataInicio = DateUtil.parseBRST(dataInicio);
+		this.dataInicio = dataInicio;
 	}
 	
 	public void setIdUsuario(final Long idUsuario) {

@@ -6,7 +6,6 @@ import gfp.type.ContaType;
 import gfp.type.FormaPagamentoType;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,7 +108,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		}
 		
 		for (final Date d : m.keySet()) {
-			final Object o[] = { new Timestamp(d.getTime()), m.get(d) };
+			final Object o[] = { d, m.get(d) };
 			result.add(o);
 		}
 		
@@ -154,8 +153,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("conta", conta));
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
-		c.add(Restrictions.le("dataPagamento", dataSaldo));
-		c.add(Restrictions.gt("dataCompensacao", dataSaldo));
+		c.add(Restrictions.le("dataPagamento",
+				DateUtil.time(dataSaldo, "23:59:59")));
+		c.add(Restrictions.gt("dataCompensacao",
+				DateUtil.time(dataSaldo, "00:00:00")));
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
@@ -172,8 +173,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("conta", conta));
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
-		c.add(Restrictions.le("dataPagamento", dataSaldo));
-		c.add(Restrictions.le("dataCompensacao", dataSaldo));
+		c.add(Restrictions.le("dataPagamento",
+				DateUtil.time(dataSaldo, "23:59:59")));
+		c.add(Restrictions.le("dataCompensacao",
+				DateUtil.time(dataSaldo, "23:59:59")));
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
@@ -303,8 +306,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		
 		if (this.formaPagamento == FormaPagamentoType.CHEQUE.ordinal() &&
 				this.categoria.getTipo() == CategoriaType.RECEITA.ordinal()) {
-			final int prazoCompensacao = this.valorOriginal < 300 ? 3 : 2;
-			int dias = 1;
+			final int prazoCompensacao = this.valorOriginal < 300 ? 2 : 1;
+			int dias = 0;
 			
 			while (dias <= prazoCompensacao) {
 				previsaoPagamento = DateUtil.add(previsaoPagamento, 1);
@@ -321,9 +324,15 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			}
 		}
 		
-		this.dataCompensacao = DateUtil.parseBRST(previsaoPagamento);
+// this.dataCompensacao = DateUtil.parseBRST(previsaoPagamento);
+		this.dataCompensacao = previsaoPagamento;
 	}
 	
+	@SuppressWarnings("unused")
+	@Deprecated
+	/**
+	 * 04/11/12
+	 */
 	private void corrigirHorarioDeVerao() {
 		this.dataVencimento = DateUtil.parseBRST(this.dataVencimento);
 		this.dataPrevisaoPagamento = DateUtil
@@ -520,7 +529,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			this.id = dao.getNextSequence(this, "id").longValue();
 		}
 		
-		corrigirHorarioDeVerao();
+// corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
 	}

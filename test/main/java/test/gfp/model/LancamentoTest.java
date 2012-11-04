@@ -48,9 +48,9 @@ public class LancamentoTest {
 		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
 		
 		l = new Lancamento(this.usuario, cr, 300.0, FormaPagamentoType.CHEQUE);
-		l.setDataPagamento(DateUtil.time(DateUtil.date(4, 11, 2010), "23:00:00"));
+		l.setDataPagamento(DateUtil.date(4, 11, 2010));
 		l = l.save();
-		assertEquals(DateUtil.date(9, 11, 2010), l.getDataCompensacao());
+		assertEquals(DateUtil.date(6, 11, 2010), l.getDataCompensacao());
 	}
 	
 	@Test
