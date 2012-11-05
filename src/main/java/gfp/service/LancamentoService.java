@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import logus.commons.datetime.DateUtil;
+import logus.commons.log.LogBuilder;
 import logus.commons.number.Number;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
 import logus.commons.persistence.hibernate.transaction.TransactionClass;
@@ -190,6 +191,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
+		LogBuilder.info("INICIO::"+dto.getDataInicio());
+		LogBuilder.info("FINAL::"+dto.getDataFinal());
 		prm.add(dto.getDataInicio());
 		prm.add(dto.getDataFinal());
 		
