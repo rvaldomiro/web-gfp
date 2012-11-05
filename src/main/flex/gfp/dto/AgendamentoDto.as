@@ -20,9 +20,33 @@ package gfp.dto
 		
 		public var anteciparFinaisSemana:Boolean = false;
 		
-		public var dataFinal:Date = DateUtil.add(DateUtil.today, 30);
+		[Transient]
+		public function get dataFinal():Date
+		{
+			return DateUtil.toDateTime(dataFinalString);
+		}
 		
-		public var dataInicio:Date = DateUtil.today;
+		public function set dataFinal(value:Date):void
+		{
+			dataFinalString = DateUtil.toDateTimeString(value);
+		}
+		
+		public var dataFinalString:String = DateUtil.toDateTimeString(DateUtil.add(DateUtil
+																				   .today
+																				   , 30));
+		
+		[Transient]
+		public function get dataInicio():Date
+		{
+			return DateUtil.toDateTime(dataInicioString);
+		}
+		
+		public function set dataInicio(value:Date):void
+		{
+			dataInicioString = DateUtil.toDateTimeString(value);
+		}
+		
+		public var dataInicioString:String = DateUtil.toDateTimeString(DateUtil.today);
 		
 		public var dia:int = 1;
 		

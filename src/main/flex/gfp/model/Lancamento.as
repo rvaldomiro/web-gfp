@@ -22,13 +22,57 @@ package gfp.model
 		
 		public var contaTransferencia:Conta;
 		
-		public var dataCompensacao:Date;
+		[Transient]
+		public function get dataCompensacao():Date
+		{
+			return DateUtil.toDateTime(dataCompensacaoString);
+		}
 		
-		public var dataPagamento:Date;
+		public function set dataCompensacao(value:Date):void
+		{
+			dataCompensacaoString = DateUtil.toDateTimeString(value);
+		}
 		
-		public var dataPrevisaoPagamento:Date;
+		public var dataCompensacaoString:String;
 		
-		public var dataVencimento:Date;
+		[Transient]
+		public function get dataPagamento():Date
+		{
+			return DateUtil.toDateTime(dataPagamentoString);
+		}
+		
+		public function set dataPagamento(value:Date):void
+		{
+			dataPagamentoString = DateUtil.toDateTimeString(value);
+		}
+		
+		public var dataPagamentoString:String;
+		
+		[Transient]
+		public function get dataPrevisaoPagamento():Date
+		{
+			return DateUtil.toDateTime(dataPrevisaoPagamentoString);
+		}
+		
+		public function set dataPrevisaoPagamento(value:Date):void
+		{
+			dataPrevisaoPagamentoString = DateUtil.toDateTimeString(value);
+		}
+		
+		public var dataPrevisaoPagamentoString:String;
+		
+		[Transient]
+		public function get dataVencimento():Date
+		{
+			return DateUtil.toDateTime(dataVencimentoString);
+		}
+		
+		public function set dataVencimento(value:Date):void
+		{
+			dataVencimentoString = DateUtil.toDateTimeString(value);
+		}
+		
+		public var dataVencimentoString:String;
 		
 		public var formaPagamento:int;
 		
