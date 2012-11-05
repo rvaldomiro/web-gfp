@@ -20,7 +20,20 @@ package gfp.dto
 		
 		public var conta:Conta;
 		
-		public var dataFinal:Date = DateUtil.lastDayOfCurrentMonth();
+		[Transient]
+		public function get dataFinal():Date
+		{
+			return DateUtil.toDateTime(dataFinalString);
+		}
+		
+		public function set dataFinal(value:Date):void
+		{
+			dataFinalString = DateUtil.toDateTimeString(value);
+		}
+		
+//		public var dataFinal:Date = DateUtil.lastDayOfCurrentMonth();
+		
+		public var dataFinalString:String = DateUtil.toDateTimeString(DateUtil.lastDayOfCurrentMonth());
 		
 		[Transient]
 		public function get dataInicio():Date
