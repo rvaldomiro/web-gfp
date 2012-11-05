@@ -62,8 +62,15 @@ public class LancamentoDto {
 		return DateUtil.toDateTimeString(this.dataInicio);
 	}
 	
+	public String getDataFinalString() {
+		return DateUtil.toDateTimeString(this.dataFinal);
+	}
+	
 	public void setDataInicioString(final String arg0) {
-		this.dataInicio = DateUtil.toDateTime(arg0);
+		this.dataInicio = DateUtil.time(DateUtil.toDateTime(arg0),"00:00:00");
+	}
+	public void setDataFinalString(final String arg0) {
+		this.dataFinal = DateUtil.time(DateUtil.toDateTime(arg0),"23:59:59");
 	}
 	
 	public Long getIdUsuario() {
