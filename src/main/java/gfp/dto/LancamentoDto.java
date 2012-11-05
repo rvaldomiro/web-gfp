@@ -49,28 +49,19 @@ public class LancamentoDto {
 	}
 	
 	public Date getDataFinal() {
-//		return DateUtil.time(this.dataFinal, "23:59:59");
 		return this.dataFinal;
-	}
-	
-	public Date getDataInicio() {
-//		return DateUtil.time(this.dataInicio, "00:00:00");
-		return this.dataInicio;
-	}
-	
-	public String getDataInicioString() {
-		return DateUtil.toDateTimeString(this.dataInicio);
 	}
 	
 	public String getDataFinalString() {
 		return DateUtil.toDateTimeString(this.dataFinal);
 	}
 	
-	public void setDataInicioString(final String arg0) {
-		this.dataInicio = DateUtil.time(DateUtil.toDateTime(arg0),"00:00:00");
+	public Date getDataInicio() {
+		return this.dataInicio;
 	}
-	public void setDataFinalString(final String arg0) {
-		this.dataFinal = DateUtil.time(DateUtil.toDateTime(arg0),"23:59:59");
+	
+	public String getDataInicioString() {
+		return DateUtil.toDateTimeString(this.dataInicio);
 	}
 	
 	public Long getIdUsuario() {
@@ -98,13 +89,19 @@ public class LancamentoDto {
 	}
 	
 	public void setDataFinal(final Date dataFinal) {
-// this.dataFinal = DateUtil.parseBRST(dataFinal);
 		this.dataFinal = dataFinal;
 	}
 	
+	public void setDataFinalString(final String arg0) {
+		this.dataFinal = DateUtil.time(DateUtil.toDateTime(arg0), "23:59:59");
+	}
+	
 	public void setDataInicio(final Date dataInicio) {
-// this.dataInicio = DateUtil.parseBRST(dataInicio);
 		this.dataInicio = dataInicio;
+	}
+	
+	public void setDataInicioString(final String arg0) {
+		this.dataInicio = DateUtil.time(DateUtil.toDateTime(arg0), "00:00:00");
 	}
 	
 	public void setIdUsuario(final Long idUsuario) {

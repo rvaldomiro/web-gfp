@@ -31,8 +31,6 @@ package gfp.dto
 			dataFinalString = DateUtil.toDateTimeString(value);
 		}
 		
-//		public var dataFinal:Date = DateUtil.lastDayOfCurrentMonth();
-		
 		public var dataFinalString:String = DateUtil.toDateTimeString(DateUtil.lastDayOfCurrentMonth());
 		
 		[Transient]
@@ -45,8 +43,6 @@ package gfp.dto
 		{
 			dataInicioString = DateUtil.toDateTimeString(value);
 		}
-		
-//		public var dataInicio:Date = DateUtil.today;
 		
 		public var dataInicioString:String = DateUtil.toDateTimeString(DateUtil.today);
 		

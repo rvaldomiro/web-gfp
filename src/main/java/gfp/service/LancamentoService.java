@@ -50,8 +50,6 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	public List<Lancamento> agendarLancamentos(final AgendamentoDto dto)
 			throws Exception {
 		final List<Lancamento> result = new ArrayList<Lancamento>();
-// final Date dataInicio = DateUtil.parseBRST(dto.getDataInicio());
-// final Date dataFinal = DateUtil.parseBRST(dto.getDataFinal());
 		final Date dataInicio = dto.getDataInicio();
 		final Date dataFinal = dto.getDataFinal();
 		final boolean pagamentoComCartaoDeCredito = dto.getLancamento()
