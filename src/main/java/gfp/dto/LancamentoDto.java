@@ -49,11 +49,13 @@ public class LancamentoDto {
 	}
 	
 	public Date getDataFinal() {
-		return DateUtil.time(this.dataFinal, "23:59:59");
+//		return DateUtil.time(this.dataFinal, "23:59:59");
+		return this.dataFinal;
 	}
 	
 	public Date getDataInicio() {
-		return DateUtil.time(this.dataInicio, "00:00:00");
+//		return DateUtil.time(this.dataInicio, "00:00:00");
+		return this.dataInicio;
 	}
 	
 	public Long getIdUsuario() {
