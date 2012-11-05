@@ -1,5 +1,6 @@
 package gfp.model
 {
+	import common.util.DateUtc;
 	import common.util.DateUtil;
 	
 	import gfp.type.FormaPagamentoType;
@@ -25,54 +26,54 @@ package gfp.model
 		[Transient]
 		public function get dataCompensacao():Date
 		{
-			return DateUtil.toDateTime(dataCompensacaoString);
+			return DateUtc.get(dataCompensacaoUtc);
 		}
 		
 		public function set dataCompensacao(value:Date):void
 		{
-			dataCompensacaoString = DateUtil.toDateTimeString(value);
+			dataCompensacaoUtc = DateUtc.set(value);
 		}
 		
-		public var dataCompensacaoString:String;
+		public var dataCompensacaoUtc:String;
 		
 		[Transient]
 		public function get dataPagamento():Date
 		{
-			return DateUtil.toDateTime(dataPagamentoString);
+			return DateUtc.get(dataPagamentoUtc);
 		}
 		
 		public function set dataPagamento(value:Date):void
 		{
-			dataPagamentoString = DateUtil.toDateTimeString(value);
+			dataPagamentoUtc = DateUtc.set(value);
 		}
 		
-		public var dataPagamentoString:String;
+		public var dataPagamentoUtc:String;
 		
 		[Transient]
 		public function get dataPrevisaoPagamento():Date
 		{
-			return DateUtil.toDateTime(dataPrevisaoPagamentoString);
+			return DateUtc.get(dataPrevisaoPagamentoUtc);
 		}
 		
 		public function set dataPrevisaoPagamento(value:Date):void
 		{
-			dataPrevisaoPagamentoString = DateUtil.toDateTimeString(value);
+			dataPrevisaoPagamentoUtc = DateUtc.set(value);
 		}
 		
-		public var dataPrevisaoPagamentoString:String;
+		public var dataPrevisaoPagamentoUtc:String;
 		
 		[Transient]
 		public function get dataVencimento():Date
 		{
-			return DateUtil.toDateTime(dataVencimentoString);
+			return DateUtc.get(dataVencimentoUtc);
 		}
 		
 		public function set dataVencimento(value:Date):void
 		{
-			dataVencimentoString = DateUtil.toDateTimeString(value);
+			dataVencimentoUtc = DateUtc.set(value);
 		}
 		
-		public var dataVencimentoString:String;
+		public var dataVencimentoUtc:String;
 		
 		public var formaPagamento:int;
 		

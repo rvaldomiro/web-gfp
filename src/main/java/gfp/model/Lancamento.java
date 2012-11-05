@@ -26,8 +26,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import logus.commons.datetime.DateUtc;
 import logus.commons.datetime.DateUtil;
-import logus.commons.log.LogBuilder;
 import logus.commons.number.Number;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
@@ -410,32 +410,32 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		return this.dataCompensacao;
 	}
 	
-	public String getDataCompensacaoString() {
-		return DateUtil.toDateTimeString(this.dataCompensacao);
+	public String getDataCompensacaoUtc() {
+		return DateUtc.get(this.dataCompensacao);
 	}
 	
 	public Date getDataPagamento() {
 		return this.dataPagamento;
 	}
 	
-	public String getDataPagamentoString() {
-		return DateUtil.toDateTimeString(this.dataPagamento);
+	public String getDataPagamentoUtc() {
+		return DateUtc.get(this.dataPagamento);
 	}
 	
 	public Date getDataPrevisaoPagamento() {
 		return this.dataPrevisaoPagamento;
 	}
 	
-	public String getDataPrevisaoPagamentoString() {
-		return DateUtil.toDateTimeString(this.dataPrevisaoPagamento);
+	public String getDataPrevisaoPagamentoUtc() {
+		return DateUtc.get(this.dataPrevisaoPagamento);
 	}
 	
 	public Date getDataVencimento() {
 		return this.dataVencimento;
 	}
 	
-	public String getDataVencimentoString() {
-		return DateUtil.toDateTimeString(this.dataVencimento);
+	public String getDataVencimentoUtc() {
+		return DateUtc.get(this.dataVencimento);
 	}
 	
 	public Integer getFormaPagamento() {
@@ -490,33 +490,32 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		this.dataCompensacao = dataCompensacao;
 	}
 	
-	public void setDataCompensacaoString(final String dataCompensacao) {
-		this.dataCompensacao = DateUtil.toDateTime(dataCompensacao);
+	public void setDataCompensacaoUtc(final String dataCompensacao) {
+		this.dataCompensacao = DateUtc.set(dataCompensacao);
 	}
 	
 	public void setDataPagamento(final Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
 	
-	public void setDataPagamentoString(final String dataPagamento) {
-		this.dataPagamento = DateUtil.toDateTime(dataPagamento);
+	public void setDataPagamentoUtc(final String dataPagamento) {
+		this.dataPagamento = DateUtc.set(dataPagamento);
 	}
 	
 	public void setDataPrevisaoPagamento(final Date dataPrevisaoPagamento) {
 		this.dataPrevisaoPagamento = dataPrevisaoPagamento;
 	}
 	
-	public void setDataPrevisaoPagamentoString(
-			final String dataPrevisaoPagamento) {
-		this.dataPrevisaoPagamento = DateUtil.toDateTime(dataPrevisaoPagamento);
+	public void setDataPrevisaoPagamentoUtc(final String dataPrevisaoPagamento) {
+		this.dataPrevisaoPagamento = DateUtc.set(dataPrevisaoPagamento);
 	}
 	
 	public void setDataVencimento(final Date dataVencimento) {
 		this.dataVencimento = dataVencimento;
 	}
 	
-	public void setDataVencimentoString(final String dataVencimento) {
-		this.dataVencimento = DateUtil.toDateTime(dataVencimento);
+	public void setDataVencimentoUtc(final String dataVencimento) {
+		this.dataVencimento = DateUtc.set(dataVencimento);
 	}
 	
 	public void setFormaPagamento(final Integer formaPagamento) {
@@ -567,9 +566,9 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		calcularDataCompensacao();
 		sincronizarVinculado();
 		
-		LogBuilder.info("dataCompensacao:" + this.dataCompensacao);
-		LogBuilder.info("dataPagamento:" + this.dataPagamento);
-		LogBuilder.info("dataPrevisaoPagamento:" + this.dataPrevisaoPagamento);
-		LogBuilder.info("dataVencimento:" + this.dataVencimento);
+// LogBuilder.info("dataCompensacao:" + this.dataCompensacao);
+// LogBuilder.info("dataPagamento:" + this.dataPagamento);
+// LogBuilder.info("dataPrevisaoPagamento:" + this.dataPrevisaoPagamento);
+// LogBuilder.info("dataVencimento:" + this.dataVencimento);
 	}
 }
