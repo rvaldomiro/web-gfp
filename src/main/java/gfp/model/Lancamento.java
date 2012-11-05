@@ -408,6 +408,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public Date getDataCompensacao() {
 		return this.dataCompensacao;
 	}
+	
 	public String getDataCompensacaoString() {
 		return DateUtil.toDateTimeString(this.dataCompensacao);
 	}
@@ -415,6 +416,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public Date getDataPagamento() {
 		return this.dataPagamento;
 	}
+	
 	public String getDataPagamentoString() {
 		return DateUtil.toDateTimeString(this.dataPagamento);
 	}
@@ -422,6 +424,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public Date getDataPrevisaoPagamento() {
 		return this.dataPrevisaoPagamento;
 	}
+	
 	public String getDataPrevisaoPagamentoString() {
 		return DateUtil.toDateTimeString(this.dataPrevisaoPagamento);
 	}
@@ -429,6 +432,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public Date getDataVencimento() {
 		return this.dataVencimento;
 	}
+	
 	public String getDataVencimentoString() {
 		return DateUtil.toDateTimeString(this.dataVencimento);
 	}
@@ -484,6 +488,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public void setDataCompensacao(final Date dataCompensacao) {
 		this.dataCompensacao = dataCompensacao;
 	}
+	
 	public void setDataCompensacaoString(final String dataCompensacao) {
 		this.dataCompensacao = DateUtil.toDateTime(dataCompensacao);
 	}
@@ -491,6 +496,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public void setDataPagamento(final Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
+	
 	public void setDataPagamentoString(final String dataPagamento) {
 		this.dataPagamento = DateUtil.toDateTime(dataPagamento);
 	}
@@ -498,13 +504,16 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public void setDataPrevisaoPagamento(final Date dataPrevisaoPagamento) {
 		this.dataPrevisaoPagamento = dataPrevisaoPagamento;
 	}
-	public void setDataPrevisaoPagamentoString(final String dataPrevisaoPagamento) {
+	
+	public void setDataPrevisaoPagamentoString(
+			final String dataPrevisaoPagamento) {
 		this.dataPrevisaoPagamento = DateUtil.toDateTime(dataPrevisaoPagamento);
 	}
 	
 	public void setDataVencimento(final Date dataVencimento) {
 		this.dataVencimento = dataVencimento;
 	}
+	
 	public void setDataVencimentoString(final String dataVencimento) {
 		this.dataVencimento = DateUtil.toDateTime(dataVencimento);
 	}
