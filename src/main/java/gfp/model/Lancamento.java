@@ -491,7 +491,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataCompensacaoString(final String dataCompensacao) {
-		LogBuilder.info("dataCompensacaoString:"+dataCompensacao);
+		LogBuilder.info("dataCompensacaoString:" + dataCompensacao);
 		this.dataCompensacao = DateUtil.toDateTime(dataCompensacao);
 	}
 	
@@ -500,7 +500,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataPagamentoString(final String dataPagamento) {
-		LogBuilder.info("dataPagamentoString:"+dataPagamento);
+		LogBuilder.info("dataPagamentoString:" + dataPagamento);
 		this.dataPagamento = DateUtil.toDateTime(dataPagamento);
 	}
 	
@@ -510,7 +510,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	
 	public void setDataPrevisaoPagamentoString(
 			final String dataPrevisaoPagamento) {
-		LogBuilder.info("dataPrevisaoPagamentoString:"+dataPrevisaoPagamento);
+		LogBuilder.info("dataPrevisaoPagamentoString:" + dataPrevisaoPagamento);
 		this.dataPrevisaoPagamento = DateUtil.toDateTime(dataPrevisaoPagamento);
 	}
 	
@@ -519,7 +519,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataVencimentoString(final String dataVencimento) {
-		LogBuilder.info("dataVencimentoString:"+dataVencimento);
+		LogBuilder.info("dataVencimentoString:" + dataVencimento);
 		this.dataVencimento = DateUtil.toDateTime(dataVencimento);
 	}
 	
@@ -566,13 +566,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		if (this.id == null) {
 			this.id = dao.getNextSequence(this, "id").longValue();
 		}
-		LogBuilder.info("dataCompensacao:"+dataCompensacao);
-		LogBuilder.info("dataPagamento:"+dataPagamento);
-		LogBuilder.info("dataPrevisaoPagamento:"+dataPrevisaoPagamento);
-		LogBuilder.info("dataVencimento:"+dataVencimento);
-		
-		
-		
+		LogBuilder.info("dataCompensacao:" + this.dataCompensacao);
+		LogBuilder.info("dataPagamento:" + this.dataPagamento);
+		LogBuilder.info("dataPrevisaoPagamento:" + this.dataPrevisaoPagamento);
+		LogBuilder.info("dataVencimento:" + this.dataVencimento);
 		
 // corrigirHorarioDeVerao();
 		calcularDataCompensacao();
