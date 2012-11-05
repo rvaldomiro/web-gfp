@@ -1,5 +1,6 @@
 package gfp.dto
 {
+	import common.util.DateUtc;
 	import common.util.DateUtil;
 	
 	import gfp.model.Categoria;
@@ -23,28 +24,28 @@ package gfp.dto
 		[Transient]
 		public function get dataFinal():Date
 		{
-			return DateUtil.toDateTime(dataFinalString);
+			return DateUtc.get(dataFinalUtc);
 		}
 		
 		public function set dataFinal(value:Date):void
 		{
-			dataFinalString = DateUtil.toDateTimeString(value);
+			dataFinalUtc = DateUtc.set(value);
 		}
 		
-		public var dataFinalString:String = DateUtil.toDateTimeString(DateUtil.lastDayOfCurrentMonth());
+		public var dataFinalUtc:String = DateUtc.set(DateUtil.lastDayOfCurrentMonth());
 		
 		[Transient]
 		public function get dataInicio():Date
 		{
-			return DateUtil.toDateTime(dataInicioString);
+			return DateUtc.get(dataInicioUtc);
 		}
 		
 		public function set dataInicio(value:Date):void
 		{
-			dataInicioString = DateUtil.toDateTimeString(value);
+			dataInicioUtc = DateUtc.set(value);
 		}
 		
-		public var dataInicioString:String = DateUtil.toDateTimeString(DateUtil.today);
+		public var dataInicioUtc:String = DateUtc.set(DateUtil.today);
 		
 		public var idUsuario:Number;
 		

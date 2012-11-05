@@ -7,6 +7,7 @@ import gfp.type.LancamentoSituacaoType;
 
 import java.util.Date;
 
+import logus.commons.datetime.DateUtc;
 import logus.commons.datetime.DateUtil;
 
 public class LancamentoDto {
@@ -52,16 +53,16 @@ public class LancamentoDto {
 		return this.dataFinal;
 	}
 	
-	public String getDataFinalString() {
-		return DateUtil.toDateTimeString(this.dataFinal);
+	public String getDataFinalUtc() {
+		return DateUtc.get(this.dataFinal);
 	}
 	
 	public Date getDataInicio() {
 		return this.dataInicio;
 	}
 	
-	public String getDataInicioString() {
-		return DateUtil.toDateTimeString(this.dataInicio);
+	public String getDataInicioUtc() {
+		return DateUtc.get(this.dataInicio);
 	}
 	
 	public Long getIdUsuario() {
@@ -92,16 +93,16 @@ public class LancamentoDto {
 		this.dataFinal = dataFinal;
 	}
 	
-	public void setDataFinalString(final String arg0) {
-		this.dataFinal = DateUtil.time(DateUtil.toDateTime(arg0), "23:59:59");
+	public void setDataFinalUtc(final String dataFinal) {
+		this.dataFinal = DateUtc.set(dataFinal, "23:59:59");
 	}
 	
 	public void setDataInicio(final Date dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 	
-	public void setDataInicioString(final String arg0) {
-		this.dataInicio = DateUtil.time(DateUtil.toDateTime(arg0), "00:00:00");
+	public void setDataInicioUtc(final String dataInicio) {
+		this.dataInicio = DateUtc.set(dataInicio, "00:00:00");
 	}
 	
 	public void setIdUsuario(final Long idUsuario) {
