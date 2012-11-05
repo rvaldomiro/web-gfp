@@ -491,6 +491,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataCompensacaoString(final String dataCompensacao) {
+		LogBuilder.info("dataCompensacaoString:"+dataCompensacao);
 		this.dataCompensacao = DateUtil.toDateTime(dataCompensacao);
 	}
 	
@@ -499,6 +500,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataPagamentoString(final String dataPagamento) {
+		LogBuilder.info("dataPagamentoString:"+dataPagamento);
 		this.dataPagamento = DateUtil.toDateTime(dataPagamento);
 	}
 	
@@ -508,6 +510,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	
 	public void setDataPrevisaoPagamentoString(
 			final String dataPrevisaoPagamento) {
+		LogBuilder.info("dataPrevisaoPagamentoString:"+dataPrevisaoPagamento);
 		this.dataPrevisaoPagamento = DateUtil.toDateTime(dataPrevisaoPagamento);
 	}
 	
@@ -516,6 +519,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	}
 	
 	public void setDataVencimentoString(final String dataVencimento) {
+		LogBuilder.info("dataVencimentoString:"+dataVencimento);
 		this.dataVencimento = DateUtil.toDateTime(dataVencimento);
 	}
 	
@@ -566,6 +570,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		LogBuilder.info("dataPagamento:"+dataPagamento);
 		LogBuilder.info("dataPrevisaoPagamento:"+dataPrevisaoPagamento);
 		LogBuilder.info("dataVencimento:"+dataVencimento);
+		
+		
+		
+		
 // corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
