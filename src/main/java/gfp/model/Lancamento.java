@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import logus.commons.datetime.DateUtil;
+import logus.commons.log.LogBuilder;
 import logus.commons.number.Number;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
@@ -561,7 +562,10 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		if (this.id == null) {
 			this.id = dao.getNextSequence(this, "id").longValue();
 		}
-		
+		LogBuilder.info("dataCompensacao:"+dataCompensacao);
+		LogBuilder.info("dataPagamento:"+dataPagamento);
+		LogBuilder.info("dataPrevisaoPagamento:"+dataPrevisaoPagamento);
+		LogBuilder.info("dataVencimento:"+dataVencimento);
 // corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
