@@ -22,7 +22,20 @@ package gfp.dto
 		
 		public var dataFinal:Date = DateUtil.lastDayOfCurrentMonth();
 		
-		public var dataInicio:Date = DateUtil.today;
+		[Transient]
+		public function get dataInicio():Date
+		{
+			return DateUtil.toDateTime(dataInicioString);
+		}
+		
+		public function set dataInicio(value:Date):void
+		{
+			dataInicioString = DateUtil.toDateTimeString(value);
+		}
+		
+//		public var dataInicio:Date = DateUtil.today;
+		
+		public var dataInicioString:String = DateUtil.toDateTimeString(DateUtil.today);
 		
 		public var idUsuario:Number;
 		

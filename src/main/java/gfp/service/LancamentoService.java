@@ -191,8 +191,8 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			cdt.add("dataCompensacao between :params2 and :params3");
 		}
 		
-		LogBuilder.info("INICIO::"+dto.getDataInicio());
-		LogBuilder.info("FINAL::"+dto.getDataFinal());
+		LogBuilder.info("INICIO ::"+dto.getDataInicio());
+		LogBuilder.info("FINAL  ::"+dto.getDataFinal());
 		prm.add(dto.getDataInicio());
 		prm.add(dto.getDataFinal());
 		
