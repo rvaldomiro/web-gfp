@@ -2,4 +2,4 @@
 !*.log
 *.lck
 gfp-dev.properties
-gfp-test.properties
+gfp-test.*
