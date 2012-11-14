@@ -115,6 +115,14 @@ package gfp.model
 					vencimento = DateUtil.addMonth(vencimento, 1);
 				}
 				
+				if (parcelaNumero > 1)
+				{
+					for (var i:int = 2; i <= parcelaNumero; i++)
+					{
+						vencimento = DateUtil.addMonth(vencimento, 1);
+					}
+				}
+				
 				var referencia:String = "Fatura " + conta.banco.nome.charAt(0) + (formaPagamento
 					== FormaPagamentoType.CREDITO_MASTERCARD ? "M" : "V") + DateUtil
 					.formatDate(vencimento).substr(3, 2) + DateUtil.formatDate(vencimento)

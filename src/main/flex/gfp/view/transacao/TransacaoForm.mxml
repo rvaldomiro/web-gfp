@@ -2,7 +2,6 @@
 <s:Panel xmlns:fx = "http://ns.adobe.com/mxml/2009"
 		 xmlns:s = "library://ns.adobe.com/flex/spark"
 		 xmlns:mx = "library://ns.adobe.com/flex/mx"
-		 xmlns:custom = "common.spark.component.custom.*"
 		 xmlns:transacao = "gfp.view.transacao.*"
 		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
@@ -12,8 +11,7 @@
 		 currentState = "Principal"
 		 stateChangeComplete = "stateChangeCompleteHandler(event)"
 		 resizeEffect = "{mx.effects.Resize}"
-		 xmlns:component = "common.spark.component.*"
-		 xmlns:component1 = "common.component.*">
+		 xmlns:component = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
 			import common.component.validator.RequiredValidator;
@@ -73,8 +71,8 @@
 			
 			private function get pagamentoComCartaoDeCredito():Boolean
 			{
-				return service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD ||
-					service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_VISA;
+				return service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD
+					|| service.selecionado.formaPagamento == FormaPagamentoType.CREDITO_VISA;
 			}
 			
 			[Bindable]
@@ -119,10 +117,10 @@
 				{
 					for each (var conta:Conta in comboContaTransferencia.dataProvider)
 					{
-						if ((service.selecionado.contaTransferencia && conta.id ==
-							service.selecionado.contaTransferencia.id) || (!service
-							.selecionado.contaTransferencia && conta.id != service
-							.selecionado.conta.id))
+						if ((service.selecionado.contaTransferencia && conta.id == service
+							.selecionado.contaTransferencia.id) || (!service.selecionado
+							.contaTransferencia && conta.id != service.selecionado
+							.conta.id))
 						{
 							comboContaTransferencia.selectedItem = conta;
 							service.selecionado.contaTransferencia = conta as Conta;
@@ -140,11 +138,11 @@
 				{
 					currentState = "Agendamento";
 					dto.dataInicio = dto.lancamento.dataVencimento;
-					dto.dataFinal = DateUtil.addMonth(!pagamentoComCartaoDeCredito ?
-													  dto.dataInicio : dto.lancamento
+					dto.dataFinal = DateUtil.addMonth(!pagamentoComCartaoDeCredito
+													  ? dto.dataInicio : dto.lancamento
 													  .dataPrevisaoPagamento, 1);
-					dto.dia = !pagamentoComCartaoDeCredito ? dto.dataInicio.date :
-						dto.lancamento.dataPrevisaoPagamento.date;
+					dto.dia = !pagamentoComCartaoDeCredito ? dto.dataInicio.date
+						: dto.lancamento.dataPrevisaoPagamento.date;
 					
 					comboFrequencia.enabled = !pagamentoComCartaoDeCredito;
 					stepperDia.enabled = !pagamentoComCartaoDeCredito;
@@ -237,21 +235,22 @@
 																	, function(re:ResultEvent):void
 																	{
 																		changed = true;
-																		var agendamentos:ArrayCollection =
-																			re.result as
-																			ArrayCollection;
+																		var agendamentos:ArrayCollection
+																			= re
+																			.result
+																			as ArrayCollection;
 																		currentState = "Principal";
 																		
-																		var _dto:LancamentoDto =
-																			new LancamentoDto();
+																		var _dto:LancamentoDto
+																			= new LancamentoDto();
 																		_dto.tipoPeriodo = 1;
-																		_dto.dataInicio = (agendamentos[0] as
-																			Lancamento)
+																		_dto.dataInicio = (agendamentos[0]
+																			as Lancamento)
 																			.dataPrevisaoPagamento;
 																		_dto.dataFinal = (agendamentos[agendamentos
-																			.length -
-																			1] as
-																			Lancamento)
+																			.length
+																			- 1]
+																			as Lancamento)
 																			.dataPrevisaoPagamento;
 																		_dto.categoria = dto
 																			.lancamento
@@ -463,6 +462,7 @@
 
 					<component:CustomDateField id = "datePrevisaoPagamento"
 											   selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
+											   enabled = "{!(service.selecionado.formaPagamento >= FormaPagamentoType.CREDITO_MASTERCARD)}"
 											   editable = "false"
 											   tabFocusEnabled = "false"/>
 				</s:VGroup>
