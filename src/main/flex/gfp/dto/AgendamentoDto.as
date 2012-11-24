@@ -23,30 +23,30 @@ package gfp.dto
 		[Transient]
 		public function get dataFinal():Date
 		{
-			return DateUtil.toDateTime(dataFinalString);
+			return DateUtil.toDateTime(dataFinalUtc);
 		}
 		
 		public function set dataFinal(value:Date):void
 		{
-			dataFinalString = DateUtil.toDateTimeString(value);
+			dataFinalUtc = DateUtil.toDateTimeString(value);
 		}
 		
-		public var dataFinalString:String = DateUtil.toDateTimeString(DateUtil.add(DateUtil
-																				   .today
-																				   , 30));
+		public var dataFinalUtc:String = DateUtil.toDateTimeString(DateUtil.add(DateUtil
+																				.today
+																				, 30));
 		
 		[Transient]
 		public function get dataInicio():Date
 		{
-			return DateUtil.toDateTime(dataInicioString);
+			return DateUtil.toDateTime(dataInicioUtc);
 		}
 		
 		public function set dataInicio(value:Date):void
 		{
-			dataInicioString = DateUtil.toDateTimeString(value);
+			dataInicioUtc = DateUtil.toDateTimeString(value);
 		}
 		
-		public var dataInicioString:String = DateUtil.toDateTimeString(DateUtil.today);
+		public var dataInicioUtc:String = DateUtil.toDateTimeString(DateUtil.today);
 		
 		public var dia:int = 1;
 		
@@ -56,5 +56,6 @@ package gfp.dto
 		
 		public var valor:Number;
 	}
+
 }
 

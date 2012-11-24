@@ -135,7 +135,8 @@ package gfp.model
 			}
 			else if (id == null)
 			{
-				observacao = null;
+				observacao = observacao != null && observacao.indexOf("Fatura") == 0
+					? null : observacao;
 				dataPrevisaoPagamento = dataVencimento;
 			}
 		}
