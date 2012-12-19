@@ -81,8 +81,13 @@
 						sTooltip += "{br}Despesas: " + NumberUtil.formatNumber(dto
 																			   .despesas
 																			   , 2);
-						sTooltip += "{br}Saldo: " + NumberUtil.formatNumber(dto.saldoAcumulado
-																			, 2);
+						sTooltip += "{br}" + (barTrocaModo.selectedIndex == 0 ? "Dia"
+							: "Mês") + ": " + NumberUtil.formatNumber(dto.receitas
+																	  - dto.despesas
+																	  , 2);
+						sTooltip += "{br}Acumulado: " + NumberUtil.formatNumber(dto
+																				.saldoAcumulado
+																				, 2);
 						sLink = "E-itemClickHandler," + service.listaPrevisaoSaldoDiario
 							.getItemIndex(dto);
 						

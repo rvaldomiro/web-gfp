@@ -13,6 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.07.00	19/12/12
+
+*	M	Incluído o saldo do dia e mês nos gráficos de previsão de saldo e renomeado o antigo para Acumulado.
+
 01.08.06.00 04/11/12
 
 *	M	Permitir mudar forma de pagamento de um lançamento salvo e consequentemente recalcular as datas de previsão de pagamento.
