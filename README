@@ -13,6 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.08.00	17/02/13
+
+*	M	Implementada a possibilidade de criar orçamentos por categoria/mês e monitorar as transações e a previsão de saldo mensal.
+
 01.08.07.00	19/12/12
 
 *	M	Incluído o saldo do dia e mês nos gráficos de previsão de saldo e renomeado o antigo para Acumulado.

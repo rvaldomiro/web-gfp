@@ -6,7 +6,6 @@
 		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
 		 title = "Categoria"
-		 xmlns:custom = "common.components.custom.*"
 		 xmlns:component = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
@@ -116,6 +115,14 @@
 		<s:TextInput id = "textDescricao"
 					 text = "@{service.selecionada.descricao}"
 					 width = "250"/>
+
+		<s:Label text = "Orçamento Mensal:"/>
+
+		<s:HGroup verticalAlign = "baseline">
+			<component:TextInputNumeric value = "@{service.selecionada.valorOrcamento}"/>
+
+			<s:Label text = "0,00 => Média últimos 3 meses"/>
+		</s:HGroup>
 
 		<s:CheckBox id = "checkTransferencia"
 					selected = "@{service.selecionada.transferencia}"

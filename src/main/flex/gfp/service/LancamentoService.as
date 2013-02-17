@@ -183,6 +183,15 @@ package gfp.service
 						   });
 		}
 		
+		[EventHandler(event = "TransacaoEvent.OBTER_SALDO_REMANESCENTE", properties = "event")]
+		public function obterSaldoRemanescente(event:ICustomEvent):void
+		{
+			executeService(service.obterSaldoRemanescente(selecionado), function(re:ResultEvent):void
+			{
+				event.result(re);
+			});
+		}
+		
 		[EventHandler(event = "TransacaoEvent.EDITAR", properties = "event")]
 		public function prepararParaEdicao(event:ICustomEvent):void
 		{

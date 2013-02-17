@@ -30,10 +30,12 @@ package gfp.event
 		
 		public static const LISTAR_SALDO_POR_CONTA:String = "TransacaoEvent_ListarSaldoPorConta";
 		
+		public static const OBTER_SALDO_REMANESCENTE:String = "TransacaoEvent_ObterSaldoRemanescente";
+		
 		public static const SALVAR:String = "TransacaoEvent_Salvar";
 		
-		public function TransacaoEvent(type:String, object:Object = null, result:Function =
-									   null, fault:Function = null):void
+		public function TransacaoEvent(type:String, object:Object = null, result:Function
+									   = null, fault:Function = null):void
 		{
 			super(type, object, result, fault);
 		}

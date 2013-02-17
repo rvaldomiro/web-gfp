@@ -247,14 +247,14 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 			
 			for (final Object[] o : saldoDiario) {
 				final Date dataCompensacao = (Date) o[0];
-				final Double saldo = (Double) o[1];
+				final Double saldo = (Double) o[2];
 				final SaldoDiarioDto dto = result.get(result
 						.indexOf(new SaldoDiarioDto(dataCompensacao)));
 				
 				if (categoria == CategoriaType.RECEITA) {
-					dto.receitas = saldo;
+					dto.receitas += saldo;
 				} else {
-					dto.despesas = saldo;
+					dto.despesas += saldo;
 				}
 			}
 		}
@@ -301,7 +301,6 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 	@RemotingInclude
 	public List<SaldoDto> listarSaldoPorConta(final Long usuarioId,
 			final Date dataSaldo) throws Exception {
-// dataSaldo = DateUtil.parseBRST(dataSaldo);
 		final List<SaldoDto> result = new ArrayList<SaldoDto>();
 		final List<Conta> contas = Conta.listarAtivas(usuarioId);
 		
@@ -350,6 +349,21 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 		result.add(new SaldoDto(SaldoDto.SALDO_ATUAL, saldoAtual));
 		
 		return result;
+	}
+	
+	@RemotingInclude
+	public Double obterSaldoRemanescente(final Lancamento lancamento) {
+		if (lancamento.getCategoria() == null) {
+			return 0.0;
+		}
+		
+		final Double orcado = lancamento.getCategoria().getValorOrcamento() > 0 ? lancamento
+				.getCategoria().getValorOrcamento() : lancamento.getCategoria()
+				.calcularMedia(lancamento.getDataVencimento(), 3);
+		final Double gasto = Lancamento.obterTotal(lancamento.getCategoria(),
+				lancamento.getDataPrevisaoPagamento());
+		
+		return orcado - gasto;
 	}
 	
 	@RemotingInclude

@@ -19,6 +19,8 @@
 			import common.util.DateUtil;
 			import common.util.MessageEvent;
 			import common.util.MessageUtil;
+			import common.util.NumberUtil;
+			import common.util.StringUtil;
 			
 			import gfp.dto.AgendamentoDto;
 			import gfp.dto.LancamentoDto;
@@ -44,6 +46,8 @@
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.ResultEvent;
+			
+			import org.swizframework.processors.DispatcherProcessor;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -90,6 +94,21 @@
 			[Bindable(event = "permiteRepetir")]
 			private function get permiteRepetir():Boolean
 			{
+				if (comboCategorias.selectedItem)
+				{
+					service.selecionado.categoria = comboCategorias.selectedItem
+						as Categoria;
+					
+					if (!service.selecionado.categoria.transferencia)
+					{
+						carregarSaldoRemanescente();
+					}
+					else
+					{
+						labelRemanescente.visible = false;
+					}
+				}
+				
 				return comboCategorias.selectedItem is Categoria && service.selecionado
 					.valorOriginal > 0;
 			}
@@ -164,6 +183,57 @@
 				currentState == "Principal" ? fadeOut.play([this]) : currentState = "Principal";
 			}
 			
+			private function carregarSaldoRemanescente():void
+			{
+				dispatcher.dispatchEvent(new TransacaoEvent(TransacaoEvent.OBTER_SALDO_REMANESCENTE
+															, null, function(re:ResultEvent):void
+															{
+																labelRemanescente
+																	.visible = comboCategorias
+																	.selectedItem
+																	!= null;
+																
+																var diasRestantes:int
+																	=  DateUtil.compareDate(DateUtil
+																							.lastDayOfMonth(service
+																											.selecionado
+																											.dataPrevisaoPagamento
+																											.month
+																											, service
+																											.selecionado
+																											.dataPrevisaoPagamento
+																											.fullYear)
+																							, DateUtil
+																							.today);
+																
+																labelRemanescente
+																	.text = "Saldo Remanescente: "
+																	+ NumberUtil
+																	.formatMoney(re
+																				 .result
+																				 as Number)
+																	+ (re.result
+																	as Number > 0
+																	? " :: " + diasRestantes
+																	+ " " + StringUtil
+																	.pluralize("dia"
+																			   , diasRestantes)
+																	+ " " + StringUtil
+																	.pluralize("restante"
+																			   , diasRestantes)
+																	: "");
+																
+																labelRemanescente
+																	.setStyle("color"
+																			  , re
+																			  .result
+																			  as Number
+																			  <= 0
+																			  ? 0xff0000
+																			  : 0x138b0d);
+															}));
+			}
+			
 			private function creationCompleteHandler(event:FlexEvent):void
 			{
 				selecaoFormaPagamentoRecebimento.init(service.selecionado);
@@ -172,25 +242,16 @@
 				dispatchEvent(new Event("permiteTransferir"));
 			}
 			
-//			private function datePagamento_focusOutHandler(event:FocusEvent):void
-//			{
-//				if (service.selecionado.valorPago == 0 && (event.target as DateField)
-//					.selectedDate)
-//				{
-//					service.selecionado.valorPago = service.selecionado.valorOriginal;
-//				}
-//			}
-			
 			private function dateVencimento_changeHandler(event:CalendarLayoutChangeEvent):void
 			{
 				service.selecionado.dataPrevisaoPagamento = event.target.selectedDate;
 				service.selecionado.calcularDataPrevisaoPagamento();
+				dispatchEvent(new Event('permiteRepetir'));
 			}
 			
 			private function efetivarTransacao():void
 			{
 				service.selecionado.dataPagamento = service.selecionado.dataPrevisaoPagamento;
-//				service.selecionado.valorPago = service.selecionado.valorOriginal;
 				salvar();
 			}
 			
@@ -208,7 +269,6 @@
 			private function prepararPagamento():void
 			{
 				service.selecionado.dataPagamento = DateUtil.today;
-//				service.selecionado.valorPago = service.selecionado.valorOriginal;
 				salvar();
 			}
 			
@@ -373,7 +433,13 @@
 
 	<s:VGroup id = "form"
 			  width = "100%">
-		<s:Label text = "Categoria:"/>
+		<s:HGroup width = "100%">
+			<s:Label text = "Categoria:"/>
+
+			<s:Label id = "labelRemanescente"
+					 width = "100%"
+					 textAlign = "right"/>
+		</s:HGroup>
 
 		<transacao:CategoriaListInput id = "comboCategorias"
 									  dataProvider = "{categoriaServcie.list}"
@@ -410,7 +476,7 @@
 															width = "{(selecaoFormaPagamentoRecebimento.dataProvider as ArrayCollection).length > 5 ? 617 : 602}"
 															height = "80"
 															enabled.Agendamento = "false"
-															change = "dispatchEvent(new Event('permiteTransferir'))"/>
+															change = "dispatchEvent(new Event('permiteRepetir')); dispatchEvent(new Event('permiteTransferir'));"/>
 
 		<s:Label text = "Transferir para:"
 				 visible = "{permiteTransferir}"
@@ -462,6 +528,7 @@
 
 					<component:CustomDateField id = "datePrevisaoPagamento"
 											   selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
+											   change = "dispatchEvent(new Event('permiteRepetir'))"
 											   enabled = "{!(service.selecionado.formaPagamento >= FormaPagamentoType.CREDITO_MASTERCARD)}"
 											   editable = "false"
 											   tabFocusEnabled = "false"/>

@@ -5,6 +5,7 @@ import gfp.type.CategoriaType;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -90,6 +91,10 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	@NotNull
 	private boolean interna;
 	
+	@NotNull
+	@Column(name = "valor_orcamento")
+	private double valorOrcamento;
+	
 	public Categoria() {
 		super();
 	}
@@ -149,6 +154,28 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 		super.delete();
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Categoria other = (Categoria) obj;
+		if (this.id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!this.id.equals(other.id)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public String getDescricao() {
 		return this.descricao;
 	}
@@ -163,6 +190,18 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	
 	public Usuario getUsuario() {
 		return this.usuario;
+	}
+	
+	public double getValorOrcamento() {
+		return this.valorOrcamento;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (this.id == null ? 0 : this.id.hashCode());
+		return result;
 	}
 	
 	public boolean isEstatistica() {
@@ -203,6 +242,10 @@ public class Categoria extends AbstractPersistentClass<Categoria> {
 	
 	public void setUsuario(final Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public void setValorOrcamento(final double valorOrcamento) {
+		this.valorOrcamento = valorOrcamento;
 	}
 	
 	@Override

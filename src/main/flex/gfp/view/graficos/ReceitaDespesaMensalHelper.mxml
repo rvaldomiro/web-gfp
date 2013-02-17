@@ -13,6 +13,7 @@
 			import gfp.dto.LancamentoDto;
 			import gfp.event.AppEvent;
 			import gfp.event.TransacaoEvent;
+			import gfp.type.CategoriaType;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
@@ -39,7 +40,11 @@
 					
 					for each (dto in dataProvider)
 					{
-						result.addItem({label: dto.categoria.descricao});
+						var excedente:Boolean = dto.categoria.tipo == CategoriaType
+							.RECEITA ? dto.valor < dto.previsao : dto.valor > dto
+							.previsao;
+						result.addItem({label: dto.categoria.descricao + (excedente
+											   ? " *" : "")});
 					}
 					
 					result.addItem({seriesName: 'Realizado'});
@@ -49,6 +54,8 @@
 						var sRealizado:String = "{br}Realizado: " + NumberUtil.formatNumber(dto
 																							.valor
 																							, 2);
+						var sRemanescente:String = "{br}Remanescente: " + NumberUtil
+							.formatNumber(dto.previsao - dto.valor, 2);
 						var sPrevisto:String = dto.previsao > 0 ? "{br}" + NumberUtil
 							.formatNumber(dto.valor / dto.previsao * 100, 1) + "% do Previsto"
 							: "";
@@ -60,8 +67,8 @@
 							+ "% do Total";
 						sLink = "E-itemClickHandler," + dataProvider.getItemIndex(dto);
 						result.addItem({value: dto.valor, tooltext: dto.categoria
-											   + sRealizado + sPrevisto + sTotal
-										   , link: sLink});
+											   + sRealizado + sRemanescente + sPrevisto
+											   + sTotal, link: sLink});
 					}
 					
 					result.addItem({seriesName: 'Previsto'});

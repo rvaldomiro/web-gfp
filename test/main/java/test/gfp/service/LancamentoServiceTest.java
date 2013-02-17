@@ -330,7 +330,7 @@ public class LancamentoServiceTest {
 		assertEquals(carteira, l2.getConta());
 		assertEquals(FormaPagamentoType.DINHEIRO.ordinal(), l2
 				.getFormaPagamento().intValue());
-		assertEquals(l.getCategoria(), l2.getCategoria());
+		assertEquals(Categoria.obterTransferencia(u), l2.getCategoria());
 		assertEquals(l.getId() + 1, l2.getId().intValue());
 		assertNull(l2.getContaTransferencia());
 		
@@ -342,7 +342,7 @@ public class LancamentoServiceTest {
 		assertEquals(corrente, l2.getConta());
 		assertEquals(FormaPagamentoType.DEBITO.ordinal(), l2
 				.getFormaPagamento().intValue());
-		assertEquals(l.getCategoria(), l2.getCategoria());
+		assertEquals(Categoria.obterTransferencia(u), l2.getCategoria());
 		assertEquals(l.getId() + 1, l2.getId().intValue());
 		assertNull(l2.getContaTransferencia());
 		

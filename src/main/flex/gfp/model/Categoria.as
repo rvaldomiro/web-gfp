@@ -28,10 +28,13 @@ package gfp.model
 		
 		public var usuario:Usuario;
 		
+		public var valorOrcamento:Number;
+		
 		public function toString():String
 		{
 			return descricao + (transferencia ? " (T)" : "");
 		}
 	}
+
 }
 

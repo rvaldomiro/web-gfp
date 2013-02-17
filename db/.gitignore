@@ -3,3 +3,4 @@
 *.lck
 gfp-dev.properties
 gfp-test.*
+/gfp-dev.tmp

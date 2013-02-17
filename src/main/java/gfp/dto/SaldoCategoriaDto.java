@@ -17,7 +17,8 @@ public class SaldoCategoriaDto {
 		super();
 		this.categoria = categoria;
 		this.valor = valor;
-		this.previsao = categoria.calcularMedia(referencia, 3);
+		this.previsao = categoria.getValorOrcamento() == 0 ? categoria
+				.calcularMedia(referencia, 3) : categoria.getValorOrcamento();
 	}
 	
 }

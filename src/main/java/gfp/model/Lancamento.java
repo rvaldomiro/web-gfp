@@ -34,7 +34,6 @@ import logus.commons.persistence.hibernate.dao.HibernateDao;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -47,29 +46,19 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 	public static HibernateDao<Lancamento> dao;
 	
 	public static void excluir(final Categoria categoria) throws Exception {
-		final Query q = dao
-				.createQuery("delete from Lancamento where categoria = :categoria");
-		q.setEntity("categoria", categoria);
-		q.executeUpdate();
+		dao.deleteWhere("categoria = ?", categoria);
 	}
 	
 	public static void excluir(final Conta conta) throws Exception {
-		final Query q = dao
-				.createQuery("delete from Lancamento where conta = :conta");
-		q.setEntity("conta", conta);
-		q.executeUpdate();
+		dao.deleteWhere("conta = ?", conta);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static List<Lancamento> listarAVencer(final Long usuarioId,
 			final Date previsaoPagamento, final CategoriaType categoria)
 			throws Exception {
-		final Query q = dao
-				.createQuery("from Lancamento where usuario.id = :usuarioId and dataPrevisaoPagamento <= :previsaoPagamento and categoria.tipo = :categoriaTipo and dataPagamento is null");
-		q.setLong("usuarioId", usuarioId);
-		q.setDate("previsaoPagamento", previsaoPagamento);
-		q.setInteger("categoriaTipo", categoria.ordinal());
-		return q.list();
+		return dao
+				.where("usuario.id = ? and dataPrevisaoPagamento <= ? and categoria.tipo = ? and dataPagamento is null",
+						usuarioId, previsaoPagamento, categoria.ordinal());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -81,6 +70,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		
 		final ProjectionList p = Projections.projectionList();
 		p.add(Projections.groupProperty("dataCompensacao"));
+		p.add(Projections.groupProperty("categoria"));
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("usuario.id", usuarioId));
 		c.add(Restrictions.eq("_categoria.tipo", categoria.ordinal()));
@@ -98,18 +88,58 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		final List<Object[]> saldoDiario = listarPrevisaoSaldoDiario(usuarioId,
 				categoria, dataInicio, dataFinal);
 		final List<Object[]> result = new ArrayList<Object[]>();
-		final Map<Date, Double> m = new HashMap<Date, Double>();
+		final Map<Date, Map<Categoria, Double>> dataCategoria = new HashMap<Date, Map<Categoria, Double>>();
 		
-		for (final Object[] o : saldoDiario) {
-			Date d = DateUtil.firstDayOfMonth((Date) o[0]);
-			d = DateUtil.time(d, 12, 0, 0);
-			final Double v = m.get(d);
-			final Double v1 = (Double) o[1];
-			m.put(d, v != null ? v + v1 : v1);
+		/* cria contas de orçamento inexistentes nos meses */
+		for (final Categoria c : Categoria.dao
+				.where("usuario.id = ? and tipo = ? and estatistica is true and valorOrcamento > 0",
+						usuarioId, categoria.ordinal())) {
+			mes: for (Date data = dataInicio; data.compareTo(dataFinal) <= 0; data = DateUtil
+					.addMonth(data, 1)) {
+				for (final Object[] o : saldoDiario) {
+					if (c.equals(o[1]) &&
+							DateUtil.month((Date) o[0]) == DateUtil.month(data)) {
+						continue mes;
+					}
+				}
+				
+				final Object o[] = { data, c, 0.0 };
+				saldoDiario.add(o);
+			}
 		}
 		
-		for (final Date d : m.keySet()) {
-			final Object o[] = { d, m.get(d) };
+		/* desmembra categorias por data */
+		for (final Object[] o : saldoDiario) {
+			final Date data = DateUtil.time(
+					DateUtil.firstDayOfMonth((Date) o[0]), 12, 0, 0);
+			
+			Map<Categoria, Double> categorias = dataCategoria.get(data);
+			
+			if (categorias == null) {
+				categorias = new HashMap<Categoria, Double>();
+				dataCategoria.put(data, categorias);
+			}
+			
+			Double valor = categorias.get(o[1]);
+			valor = valor == null ? (Double) o[2] : valor + (Double) o[2];
+			categorias.put((Categoria) o[1], valor);
+		}
+		
+		/* acumula saldos */
+		for (final Date data : dataCategoria.keySet()) {
+			final Map<Categoria, Double> categorias = dataCategoria.get(data);
+			Double valor = 0.0;
+			
+			for (final Categoria c : categorias.keySet()) {
+				if (c.getValorOrcamento() > 0 &&
+						categorias.get(c) < c.getValorOrcamento()) {
+					categorias.put(c, c.getValorOrcamento());
+				}
+				
+				valor += categorias.get(c);
+			}
+			
+			final Object o[] = { data, null, valor };
 			result.add(o);
 		}
 		
@@ -325,7 +355,6 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			}
 		}
 		
-// this.dataCompensacao = DateUtil.parseBRST(previsaoPagamento);
 		this.dataCompensacao = previsaoPagamento;
 	}
 	
@@ -562,13 +591,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 			this.id = dao.getNextSequence(this, "id").longValue();
 		}
 		
-// corrigirHorarioDeVerao();
 		calcularDataCompensacao();
 		sincronizarVinculado();
-		
-// LogBuilder.info("dataCompensacao:" + this.dataCompensacao);
-// LogBuilder.info("dataPagamento:" + this.dataPagamento);
-// LogBuilder.info("dataPrevisaoPagamento:" + this.dataPrevisaoPagamento);
-// LogBuilder.info("dataVencimento:" + this.dataVencimento);
 	}
+	
 }

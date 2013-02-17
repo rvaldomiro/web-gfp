@@ -6,6 +6,8 @@
 						  height = "100%">
 	<fx:Script>
 		<![CDATA[
+			import common.util.NumberUtil;
+			
 			import gfp.type.CategoriaType;
 		]]>
 	</fx:Script>
@@ -13,12 +15,19 @@
 	<s:VGroup paddingLeft = "3"
 			  paddingRight = "3"
 			  paddingTop = "3"
-			  paddingBottom = "3">
+			  paddingBottom = "3"
+			  width = "100%">
 		<s:Label text = "{data + (!data.estatistica ? ' (Não Conciliada)' : '')}"
 				 width = "100%"/>
 
-		<s:Label text = "{data.tipo == CategoriaType.RECEITA ? 'Receita' : 'Despesa'}"
-				 width = "100%"
-				 fontSize = "10"/>
+		<s:HGroup verticalAlign = "baseline"
+				  width = "100%">
+			<s:Label text = "{data.tipo == CategoriaType.RECEITA ? 'Receita' : 'Despesa'}"
+					 color = "{data.tipo == CategoriaType.RECEITA ? 0x138b0d : 0xff0000}"
+					 width = "100%"
+					 fontSize = "10"/>
+
+			<s:Label text = "{data.valorOrcamento != 0 ? 'Orçamento Mensal: ' + NumberUtil.formatMoney(data.valorOrcamento) : ''}"/>
+		</s:HGroup>
 	</s:VGroup>
 </s:MXDataGridItemRenderer>
