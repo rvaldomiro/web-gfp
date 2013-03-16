@@ -8,7 +8,7 @@ import gfp.type.LancamentoSituacaoType;
 import java.util.Date;
 
 import logus.commons.datetime.DateUtc;
-import logus.commons.datetime.DateUtil;
+import logus.commons.util.DateUtil;
 
 public class LancamentoDto {
 	

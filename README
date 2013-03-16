@@ -13,6 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.09.00	16/03/13
+
+*	M	Alterado o parâmetro para cálculo do saldo remanescente, agora para a ser pela previsão de pagamento ao invés do vencimento.
+
 01.08.08.00	17/02/13
 
 *	M	Implementada a possibilidade de criar orçamentos por categoria/mês e monitorar as transações e a previsão de saldo mensal.

@@ -27,10 +27,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import logus.commons.datetime.DateUtc;
-import logus.commons.datetime.DateUtil;
-import logus.commons.number.Number;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
+import logus.commons.util.DateUtil;
+import logus.commons.util.NumberUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
@@ -161,7 +161,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.add(Restrictions.eq("usuario.id", usuarioId));
 		c.add(Restrictions.eq("_categoria.tipo", tipoCategoria));
 		c.add(Restrictions.eq("_categoria.estatistica", true));
-		c.add(Restrictions.between("dataVencimento", dataInicio, dataFinal));
+		c.add(Restrictions.between("dataPrevisaoPagamento", dataInicio,
+				dataFinal));
 		c.setProjection(p);
 		
 		final List<Object[]> saldoCategoria = c.list();
@@ -191,7 +192,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-		return result != null ? Number.round(result, 2) : 0.0;
+		return result != null ? NumberUtil.round(result, 2) : 0.0;
 	}
 	
 	public static double obterSaldoDisponivel(final Conta conta,
@@ -211,7 +212,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		final Double result = (Double) c.uniqueResult();
-		return result != null ? Number.round(result, 2) : 0.0;
+		return result != null ? NumberUtil.round(result, 2) : 0.0;
 	}
 	
 	public static double obterSaldoDisponivel(final Conta conta,
@@ -225,7 +226,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		c.setProjection(p);
 		
 		Double result = (Double) c.uniqueResult();
-		result = result != null ? Number.round(result, 2) : 0.0;
+		result = result != null ? NumberUtil.round(result, 2) : 0.0;
 		result = (formaPagamento == FormaPagamentoType.CREDITO_MASTERCARD ? conta
 				.getLimiteMastercard() : conta.getLimiteVisa()) -
 				result;
@@ -239,7 +240,7 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 		final ProjectionList p = Projections.projectionList();
 		p.add(Projections.sum("valorOriginal"));
 		c.add(Restrictions.eq("categoria", categoria));
-		c.add(Restrictions.between("dataVencimento",
+		c.add(Restrictions.between("dataPrevisaoPagamento",
 				DateUtil.firstDayOfMonth(referencia),
 				DateUtil.lastDayOfMonth(referencia)));
 		c.setProjection(p);

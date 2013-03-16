@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
-import logus.commons.string.StringUtil;
+import logus.commons.util.StringUtil;
 
 @Entity
 public class Usuario extends AbstractPersistentClass<Usuario> {

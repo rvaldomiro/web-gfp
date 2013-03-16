@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.DateUtil;
+import logus.commons.util.DateUtil;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.ProjectionList;

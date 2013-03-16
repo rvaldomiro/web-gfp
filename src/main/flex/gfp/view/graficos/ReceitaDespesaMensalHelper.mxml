@@ -135,7 +135,7 @@
 				var item:Object = dataProvider.getItemAt(index);
 				
 				var dto:LancamentoDto = new LancamentoDto();
-				dto.tipoPeriodo = 0;
+				dto.tipoPeriodo = 1;
 				dto.dataInicio = DateUtil.firstDayOfMonth(mes, ano);
 				dto.dataFinal = DateUtil.lastDayOfMonth(mes, ano);
 				dto.categoria = item.categoria.id;

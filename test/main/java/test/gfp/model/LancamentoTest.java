@@ -10,7 +10,7 @@ import gfp.type.FormaPagamentoType;
 
 import java.util.List;
 
-import logus.commons.datetime.DateUtil;
+import logus.commons.util.DateUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -68,19 +68,19 @@ public class LancamentoTest {
 		Lancamento l;
 		
 		l = new Lancamento(this.usuario, db, 100.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(DateUtil.date(1, 1, 2012));
+		l.setDataPrevisaoPagamento(DateUtil.date(1, 1, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 200.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(DateUtil.date(1, 2, 2012));
+		l.setDataPrevisaoPagamento(DateUtil.date(1, 2, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 300.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(DateUtil.date(1, 3, 2012));
+		l.setDataPrevisaoPagamento(DateUtil.date(1, 3, 2012));
 		l = l.save();
 		
 		l = new Lancamento(this.usuario, db, 50.0, FormaPagamentoType.DINHEIRO);
-		l.setDataVencimento(DateUtil.date(1, 4, 2012));
+		l.setDataPrevisaoPagamento(DateUtil.date(1, 4, 2012));
 		l = l.save();
 		
 		listaSaldoCategoriaMensal = Lancamento.listarSaldoCategoriaMensal(

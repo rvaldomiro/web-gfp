@@ -14,10 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import logus.commons.datetime.DateUtil;
 import logus.commons.persistence.AbstractPersistentClass;
 import logus.commons.persistence.hibernate.dao.HibernateDao;
-import logus.commons.string.StringUtil;
+import logus.commons.util.DateUtil;
+import logus.commons.util.StringUtil;
 
 import org.hibernate.annotations.GenericGenerator;
 

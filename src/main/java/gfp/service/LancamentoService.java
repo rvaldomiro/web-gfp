@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.DateUtil;
-import logus.commons.number.Number;
 import logus.commons.persistence.hibernate.transaction.HibernateTransaction;
 import logus.commons.persistence.hibernate.transaction.TransactionClass;
-import logus.commons.string.StringUtil;
+import logus.commons.util.DateUtil;
+import logus.commons.util.NumberUtil;
+import logus.commons.util.StringUtil;
 
 import org.hibernate.Query;
 import org.springframework.flex.remoting.RemotingDestination;
@@ -313,13 +313,13 @@ public class LancamentoService extends TransactionClass<LancamentoService> {
 					conta, CategoriaType.DESPESA, dataSaldo);
 			final double saldoBloqueado = Lancamento.obterSaldoBloqueado(conta,
 					CategoriaType.RECEITA, dataSaldo);
-			final double saldoDisponivel = Number.round(receitaConciliada -
+			final double saldoDisponivel = NumberUtil.round(receitaConciliada -
 					despesaConciliada, 2);
-			final double saldoTotalConta = Number.round(receitaConciliada +
+			final double saldoTotalConta = NumberUtil.round(receitaConciliada +
 					saldoBloqueado - despesaConciliada, 2);
 			
 			saldoAtual += saldoDisponivel;
-			saldoAtual = Number.round(saldoAtual, 2);
+			saldoAtual = NumberUtil.round(saldoAtual, 2);
 			
 			result.add(new SaldoDto(conta, SaldoDto.SALDO_DISPONIVEL,
 					saldoDisponivel));

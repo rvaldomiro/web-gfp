@@ -22,7 +22,7 @@ import gfp.type.LancamentoSituacaoType;
 import java.util.Date;
 import java.util.List;
 
-import logus.commons.datetime.DateUtil;
+import logus.commons.util.DateUtil;
 
 import org.junit.After;
 import org.junit.Before;
