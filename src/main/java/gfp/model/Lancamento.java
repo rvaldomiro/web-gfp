@@ -98,7 +98,8 @@ public class Lancamento extends AbstractPersistentClass<Lancamento> {
 					.addMonth(data, 1)) {
 				for (final Object[] o : saldoDiario) {
 					if (c.equals(o[1]) &&
-							DateUtil.month((Date) o[0]) == DateUtil.month(data)) {
+							DateUtil.month((Date) o[0]) == DateUtil.month(data) &&
+							DateUtil.year((Date) o[0]) == DateUtil.year(data)) {
 						continue mes;
 					}
 				}
