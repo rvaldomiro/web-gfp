@@ -46,7 +46,9 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				
 				final Double totalReceitas = (Double) c.uniqueResult();
 				
-				o.setReceitas(totalReceitas);
+				if (totalReceitas != null && totalReceitas > o.receitas) {
+					o.setReceitas(totalReceitas);
+				}
 				
 				c = Lancamento.dao.createCriteria();
 				c.createAlias("categoria", "_categoria");
@@ -64,7 +66,10 @@ public class SaldoDiarioDto implements Comparable<SaldoDiarioDto> {
 				
 				final Double totalDespesas = (Double) c.uniqueResult();
 				
-				o.setDespesas(totalDespesas);
+				if (totalDespesas != null && totalDespesas > o.despesas) {
+					o.setDespesas(totalDespesas);
+				}
+				
 				hoje = false;
 			}
 			
