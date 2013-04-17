@@ -110,13 +110,13 @@
 						   selected = "{service.selecionada.tipo == CategoriaType.DESPESA}"/>
 		</s:HGroup>
 
-		<s:Label text = "Descrição:"/>
+		<s:Label text = "Descrição"/>
 
 		<s:TextInput id = "textDescricao"
 					 text = "@{service.selecionada.descricao}"
 					 width = "250"/>
 
-		<s:Label text = "Orçamento Mensal:"/>
+		<s:Label text = "Orçamento Mensal"/>
 
 		<s:HGroup verticalAlign = "baseline">
 			<component:TextInputNumeric value = "@{service.selecionada.valorOrcamento}"/>

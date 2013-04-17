@@ -195,7 +195,7 @@
 					</s:HGroup>
 
 					<s:HGroup width = "100%">
-						<s:Label text = "Observação:"/>
+						<s:Label text = "Observação"/>
 
 						<s:TextInput id = "textObservacao"
 									 text = "@{dto.observacao}"

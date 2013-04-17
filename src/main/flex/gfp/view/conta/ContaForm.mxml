@@ -6,7 +6,6 @@
 		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
 		 title = "Conta"
-		 xmlns:custom = "common.components.custom.*"
 		 xmlns:component = "common.spark.component.*">
 	<fx:Script>
 		<![CDATA[
@@ -170,7 +169,7 @@
 						   value = "{ContaType.CARTEIRA}"/>
 		</s:HGroup>
 
-		<s:Label text = "Banco:"/>
+		<s:Label text = "Banco"/>
 
 		<s:ComboBox id = "comboBancos"
 					dataProvider = "{bancoService.list}"
@@ -178,7 +177,7 @@
 					width = "100%"
 					enabled = "{!radioCarteira.selected}"/>
 
-		<s:Label text = "Identificação:"/>
+		<s:Label text = "Identificação"/>
 
 		<s:TextInput id = "textIdentificacao"
 					 text = "@{service.selecionada.identificacao}"
@@ -207,12 +206,12 @@
 
 		<s:HGroup enabled = "{checkOperaCartaoMastercard.selected}"
 				  verticalAlign = "baseline">
-			<s:Label text = "Limite:"/>
+			<s:Label text = "Limite"/>
 
 			<component:TextInputNumeric id = "textLimiteMastercard"
 										value = "@{service.selecionada.limiteMastercard}"/>
 
-			<s:Label text = "Fechamento:"/>
+			<s:Label text = "Fechamento"/>
 
 			<s:NumericStepper id = "stepperFechamentoMastercard"
 							  value = "@{service.selecionada.fechamentoMastercard}"
@@ -220,7 +219,7 @@
 							  maximum = "28"
 							  stepSize = "1"/>
 
-			<s:Label text = "Vencimento:"/>
+			<s:Label text = "Vencimento"/>
 
 			<s:NumericStepper id = "stepperVencimentoMastercard"
 							  value = "@{service.selecionada.vencimentoMastercard}"
@@ -238,12 +237,12 @@
 
 		<s:HGroup enabled = "{checkOperaCartaoVisa.selected}"
 				  verticalAlign = "baseline">
-			<s:Label text = "Limite:"/>
+			<s:Label text = "Limite"/>
 
 			<component:TextInputNumeric id = "textLimiteVisa"
 										value = "@{service.selecionada.limiteVisa}"/>
 
-			<s:Label text = "Fechamento:"/>
+			<s:Label text = "Fechamento"/>
 
 			<s:NumericStepper id = "stepperFechamentoVisa"
 							  value = "@{service.selecionada.fechamentoVisa}"
@@ -251,7 +250,7 @@
 							  maximum = "28"
 							  stepSize = "1"/>
 
-			<s:Label text = "Vencimento:"/>
+			<s:Label text = "Vencimento"/>
 
 			<s:NumericStepper id = "stepperVencimentoVisa"
 							  value = "@{service.selecionada.vencimentoVisa}"

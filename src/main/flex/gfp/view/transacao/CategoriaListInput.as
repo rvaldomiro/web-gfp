@@ -1,15 +1,11 @@
 package gfp.view.transacao
 {
-	import common.custom.CustomEvent;
 	import common.util.MessageUtil;
 	
-	import flash.events.Event;
-	import flash.events.FocusEvent;
 	import flash.events.IEventDispatcher;
 	
 	import gfp.event.CategoriaEvent;
 	import gfp.model.Categoria;
-	import gfp.service.CategoriaService;
 	import gfp.service.UsuarioService;
 	import gfp.type.CategoriaType;
 	

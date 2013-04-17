@@ -32,7 +32,8 @@ package gfp.model
 		
 		public function toString():String
 		{
-			return descricao + (transferencia ? " (T)" : "");
+			return descricao + (transferencia ? " (T)" : "") + (valorOrcamento > 0
+				? " (O)" : "");
 		}
 	}
 

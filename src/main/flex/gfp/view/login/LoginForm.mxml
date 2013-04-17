@@ -4,7 +4,6 @@
 		 xmlns:mx = "library://ns.adobe.com/flex/mx"
 		 creationComplete = "creationCompleteHandler()"
 		 xmlns:serviceFeedback = "common.spark.component.serviceFeedback.*"
-		 xmlns:usuarios = "gfp.view.usuarios.*"
 		 skinClass = "assets.skins.CustomPanelSkin"
 		 title.Login = "Bem-Vindo ao GFP"
 		 title.Cadastro = "Novo Usuário"
@@ -196,7 +195,7 @@
 					 color = "#B33333"/>
 
 			<s:VGroup width = "100%">
-				<s:Label text = "Usuário:"/>
+				<s:Label text = "Usuário"/>
 
 				<s:TextInput id = "textUsuario"
 							 fontSize = "18"
@@ -205,7 +204,7 @@
 			</s:VGroup>
 
 			<s:VGroup width = "100%">
-				<s:Label text = "Senha:"/>
+				<s:Label text = "Senha"/>
 
 				<s:TextInput id = "textSenha"
 							 fontSize = "18"
@@ -260,7 +259,7 @@
 			  includeIn = "Cadastro">
 		<s:HGroup width = "100%">
 			<s:VGroup width = "100%">
-				<s:Label text = "Usuário:"/>
+				<s:Label text = "Usuário"/>
 
 				<s:TextInput id = "textCadastroUsuario"
 							 text = "@{service.selecionado.login}"
@@ -268,7 +267,7 @@
 			</s:VGroup>
 
 			<s:VGroup width = "100%">
-				<s:Label text = "Nome Completo:"/>
+				<s:Label text = "Nome Completo"/>
 
 				<s:TextInput id = "textCadastroNome"
 							 text = "@{service.selecionado.nome}"
@@ -278,7 +277,7 @@
 
 		<s:HGroup width = "100%">
 			<s:VGroup width = "100%">
-				<s:Label text = "Senha:"/>
+				<s:Label text = "Senha"/>
 
 				<s:TextInput id = "textCadastroSenha"
 							 text = "@{service.selecionado.senha}"
@@ -287,7 +286,7 @@
 			</s:VGroup>
 
 			<s:VGroup width = "100%">
-				<s:Label text = "Confirmação:"/>
+				<s:Label text = "Confirmação"/>
 
 				<s:TextInput id = "textCadastroConfirmacao"
 							 width = "100%"
@@ -295,7 +294,7 @@
 			</s:VGroup>
 		</s:HGroup>
 
-		<s:Label text = "E-Mail:"/>
+		<s:Label text = "E-Mail"/>
 
 		<s:TextInput id = "textCadastroEMail"
 					 text = "@{service.selecionado.email}"

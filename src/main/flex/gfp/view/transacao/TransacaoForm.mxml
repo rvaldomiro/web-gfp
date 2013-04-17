@@ -193,6 +193,12 @@
 																	.selectedItem
 																	!= null;
 																
+																if (!labelRemanescente
+																	.visible)
+																{
+																	return;
+																}
+																
 																var diasRestantes:int
 																	=  DateUtil.compareDate(DateUtil
 																							.lastDayOfMonth(service
@@ -207,7 +213,18 @@
 																							.today);
 																
 																labelRemanescente
-																	.text = "Saldo Remanescente: "
+																	.text = ((comboCategorias
+																	.selectedItem
+																	as Categoria)
+																	.valorOrcamento
+																	> 0 ? "Orçamento Mensal: "
+																	+ NumberUtil
+																	.formatMoney((comboCategorias
+																				 .selectedItem
+																				 as Categoria)
+																				 .valorOrcamento)
+																	+ " :: " : "")
+																	+ "Saldo Remanescente: "
 																	+ NumberUtil
 																	.formatMoney(re
 																				 .result
@@ -434,7 +451,7 @@
 	<s:VGroup id = "form"
 			  width = "100%">
 		<s:HGroup width = "100%">
-			<s:Label text = "Categoria:"/>
+			<s:Label text = "Categoria"/>
 
 			<s:Label id = "labelRemanescente"
 					 width = "100%"
@@ -450,7 +467,7 @@
 		<s:HGroup width = "100%"
 				  gap = "10">
 			<s:VGroup>
-				<s:Label text = "Vencimento:"/>
+				<s:Label text = "Vencimento"/>
 
 				<component:CustomDateField id = "dateVencimento"
 										   selectedDate = "@{service.selecionado.dataVencimento}"
@@ -461,7 +478,7 @@
 			</s:VGroup>
 
 			<s:VGroup>
-				<s:Label text = "Valor:"/>
+				<s:Label text = "Valor"/>
 
 				<component:TextInputNumeric id = "textValorOriginal"
 											value = "@{service.selecionado.valorOriginal}"
@@ -470,7 +487,7 @@
 			</s:VGroup>
 		</s:HGroup>
 
-		<s:Label text = "Forma de Pagamento / Recebimento:"/>
+		<s:Label text = "Forma de Pagamento / Recebimento"/>
 
 		<transacao:SelecaoFormaPagamentoRecebimentoRenderer id = "selecaoFormaPagamentoRecebimento"
 															width = "{(selecaoFormaPagamentoRecebimento.dataProvider as ArrayCollection).length > 5 ? 617 : 602}"
@@ -478,7 +495,7 @@
 															enabled.Agendamento = "false"
 															change = "dispatchEvent(new Event('permiteRepetir')); dispatchEvent(new Event('permiteTransferir'));"/>
 
-		<s:Label text = "Transferir para:"
+		<s:Label text = "Transferir para"
 				 visible = "{permiteTransferir}"
 				 includeInLayout = "{permiteTransferir}"/>
 
@@ -488,7 +505,7 @@
 						visible = "{permiteTransferir}"
 						includeInLayout = "{permiteTransferir}"/>
 
-		<s:Label text = "Observação:"/>
+		<s:Label text = "Observação"/>
 
 		<s:TextInput text = "@{service.selecionado.observacao}"
 					 width = "100%"
@@ -501,7 +518,7 @@
 				  visible.Agendamento = "false"
 				  includeInLayout.Agendamento = "false"
 				  showEffect = "{mx.effects.Fade}">
-			<s:Label text = "Parcela:"
+			<s:Label text = "Parcela"
 					 visible = "{service.selecionado.id != null}"
 					 includeInLayout = "{service.selecionado.id != null}"/>
 
@@ -524,7 +541,7 @@
 			<s:HGroup width = "100%"
 					  gap = "10">
 				<s:VGroup>
-					<s:Label text = "Previsão Pagto:"/>
+					<s:Label text = "Previsão Pagto"/>
 
 					<component:CustomDateField id = "datePrevisaoPagamento"
 											   selectedDate = "@{service.selecionado.dataPrevisaoPagamento}"
@@ -535,7 +552,7 @@
 				</s:VGroup>
 
 				<s:VGroup>
-					<s:Label text = "Pagamento:"/>
+					<s:Label text = "Pagamento"/>
 
 					<component:CustomDateField selectedDate = "@{service.selecionado.dataPagamento}"
 											   editable = "false"
@@ -552,7 +569,7 @@
 			<s:HGroup width = "100%"
 					  gap = "10">
 				<s:VGroup width = "100%">
-					<s:Label text = "Frequência:"/>
+					<s:Label text = "Frequência"/>
 
 					<s:DropDownList id = "comboFrequencia"
 									dataProvider = "{AgendamentoDto.frequencias}"
@@ -561,7 +578,7 @@
 				</s:VGroup>
 
 				<s:VGroup>
-					<s:Label text = "Dia:"/>
+					<s:Label text = "Dia"/>
 
 					<s:NumericStepper id = "stepperDia"
 									  value = "@{dto.dia}"
@@ -570,7 +587,7 @@
 				</s:VGroup>
 
 				<s:VGroup>
-					<s:Label text = "Até:"/>
+					<s:Label text = "Até"/>
 
 					<component:CustomDateField id = "textDataFinal"
 											   selectedDate = "@{dto.dataFinal}"
@@ -579,7 +596,7 @@
 				</s:VGroup>
 
 				<s:VGroup>
-					<s:Label text = "Valor:"/>
+					<s:Label text = "Valor"/>
 
 					<component:TextInputNumeric id = "textValorAgendamento"
 												value = "@{dto.valor}"/>
