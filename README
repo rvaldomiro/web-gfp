@@ -13,6 +13,10 @@ Está implementado sob as seguintes tecnologias/frameworks:
 Changelog
 =========
 
+01.08.10.01	22/10/13
+
+*	C	Tratamentos para horário de verão.
+
 01.08.10.00	16/04/13
 
 *	C	Corrigida a previsão de saldo mensal para o mês atual considerando os orçamentos.
